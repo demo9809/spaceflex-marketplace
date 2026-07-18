@@ -481,7 +481,7 @@ export function PropertyExplorer() {
                 </div>
               </div>
 
-              <div className="flex gap-3 border-t border-line px-6 py-4">
+              <div className="flex gap-3 border-t border-line px-6 pt-4 pb-[calc(1rem+4rem+env(safe-area-inset-bottom))] md:pb-4">
                 <Button
                   variant="outline"
                   className="flex-1"
