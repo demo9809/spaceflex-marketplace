@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SpaceFlex Marketplace
 
-## Getting Started
+Premium cross-border real estate marketplace for the Gulf & India — Doha, Dubai, Riyadh, Abu Dhabi, Jeddah, Mumbai and Gurugram.
 
-First, run the development server:
+Built with **Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · Lucide icons**. All routes prerender statically; the app runs with zero backend against a realistic mock-data layer.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # static production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Design system — "Modern Estate Editorial"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Brand color is taken directly from the SpaceFlex logo gradient (`#082822 → #133f2f`). All tokens live in [src/app/globals.css](src/app/globals.css) as CSS variables mapped into Tailwind via `@theme` — a `.dark` block already carries a full dark-mode palette.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Token | Role |
+|---|---|
+| `--ink` `#0b241d` | Text & dark surfaces (brand green-black) |
+| `--paper` `#f6f5ef` | Page background (warm ivory) |
+| `--brass` `#166246` | Interactive accent (brand emerald)* |
+| `--gold` `#ae8a4e` | Support accent — star ratings, glow details |
+| `--line / --muted / --faint` | Hairlines and text hierarchy |
 
-## Learn More
+*The token is named `brass` from the first design iteration; its value is now the brand emerald. Rename across the codebase if it bothers you.
 
-To learn more about Next.js, take a look at the following resources:
+**Type**: Fraunces (display serif, optical sizing) + Instrument Sans (UI), loaded via `next/font`. Fluid scale in `--text-display/h1/h2/h3/h4`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Motion**: dependency-free. Scroll reveals use IntersectionObserver with a scroll-listener fallback ([reveal.tsx](src/components/motion/reveal.tsx)); overlays use a `usePresence` mount/unmount CSS-transition hook ([use-presence.ts](src/lib/use-presence.ts)). `prefers-reduced-motion` disables everything.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Map & integrations
 
-## Deploy on Vercel
+The search map is an intentional illustrative panel ([map-panel.tsx](src/components/property/map-panel.tsx)) that normalises real lat/lng into a styled canvas — swap the component body for Mapbox GL when a token is available. Forms simulate success states client-side; wire them to an API in place.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Route map
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Route | Purpose |
+|---|---|
+| `/` | Editorial homepage: hero search, featured collection, Private Office, cities, projects, agents, journal |
+| `/properties` | Search: filters drawer, sort, grid/list/map views, shareable URL state |
+| `/properties/[slug]` | Detail: gallery + lightbox, key facts, amenities, mortgage widget, agent contact, similar homes |
+| `/agents`, `/agents/[slug]` | Verified agent directory and profiles with listings & reviews |
+| `/developers`, `/developers/[slug]`, `/developers/projects/[slug]` | Off-plan projects, developer track records, pre-launch interest |
+| `/journal`, `/journal/[slug]` | Editorial with drop-cap article layout |
+| `/reports`, `/calculators` | Market reports (email-capture) and mortgage/yield tools |
+| `/saved`, `/compare` | localStorage-backed collection and side-by-side comparison (via card scale icon) |
+| `/signin`, `/signup`, `/dashboard` | Auth screens and buyer workspace (overview, saved, messages, viewings, settings) |
+| `/list-with-us`, `/about`, `/contact`, `/legal` | Agent plans & pricing, company, contact desks, legal |
+
+Mobile gets a native-app treatment: bottom tab bar, bottom-sheet filters, sticky action bar on property detail, thumb-first controls.
