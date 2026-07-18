@@ -129,8 +129,9 @@ export function SiteHeader() {
           >
             Sign in
           </Link>
-          <ButtonLink href="/list-property" size="sm" className="hidden md:inline-flex">
-            List a property
+          <ButtonLink href="/list-property" size="sm">
+            <span className="lg:hidden">List property</span>
+            <span className="hidden lg:inline">List a property</span>
           </ButtonLink>
           <button
             className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-brass-tint lg:hidden"
