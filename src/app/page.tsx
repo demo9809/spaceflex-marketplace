@@ -8,6 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { HeroSearch } from "@/components/home/hero-search";
+import { HeroBackdrop } from "@/components/home/hero-backdrop";
 import { PropertyCard } from "@/components/property/property-card";
 import { AgentCard } from "@/components/agent/agent-card";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -62,17 +63,8 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden md:min-h-[88vh]">
-        <Image
-          src={IMG.villaNight}
-          alt="Modern villa at dusk"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
-        <div className="grain absolute inset-0" />
+      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
+        <HeroBackdrop />
 
         <div className="container-site relative z-10 pb-14 pt-36 md:pb-24">
           <p className="rise rise-1 eyebrow !text-paper/80">

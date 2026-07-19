@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { MobileTabBar } from "@/components/site/mobile-tab-bar";
 import { SavedProvider } from "@/lib/store/saved";
+import { AuthProvider } from "@/lib/store/auth";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -37,12 +38,14 @@ export default function RootLayout({
       className={`${fraunces.variable} ${instrument.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SavedProvider>
-          <SiteHeader />
-          <main className="flex-1 pb-16 md:pb-0">{children}</main>
-          <SiteFooter />
-          <MobileTabBar />
-        </SavedProvider>
+        <AuthProvider>
+          <SavedProvider>
+            <SiteHeader />
+            <main className="flex-1 pb-16 md:pb-0">{children}</main>
+            <SiteFooter />
+            <MobileTabBar />
+          </SavedProvider>
+        </AuthProvider>
       </body>
     </html>
   );

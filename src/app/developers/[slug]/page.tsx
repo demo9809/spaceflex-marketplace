@@ -39,7 +39,7 @@ export default async function DeveloperPage({
 
   return (
     <>
-      <section className="relative isolate flex min-h-[46vh] items-end overflow-hidden">
+      <section className="relative isolate -mt-16 flex min-h-[46vh] items-end overflow-hidden md:-mt-[4.5rem]">
         <Image
           src={dev.cover}
           alt=""
@@ -48,7 +48,7 @@ export default async function DeveloperPage({
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/55" />
         <div className="container-site relative z-10 pb-12 pt-40">
           <div className="flex items-end gap-5">
             <span className="font-display flex h-20 w-20 items-center justify-center rounded-3xl bg-paper text-2xl font-semibold text-ink shadow-lift">

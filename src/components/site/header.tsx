@@ -8,6 +8,7 @@ import { Heart, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { useSaved } from "@/lib/store/saved";
+import { useAuth } from "@/lib/store/auth";
 
 const nav = [
   { label: "Buy", href: "/properties?status=sale" },
@@ -27,13 +28,40 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { saved } = useSaved();
+  const { authed } = useAuth();
+
+  /* Pages whose hero extends dark artwork beneath the header —
+     the header renders light-on-dark until the user scrolls. */
+  const hasDarkHero =
+    pathname === "/" ||
+    pathname === "/list-with-us" ||
+    (/^\/developers\/[^/]+$/.test(pathname) &&
+      !pathname.startsWith("/developers/projects"));
+  const light = hasDarkHero && !scrolled && !open;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    /* Capture-phase document listener catches scrolling from any
+       scroll container, not only the window; position is read from
+       every source a browser might use. */
+    const onScroll = () =>
+      setScrolled(
+        Math.max(
+          window.scrollY || 0,
+          document.documentElement.scrollTop || 0,
+          document.body.scrollTop || 0
+        ) > 12
+      );
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    document.addEventListener("scroll", onScroll, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      document.removeEventListener("scroll", onScroll, { capture: true });
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -56,7 +84,9 @@ export function SiteHeader() {
             ? "bg-paper"
             : scrolled
               ? "bg-paper/85 shadow-[0_1px_0_var(--line)] backdrop-blur-xl"
-              : "bg-paper"
+              : light
+                ? "bg-white/5 shadow-[inset_0_-1px_0_rgb(255_255_255/0.12)] backdrop-blur-xl"
+                : "bg-white/30 shadow-[inset_0_-1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl backdrop-saturate-150"
         )}
       />
       <div className="container-site relative flex h-16 items-center justify-between gap-6 md:h-[4.5rem]">
@@ -67,7 +97,10 @@ export function SiteHeader() {
             width={169}
             height={32}
             priority
-            className="h-7 w-auto md:h-8"
+            className={cn(
+              "h-7 w-auto transition-[filter] duration-300 md:h-8",
+              light && "brightness-0 invert"
+            )}
           />
         </Link>
 
@@ -77,14 +110,24 @@ export function SiteHeader() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-brass-tint hover:text-ink"
+              className={cn(
+                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                light
+                  ? "text-white/85 hover:bg-white/10 hover:text-white"
+                  : "text-ink-soft hover:bg-brass-tint hover:text-ink"
+              )}
             >
               {item.label}
             </Link>
           ))}
           <div className="group relative">
             <button
-              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-brass-tint hover:text-ink"
+              className={cn(
+                "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                light
+                  ? "text-white/85 hover:bg-white/10 hover:text-white"
+                  : "text-ink-soft hover:bg-brass-tint hover:text-ink"
+              )}
               aria-haspopup="true"
             >
               Insights
@@ -113,7 +156,10 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/saved"
-            className="relative hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-brass-tint md:flex"
+            className={cn(
+              "relative hidden h-10 w-10 items-center justify-center rounded-full transition-colors md:flex",
+              light ? "text-white hover:bg-white/10" : "hover:bg-brass-tint"
+            )}
             aria-label={`Saved properties (${saved.length})`}
           >
             <Heart size={18} />
@@ -124,17 +170,29 @@ export function SiteHeader() {
             )}
           </Link>
           <Link
-            href="/signin"
-            className="hidden rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-brass-tint hover:text-ink md:block"
+            href={authed ? "/dashboard" : "/signin"}
+            className={cn(
+              "hidden rounded-full px-4 py-2 text-sm font-medium transition-colors md:block",
+              light
+                ? "text-white/85 hover:bg-white/10 hover:text-white"
+                : "text-ink-soft hover:bg-brass-tint hover:text-ink"
+            )}
           >
-            Sign in
+            {authed ? "Dashboard" : "Sign in"}
           </Link>
-          <ButtonLink href="/list-property" size="sm">
+          <ButtonLink
+            href="/list-property"
+            size="sm"
+            variant={light ? "inverted" : "primary"}
+          >
             <span className="lg:hidden">List property</span>
             <span className="hidden lg:inline">List a property</span>
           </ButtonLink>
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-brass-tint lg:hidden"
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-full transition-colors lg:hidden",
+              light ? "text-white hover:bg-white/10" : "hover:bg-brass-tint"
+            )}
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
@@ -171,8 +229,12 @@ export function SiteHeader() {
             <ButtonLink href="/list-property" size="lg">
               List a property
             </ButtonLink>
-            <ButtonLink href="/signin" variant="outline" size="lg">
-              Sign in
+            <ButtonLink
+              href={authed ? "/dashboard" : "/signin"}
+              variant="outline"
+              size="lg"
+            >
+              {authed ? "Your dashboard" : "Sign in"}
             </ButtonLink>
           </div>
         </nav>

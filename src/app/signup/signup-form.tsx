@@ -5,6 +5,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/field";
+import { useAuth } from "@/lib/store/auth";
 
 const roles = [
   { id: "buyer", label: "Buying" },
@@ -15,6 +16,7 @@ const roles = [
 
 export function SignUpForm() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const [role, setRole] = useState("buyer");
 
   return (
@@ -22,6 +24,7 @@ export function SignUpForm() {
       className="space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
+        signIn();
         router.push("/dashboard");
       }}
     >

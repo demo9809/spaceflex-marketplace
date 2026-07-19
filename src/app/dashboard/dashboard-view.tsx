@@ -9,11 +9,14 @@ import {
   Bell,
   CalendarDays,
   Settings,
+  LogOut,
 } from "lucide-react";
 import { useSaved } from "@/lib/store/saved";
+import { useAuth } from "@/lib/store/auth";
 import { properties } from "@/lib/data/properties";
 import { PropertyCard } from "@/components/property/property-card";
 import { MessagesPanel } from "./messages";
+import { SignInForm } from "@/app/signin/signin-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -50,7 +53,37 @@ export function DashboardView() {
   const router = useRouter();
   const tab = params.get("tab") ?? "overview";
   const { saved } = useSaved();
+  const { authed, hydrated, signOut } = useAuth();
   const savedItems = properties.filter((p) => saved.includes(p.id));
+
+  if (!hydrated) {
+    return (
+      <div className="container-site py-14" aria-busy="true">
+        <div className="skeleton h-8 w-52 rounded-full" />
+        <div className="skeleton mt-6 h-64 w-full rounded-3xl" />
+      </div>
+    );
+  }
+
+  /* Demo gate: any credentials unlock the workspace */
+  if (!authed) {
+    return (
+      <div className="container-site flex min-h-[calc(100dvh-9rem)] items-center justify-center py-10 md:min-h-[70vh]">
+        <div className="w-full max-w-sm">
+          <p className="eyebrow">Members</p>
+          <h1 className="font-display text-h2 mt-2 font-medium tracking-tight">
+            Sign in to continue
+          </h1>
+          <p className="mt-2 text-sm text-muted">
+            Your inbox, saved homes and viewings live behind your account.
+          </p>
+          <div className="mt-8">
+            <SignInForm redirect={false} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-site py-6 md:py-14">
@@ -67,10 +100,22 @@ export function DashboardView() {
             Good afternoon, Alex
           </h1>
         </div>
-        <button className="relative flex h-11 w-11 items-center justify-center rounded-full border border-line bg-raised transition-colors hover:bg-brass-tint" aria-label="Notifications (2 unread)">
-          <Bell size={18} />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-line bg-raised transition-colors hover:bg-brass-tint"
+            aria-label="Notifications (2 unread)"
+          >
+            <Bell size={18} />
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" />
+          </button>
+          <button
+            onClick={signOut}
+            className="flex h-11 items-center gap-2 rounded-full border border-line bg-raised px-4 text-sm font-medium transition-colors hover:border-danger hover:bg-danger-tint hover:text-danger"
+          >
+            <LogOut size={16} />
+            Sign out
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -266,6 +311,9 @@ export function DashboardView() {
               </button>
             </div>
           ))}
+          <Button variant="outline" className="w-full" onClick={signOut}>
+            Sign out
+          </Button>
         </div>
       )}
     </div>

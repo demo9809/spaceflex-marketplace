@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/field";
+import { useAuth } from "@/lib/store/auth";
 
 function GoogleMark() {
   return (
@@ -27,18 +28,30 @@ function GoogleMark() {
   );
 }
 
-export function SignInForm() {
+export function SignInForm({ redirect = true }: { redirect?: boolean }) {
   const router = useRouter();
+  const { signIn } = useAuth();
+
+  function complete() {
+    signIn();
+    if (redirect) router.push("/dashboard");
+  }
 
   return (
     <form
       className="space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
-        router.push("/dashboard");
+        complete();
       }}
     >
-      <Button type="button" variant="outline" className="w-full" size="lg">
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        size="lg"
+        onClick={complete}
+      >
         <GoogleMark />
         Continue with Google
       </Button>

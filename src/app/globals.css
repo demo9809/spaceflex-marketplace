@@ -259,6 +259,48 @@ body {
   animation: shimmer 1.6s linear infinite;
 }
 
+/* Select chevron (data-URI backgrounds can't be inlined as Tailwind
+   arbitrary values because of spaces in the SVG markup) */
+.select-arrow {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235e6e63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+}
+
+/* ── Hero aurora backdrop ── */
+.aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  will-change: transform;
+  pointer-events: none;
+}
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(-8%, -4%, 0) scale(1); }
+  50% { transform: translate3d(12%, 9%, 0) scale(1.18); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(6%, 10%, 0) scale(1.08); }
+  50% { transform: translate3d(-11%, -8%, 0) scale(0.9); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(-7%, 7%, 0) scale(1.14); }
+  66% { transform: translate3d(9%, -5%, 0) scale(0.94); }
+}
+@keyframes grid-pan {
+  from { background-position: 0 0; }
+  to { background-position: 64px 64px; }
+}
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: grid-pan 24s linear infinite;
+  mask-image: radial-gradient(75% 80% at 50% 35%, black 30%, transparent 100%);
+}
+
 /* Lightbox image crossfade */
 @keyframes frame-in {
   from {

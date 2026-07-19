@@ -70,7 +70,7 @@ const stats = [
 export default function ListWithUsPage() {
   return (
     <>
-      <section className="relative isolate flex min-h-[60vh] items-end overflow-hidden">
+      <section className="relative isolate -mt-16 flex min-h-[60vh] items-end overflow-hidden md:-mt-[4.5rem]">
         <Image
           src={IMG.modernHouse}
           alt=""
@@ -79,7 +79,7 @@ export default function ListWithUsPage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/55" />
         <div className="container-site relative z-10 pb-14 pt-40">
           <p className="rise rise-1 eyebrow !text-paper/80">For Agents & Owners</p>
           <h1 className="rise rise-2 font-display text-h1 mt-3 max-w-2xl font-medium text-paper text-balance">
