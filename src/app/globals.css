@@ -98,7 +98,7 @@
   --color-info: var(--info);
 
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -149,9 +149,19 @@ body {
 /* ── Typography helpers ── */
 
 .font-display {
-  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  font-feature-settings: "ss01", "cv05";
+}
+
+/* Optical tracking: large display type needs tighter letterfit than
+   small headings, otherwise the hero reads loose and generic. */
+.text-display,
+.text-h1 {
+  letter-spacing: -0.042em;
+}
+.text-h2 {
+  letter-spacing: -0.035em;
 }
 
 .text-display {

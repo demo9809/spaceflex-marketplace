@@ -63,7 +63,9 @@ export function ReportCard({ report }: { report: Report }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Work email"
             aria-label={`Email to receive ${report.title}`}
-            className="flex-1"
+            /* flex-1 only once the form is a row — in flex-col its
+               basis:0 would override h-11 and collapse the field */
+            className="w-full sm:flex-1"
           />
           <Button type="submit" className="shrink-0">
             <Download size={15} />

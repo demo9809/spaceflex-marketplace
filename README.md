@@ -24,7 +24,7 @@ Brand color is taken directly from the SpaceFlex logo gradient (`#082822 → #13
 
 *The token is named `brass` from the first design iteration; its value is now the brand emerald. Rename across the codebase if it bothers you.
 
-**Type**: Fraunces (display serif, optical sizing) + Instrument Sans (UI), loaded via `next/font`. Fluid scale in `--text-display/h1/h2/h3/h4`.
+**Type**: Plus Jakarta Sans (display, weights 500–800) + Instrument Sans (UI body), loaded via `next/font`. All-sans by design — no serif. Fluid scale in `--text-display/h1/h2/h3/h4`, with optical tracking that tightens as type scales up (`-0.03em` → `-0.042em` at hero sizes).
 
 **Motion**: dependency-free. Scroll reveals use IntersectionObserver with a scroll-listener fallback ([reveal.tsx](src/components/motion/reveal.tsx)); overlays use a `usePresence` mount/unmount CSS-transition hook ([use-presence.ts](src/lib/use-presence.ts)). `prefers-reduced-motion` disables everything.
 

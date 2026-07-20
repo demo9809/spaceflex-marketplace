@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
@@ -7,10 +7,10 @@ import { MobileTabBar } from "@/components/site/mobile-tab-bar";
 import { SavedProvider } from "@/lib/store/saved";
 import { AuthProvider } from "@/lib/store/auth";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const display = Plus_Jakarta_Sans({
+  variable: "--font-display-family",
   subsets: ["latin"],
-  axes: ["SOFT", "WONK", "opsz"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const instrument = Instrument_Sans({
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${instrument.variable} h-full antialiased`}
+      className={`${display.variable} ${instrument.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
