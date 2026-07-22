@@ -20,6 +20,7 @@ import { getAgent } from "@/lib/data/agents";
 import { propertyPrice, pricePerSqft, formatArea } from "@/lib/format";
 import { Gallery } from "@/components/property/gallery";
 import { MortgageWidget } from "@/components/property/mortgage-widget";
+import { ListedBy } from "@/components/property/listed-by";
 import { ContactCard } from "@/components/agent/contact-card";
 import { PropertyCard } from "@/components/property/property-card";
 import { SaveButton } from "@/components/property/save-button";
@@ -184,6 +185,9 @@ export default async function PropertyDetailPage({
                 {property.description}
               </p>
             </section>
+
+            {/* Listed by */}
+            <ListedBy property={property} agent={agent} />
 
             {/* Amenities */}
             <section aria-labelledby="amenities" className="mt-10">

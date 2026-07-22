@@ -153,6 +153,8 @@ export const properties: Property[] = [
     description:
       "A double-height loft on the Boulevard with a direct view of the Burj Khalifa from the mezzanine study. Fully furnished in oak and bouclé by the current owner's interior studio, and available on a one- or two-year lease. Walk to Dubai Mall, the Opera District, and DIFC in fifteen minutes.",
     agentId: "a3",
+    listingKind: "owner",
+    owner: { name: "Rana K.", since: 2021 },
     featured: true,
     daysOnMarket: 5,
     views: 1980,
@@ -549,6 +551,8 @@ export const properties: Property[] = [
     description:
       "A quiet one-bedroom over landscaped courtyards in Fox Hills, two stops from Lusail Boulevard on the tram. New building, responsive management, and a rent that leaves room in a first Doha budget. Semi-furnished with wardrobes and kitchen appliances.",
     agentId: "a1",
+    listingKind: "owner",
+    owner: { name: "Mansoor A.", since: 2022 },
     daysOnMarket: 4,
     views: 510,
   },

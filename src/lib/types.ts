@@ -32,6 +32,12 @@ export interface Property {
   parking: number;
   description: string;
   agentId: string;
+  /* Who is behind this listing. Defaults to "agency" (a brokerage
+     represented by its agent). "independent" = a solo licensed agent
+     with no firm. "owner" = a private individual listing directly. */
+  listingKind?: "agency" | "independent" | "owner";
+  /* Present only when listingKind === "owner". */
+  owner?: { name: string; since: number };
   featured?: boolean;
   exclusive?: boolean;
   offPlan?: boolean;
@@ -41,8 +47,22 @@ export interface Property {
   floorPlan?: string;
 }
 
+export interface Agency {
+  id: string;
+  slug: string;
+  name: string;
+  logoInitials: string;
+  city: string;
+  since: number;
+  licenseNo: string;
+  activeListings: number;
+  verified: boolean;
+  tagline: string;
+}
+
 export interface Agent {
   id: string;
+  agencyId?: string;
   slug: string;
   name: string;
   title: string;

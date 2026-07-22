@@ -2,9 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { BedDouble, Bath, Ruler, MapPin, Scale } from "lucide-react";
+import {
+  BedDouble,
+  Bath,
+  Ruler,
+  MapPin,
+  Scale,
+  Building2,
+  UserRound,
+} from "lucide-react";
 import type { Property } from "@/lib/types";
 import { propertyPrice } from "@/lib/format";
+import { agencyForAgent } from "@/lib/data/agencies";
+import { getAgent } from "@/lib/data/agents";
 import { Badge } from "@/components/ui/badge";
 import { SaveButton } from "./save-button";
 import { useSaved } from "@/lib/store/saved";
@@ -21,6 +31,14 @@ export function PropertyCard({
 }) {
   const { inCompare, toggleCompare } = useSaved();
   const comparing = inCompare(property.id);
+
+  /* Listing source — brokerage, private owner, or independent agent */
+  const isOwner = property.listingKind === "owner";
+  const agency = isOwner ? undefined : agencyForAgent(property.agentId);
+  const source = isOwner
+    ? "Private owner"
+    : (agency?.name ?? getAgent(property.agentId)?.name ?? "SpaceFlex");
+  const SourceIcon = isOwner ? UserRound : Building2;
 
   return (
     <article
@@ -80,6 +98,11 @@ export function PropertyCard({
             {property.community}, {property.city}
           </p>
         </div>
+
+        <p className="-mt-1 flex items-center gap-1.5 text-xs text-faint">
+          <SourceIcon size={12} className="shrink-0" />
+          <span className="truncate">{source}</span>
+        </p>
 
         <div className="flex items-center gap-4 border-t border-line pt-3 text-[0.8125rem] text-muted">
           {property.beds > 0 && (
