@@ -111,31 +111,73 @@ export function HeroSearch() {
   }
 
   return (
-    <div className="w-full max-w-2xl md:mx-auto">
-      {/* Buy / Rent */}
-      <div className="md:flex md:justify-center">
-      <div
-        role="tablist"
-        aria-label="Listing type"
-        className="inline-flex rounded-full bg-white/15 p-1 backdrop-blur-md"
-      >
-        {(["sale", "rent"] as const).map((s) => (
-          <button
-            key={s}
-            role="tab"
-            aria-selected={status === s}
-            onClick={() => setStatus(s)}
-            className={cn(
-              "rounded-full px-6 py-2 text-sm font-medium transition-all duration-200",
-              status === s
-                ? "bg-paper text-ink shadow-card"
-                : "text-paper/85 hover:text-paper"
-            )}
+    <div className="w-full max-w-3xl text-left md:mx-auto">
+      {/* Utility row — listing type left, refinements right */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          role="tablist"
+          aria-label="Listing type"
+          className="inline-flex rounded-full bg-white/15 p-1 backdrop-blur-md"
+        >
+          {(["sale", "rent"] as const).map((s) => (
+            <button
+              key={s}
+              role="tab"
+              aria-selected={status === s}
+              onClick={() => setStatus(s)}
+              className={cn(
+                "rounded-full px-6 py-2 text-sm font-medium transition-all duration-200",
+                status === s
+                  ? "bg-paper text-ink shadow-card"
+                  : "text-paper/85 hover:text-paper"
+              )}
+            >
+              {s === "sale" ? "Buy" : "Rent"}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            aria-label="Property type"
+            className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
           >
-            {s === "sale" ? "Buy" : "Rent"}
+            <option value="all">Any type</option>
+            {types.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={beds}
+            onChange={(e) => setBeds(e.target.value)}
+            aria-label="Minimum bedrooms"
+            className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
+          >
+            <option value="any">Any beds</option>
+            {["1", "2", "3", "4", "5"].map((b) => (
+              <option key={b} value={b}>
+                {b}+ beds
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            onClick={() => {
+              const p = new URLSearchParams({ status, ...extra() });
+              router.push(`/properties?${p.toString()}`);
+            }}
+            className="flex h-9 items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50"
+          >
+            <SlidersHorizontal size={13} />
+            All filters
           </button>
-        ))}
-      </div>
+        </div>
       </div>
 
       {/* Search + suggestions */}
@@ -243,51 +285,8 @@ export function HeroSearch() {
         )}
       </div>
 
-      {/* Quick refinements */}
-      <div className="mt-3 flex flex-wrap items-center gap-2 md:justify-center">
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          aria-label="Property type"
-          className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
-        >
-          <option value="all">Any type</option>
-          {types.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={beds}
-          onChange={(e) => setBeds(e.target.value)}
-          aria-label="Minimum bedrooms"
-          className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
-        >
-          <option value="any">Any beds</option>
-          {["1", "2", "3", "4", "5"].map((b) => (
-            <option key={b} value={b}>
-              {b}+ beds
-            </option>
-          ))}
-        </select>
-
-        <button
-          type="button"
-          onClick={() => {
-            const p = new URLSearchParams({ status, ...extra() });
-            router.push(`/properties?${p.toString()}`);
-          }}
-          className="flex h-9 items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50"
-        >
-          <SlidersHorizontal size={13} />
-          All filters
-        </button>
-      </div>
-
       {/* Trending */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 md:justify-center">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="text-xs uppercase tracking-[0.14em] text-paper/70">
           Trending
         </span>
