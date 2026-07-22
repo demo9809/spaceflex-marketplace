@@ -63,22 +63,22 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh] md:items-center">
+      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
         <HeroBackdrop />
 
-        <div className="container-site relative z-10 pb-14 pt-36 md:pb-16 md:pt-28 md:text-center">
+        <div className="container-site relative z-10 pb-14 pt-36 md:pb-24">
           <p className="rise rise-1 eyebrow !text-paper/80">
             Qatar · Premium Property
           </p>
-          <h1 className="rise rise-2 font-display text-display mt-4 max-w-3xl font-medium text-paper text-balance md:mx-auto">
+          <h1 className="rise rise-2 font-display text-display mt-4 max-w-3xl font-medium text-paper text-balance">
             Homes worth the journey.
           </h1>
-          <p className="rise rise-3 mt-5 max-w-xl text-base leading-relaxed text-paper/85 md:mx-auto md:text-lg">
+          <p className="rise rise-3 mt-5 max-w-xl text-base leading-relaxed text-paper/85 md:text-lg">
             A curated marketplace for exceptional residences and investments
             across Doha, Lusail, The Pearl and Al Rayyan — with the
             intelligence to buy well.
           </p>
-          <div className="rise rise-4 mt-8 md:flex md:justify-center">
+          <div className="rise rise-4 mt-8">
             <HeroSearch />
           </div>
         </div>

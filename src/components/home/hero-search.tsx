@@ -111,7 +111,7 @@ export function HeroSearch() {
   }
 
   return (
-    <div className="w-full max-w-3xl text-left md:mx-auto">
+    <div className="w-full max-w-3xl text-left">
       {/* Utility row — listing type left, refinements right */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div
