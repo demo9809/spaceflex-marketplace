@@ -47,6 +47,25 @@ export interface Property {
   floorPlan?: string;
 }
 
+export type LandmarkCategory =
+  | "Work"
+  | "Education"
+  | "Retail"
+  | "Transport"
+  | "Health"
+  | "Leisure";
+
+export interface Landmark {
+  id: string;
+  name: string;
+  /* Compact label for chips and result badges */
+  short: string;
+  category: LandmarkCategory;
+  city: string;
+  lat: number;
+  lng: number;
+}
+
 export interface Agency {
   id: string;
   slug: string;

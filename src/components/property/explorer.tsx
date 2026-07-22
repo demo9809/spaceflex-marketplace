@@ -9,19 +9,29 @@ import {
   Map as MapIcon,
   Search,
   X,
+  Route,
 } from "lucide-react";
 import { usePresence } from "@/lib/use-presence";
 import { properties } from "@/lib/data/properties";
+import { landmarks } from "@/lib/data/landmarks";
+import { evaluateCommute, commuteScore, type MatchMode } from "@/lib/geo";
 import type { Property, PropertyType } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 import { MapPanel } from "./map-panel";
+import { CommuteFilter } from "./commute-filter";
 import { CompareTray } from "@/components/site/compare-tray";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
 type View = "grid" | "list" | "map";
-type Sort = "featured" | "price-asc" | "price-desc" | "newest" | "views";
+type Sort =
+  | "featured"
+  | "price-asc"
+  | "price-desc"
+  | "newest"
+  | "views"
+  | "commute";
 
 const types: PropertyType[] = [
   "Apartment",
@@ -71,6 +81,35 @@ export function PropertyExplorer() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const drawer = usePresence(filtersOpen);
 
+  /* ── Multi-landmark commute filter ── */
+  const [hubIds, setHubIds] = useState<string[]>(
+    params.get("hubs")?.split(",").filter(Boolean) ?? []
+  );
+  const [maxCommute, setMaxCommute] = useState(
+    Number(params.get("commute")) || 25
+  );
+  const [matchMode, setMatchMode] = useState<MatchMode>(
+    (params.get("match") as MatchMode) ?? "all"
+  );
+
+  const selectedHubs = useMemo(
+    () => landmarks.filter((l) => hubIds.includes(l.id)),
+    [hubIds]
+  );
+
+  const toggleHub = (id: string) =>
+    setHubIds((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+
+  /* When opened via the Commute button, scroll the drawer to that section */
+  const [jumpToCommute, setJumpToCommute] = useState(false);
+  useEffect(() => {
+    if (!drawer.shown || !jumpToCommute) return;
+    document
+      .getElementById("commute-section")
+      ?.scrollIntoView({ block: "start", behavior: "smooth" });
+    setJumpToCommute(false);
+  }, [drawer.shown, jumpToCommute]);
+
   /* Lock page scroll while the filter sheet is open */
   useEffect(() => {
     document.body.style.overflow = filtersOpen ? "hidden" : "";
@@ -87,10 +126,15 @@ export function PropertyExplorer() {
     if (type !== "all") p.set("type", type);
     if (beds !== "any") p.set("beds", beds);
     if (query) p.set("q", query);
+    if (hubIds.length) {
+      p.set("hubs", hubIds.join(","));
+      p.set("commute", String(maxCommute));
+      p.set("match", matchMode);
+    }
     router.replace(`/properties${p.toString() ? `?${p}` : ""}`, {
       scroll: false,
     });
-  }, [status, city, type, beds, query, router]);
+  }, [status, city, type, beds, query, hubIds, maxCommute, matchMode, router]);
 
   const results = useMemo(() => {
     let list = properties.filter((p) => {
@@ -112,6 +156,12 @@ export function PropertyExplorer() {
           `${p.title} ${p.community} ${p.city} ${p.country}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
+      /* Multi-landmark proximity: keep only homes that satisfy the
+         selected hubs within the chosen drive-time budget. */
+      if (selectedHubs.length) {
+        const verdict = evaluateCommute(p, selectedHubs, maxCommute, matchMode);
+        if (!verdict.passes) return false;
+      }
       return true;
     });
     switch (sort) {
@@ -127,13 +177,38 @@ export function PropertyExplorer() {
       case "views":
         list = [...list].sort((a, b) => b.views - a.views);
         break;
+      case "commute":
+        list = [...list].sort(
+          (a, b) =>
+            commuteScore(
+              evaluateCommute(a, selectedHubs, maxCommute, matchMode),
+              matchMode
+            ) -
+            commuteScore(
+              evaluateCommute(b, selectedHubs, maxCommute, matchMode),
+              matchMode
+            )
+        );
+        break;
       default:
         list = [...list].sort(
           (a, b) => Number(b.featured ?? false) - Number(a.featured ?? false)
         );
     }
     return list;
-  }, [status, city, type, beds, query, amenities, maxPrice, sort]);
+  }, [
+    status,
+    city,
+    type,
+    beds,
+    query,
+    amenities,
+    maxPrice,
+    sort,
+    selectedHubs,
+    maxCommute,
+    matchMode,
+  ]);
 
   const activeChips = [
     status !== "all" && {
@@ -146,6 +221,10 @@ export function PropertyExplorer() {
     ...amenities.map((a) => ({
       label: a,
       clear: () => setAmenities((s) => s.filter((x) => x !== a)),
+    })),
+    ...selectedHubs.map((l) => ({
+      label: `≤${maxCommute}m to ${l.short}`,
+      clear: () => toggleHub(l.id),
     })),
   ].filter(Boolean) as { label: string; clear: () => void }[];
 
@@ -215,7 +294,32 @@ export function PropertyExplorer() {
             <option value="price-desc">Price · high to low</option>
             <option value="newest">Newest</option>
             <option value="views">Most viewed</option>
+            {selectedHubs.length > 0 && (
+              <option value="commute">Best commute</option>
+            )}
           </Select>
+
+          <Button
+            variant={selectedHubs.length ? "brass" : "outline"}
+            onClick={() => {
+              setFiltersOpen(true);
+              setJumpToCommute(true);
+            }}
+            className="gap-2"
+          >
+            <Route size={15} />
+            <span className="hidden sm:inline">Commute</span>
+            {selectedHubs.length > 0 && (
+              <span
+                className={cn(
+                  "flex h-5 w-5 items-center justify-center rounded-full text-[0.6875rem] font-bold",
+                  "bg-white/25 text-white"
+                )}
+              >
+                {selectedHubs.length}
+              </span>
+            )}
+          </Button>
 
           <Button
             variant="outline"
@@ -299,6 +403,7 @@ export function PropertyExplorer() {
               setQuery("");
               setAmenities([]);
               setMaxPrice("");
+              setHubIds([]);
             }}
           >
             Clear all filters
@@ -329,6 +434,11 @@ export function PropertyExplorer() {
               property={p}
               layout={view}
               priority={i < 3}
+              commute={
+                selectedHubs.length
+                  ? evaluateCommute(p, selectedHubs, maxCommute, matchMode)
+                  : undefined
+              }
             />
           ))}
         </div>
@@ -367,6 +477,22 @@ export function PropertyExplorer() {
               </div>
 
               <div className="flex-1 space-y-7 overflow-y-auto px-6 py-6">
+                {/* Multi-landmark commute search */}
+                <div id="commute-section" className="scroll-mt-4">
+                  <CommuteFilter
+                    selectedIds={hubIds}
+                    onToggle={toggleHub}
+                    onClear={() => setHubIds([])}
+                    maxMinutes={maxCommute}
+                    onMaxMinutes={setMaxCommute}
+                    mode={matchMode}
+                    onMode={setMatchMode}
+                    city={city}
+                  />
+                </div>
+
+                <div className="h-px bg-line" />
+
                 <div className="sm:hidden">
                   <Label>Listing type</Label>
                   <div className="flex flex-wrap gap-2">
@@ -499,6 +625,7 @@ export function PropertyExplorer() {
                     setBeds("any");
                     setAmenities([]);
                     setMaxPrice("");
+                    setHubIds([]);
                   }}
                 >
                   Reset

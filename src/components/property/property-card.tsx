@@ -12,9 +12,11 @@ import {
   UserRound,
 } from "lucide-react";
 import type { Property } from "@/lib/types";
+import type { CommuteVerdict } from "@/lib/geo";
 import { propertyPrice } from "@/lib/format";
 import { agencyForAgent } from "@/lib/data/agencies";
 import { getAgent } from "@/lib/data/agents";
+import { categoryIcon } from "@/lib/landmark-icons";
 import { Badge } from "@/components/ui/badge";
 import { SaveButton } from "./save-button";
 import { useSaved } from "@/lib/store/saved";
@@ -24,10 +26,13 @@ export function PropertyCard({
   property,
   priority = false,
   layout = "grid",
+  commute,
 }: {
   property: Property;
   priority?: boolean;
   layout?: "grid" | "list";
+  /* Present when a multi-landmark commute search is active */
+  commute?: CommuteVerdict;
 }) {
   const { inCompare, toggleCompare } = useSaved();
   const comparing = inCompare(property.id);
@@ -103,6 +108,31 @@ export function PropertyCard({
           <SourceIcon size={12} className="shrink-0" />
           <span className="truncate">{source}</span>
         </p>
+
+        {/* Estimated drive time to each selected hub */}
+        {commute && commute.legs.length > 0 && (
+          <ul className="flex flex-wrap gap-1.5">
+            {commute.legs
+              .slice()
+              .sort((a, b) => a.minutes - b.minutes)
+              .map((leg) => {
+                const Icon = categoryIcon[leg.landmark.category];
+                return (
+                  <li
+                    key={leg.landmark.id}
+                    className="flex items-center gap-1 rounded-full bg-brass-tint px-2 py-1 text-[0.6875rem] font-medium text-ink"
+                    title={`${leg.km.toFixed(1)} km to ${leg.landmark.name}`}
+                  >
+                    <Icon size={11} className="shrink-0 text-brass" />
+                    {leg.minutes}m
+                    <span className="max-w-20 truncate text-muted">
+                      {leg.landmark.short}
+                    </span>
+                  </li>
+                );
+              })}
+          </ul>
+        )}
 
         <div className="flex items-center gap-4 border-t border-line pt-3 text-[0.8125rem] text-muted">
           {property.beds > 0 && (
