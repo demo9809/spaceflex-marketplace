@@ -15,9 +15,9 @@ const offices = [
     phone: "+974 4000 1200",
   },
   {
-    city: "Dubai",
-    lines: ["Index Tower, Level 9", "DIFC, Dubai, UAE"],
-    phone: "+971 4 550 8800",
+    city: "Lusail",
+    lines: ["Marina District, Tower 14", "Lusail, Qatar"],
+    phone: "+974 4000 1240",
   },
 ];
 

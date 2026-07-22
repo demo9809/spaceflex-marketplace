@@ -7,7 +7,7 @@ import { agents } from "@/lib/data/agents";
 export const metadata: Metadata = {
   title: "Verified Agents",
   description:
-    "Licence-checked, client-reviewed property advisors across Doha, Dubai, Riyadh, Abu Dhabi and Mumbai.",
+    "Licence-checked, client-reviewed property advisors across Doha, Lusail and The Pearl.",
 };
 
 export default function AgentsPage() {

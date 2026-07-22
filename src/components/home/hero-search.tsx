@@ -15,7 +15,7 @@ import { suggest, suggestionHref, type Suggestion } from "@/lib/search-suggest";
 import { categoryIcon } from "@/lib/landmark-icons";
 import { cn } from "@/lib/utils";
 
-const trending = ["Doha", "Dubai", "Riyadh", "Abu Dhabi", "Mumbai"];
+const trending = ["West Bay", "The Pearl Island", "Lusail Marina", "Msheireb Downtown", "Al Sadd"];
 const types = ["Apartment", "Villa", "Penthouse", "Townhouse", "Duplex", "Office"];
 const RECENT_KEY = "sf:recent-searches";
 
@@ -111,8 +111,9 @@ export function HeroSearch() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-2xl md:mx-auto">
       {/* Buy / Rent */}
+      <div className="md:flex md:justify-center">
       <div
         role="tablist"
         aria-label="Listing type"
@@ -134,6 +135,7 @@ export function HeroSearch() {
             {s === "sale" ? "Buy" : "Rent"}
           </button>
         ))}
+      </div>
       </div>
 
       {/* Search + suggestions */}
@@ -242,7 +244,7 @@ export function HeroSearch() {
       </div>
 
       {/* Quick refinements */}
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2 md:justify-center">
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
@@ -285,7 +287,7 @@ export function HeroSearch() {
       </div>
 
       {/* Trending */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2 md:justify-center">
         <span className="text-xs uppercase tracking-[0.14em] text-paper/70">
           Trending
         </span>
@@ -294,7 +296,7 @@ export function HeroSearch() {
             key={c}
             onClick={() =>
               router.push(
-                `/properties?city=${encodeURIComponent(c)}&status=${status}`
+                `/properties?district=${encodeURIComponent(c)}&status=${status}`
               )
             }
             className="rounded-full border border-white/25 px-3.5 py-1.5 text-[0.8125rem] text-paper/90 backdrop-blur-sm transition-colors hover:border-white/60 hover:bg-white/10"

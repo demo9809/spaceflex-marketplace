@@ -15,7 +15,7 @@ const sections = [
   },
   {
     title: "Licensing",
-    body: "SpaceFlex operates under real-estate advertising and brokerage-adjacent licences in each market we serve, including Qatar (ULC), Dubai (RERA advertising permits per listing), Saudi Arabia (REGA), and India (state RERA registrations for advertised projects). Licence numbers appear on each listing where required by the local regulator.",
+    body: "SpaceFlex operates under Qatar's real-estate advertising and brokerage regulations, including Urban Planning and Development Authority (ULC) brokerage licensing and the Real Estate Regulatory Authority's advertising rules. Broker licence numbers appear on each listing, and freehold or usufruct status is stated on every property page.",
   },
   {
     title: "Cookies",

@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "SpaceFlex is the curated cross-border marketplace for premium property across the Gulf and India.",
+    "SpaceFlex is Qatar's curated marketplace for premium property — West Bay, The Pearl, Lusail and beyond.",
 };
 
 const values = [
@@ -20,8 +20,8 @@ const values = [
     text: "Price history, comparables, response times, review counts. What our research desk knows, buyers see.",
   },
   {
-    title: "Cross-border by default",
-    text: "Wealth in this region moves between Doha, Dubai, Riyadh and Mumbai. Your property search should too.",
+    title: "Qatar, in depth",
+    text: "One market, understood properly — freehold zones, usufruct areas, service charges and commute realities, district by district.",
   },
   {
     title: "Agents as partners",
@@ -31,8 +31,8 @@ const values = [
 
 const milestones = [
   { year: "2023", event: "Founded in Doha; first 200 curated listings" },
-  { year: "2024", event: "Dubai and Abu Dhabi launch; verified-agent program" },
-  { year: "2025", event: "Riyadh, Jeddah and India desks; QAR 4.2B in placed transactions" },
+  { year: "2024", event: "The Pearl and Lusail desks; verified-agent program" },
+  { year: "2025", event: "Al Rayyan and Al Wakrah coverage; QAR 4.2B in placed transactions" },
   { year: "2026", event: "Research desk, Private Office and this redesign" },
 ];
 
@@ -46,11 +46,11 @@ export default function AboutPage() {
           decision.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          SpaceFlex began with a simple observation: the Gulf&apos;s property
+          SpaceFlex began with a simple observation: Qatar&apos;s property
           portals were built to maximise listings, not confidence. We built the
           opposite — a curated, verified, data-forward marketplace for people
-          making one of the largest decisions of their lives, often from
-          another country.
+          making one of the largest decisions of their lives, often before they
+          have set foot in the country.
         </p>
       </section>
 
@@ -107,7 +107,7 @@ export default function AboutPage() {
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-paper/70">
             Research, engineering, design and market desks across Doha and
-            Dubai. Remote-friendly for the right person.
+            Lusail. Remote-friendly for the right person.
           </p>
           <ButtonLink href="/contact" variant="inverted" size="lg" className="mt-8">
             Get in touch

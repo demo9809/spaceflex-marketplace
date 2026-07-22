@@ -22,11 +22,11 @@ import { projects, developers } from "@/lib/data/developers";
 import { articles } from "@/lib/data/articles";
 import { formatPrice } from "@/lib/format";
 
-const cityCollections = [
-  { city: "Doha", note: "West Bay · The Pearl · Lusail", image: IMG.towers },
-  { city: "Dubai", note: "Palm · Downtown · Emirates Hills", image: IMG.marina },
-  { city: "Riyadh", note: "Diplomatic Quarter · Al Nakheel", image: IMG.desertVilla },
-  { city: "Mumbai", note: "Bandra · Worli Sea Face", image: IMG.skyline },
+const districtCollections = [
+  { district: "West Bay", note: "Towers · Corniche · Diplomatic", image: IMG.towers },
+  { district: "The Pearl Island", note: "Porto Arabia · Viva Bahriya", image: IMG.marina },
+  { district: "Lusail Marina", note: "Marina · Place Vendôme · Tram", image: IMG.skyline },
+  { district: "West Bay Lagoon", note: "Waterfront villas · Onaiza", image: IMG.desertVilla },
 ];
 
 const pillars = [
@@ -42,8 +42,8 @@ const pillars = [
   },
   {
     icon: Building2,
-    title: "Cross-border by design",
-    text: "One account, eight markets. Search Doha, Dubai, Riyadh and Mumbai in a single considered shortlist.",
+    title: "Every Qatar district, one search",
+    text: "Every freehold and usufruct district in one search — West Bay, The Pearl, Lusail, Msheireb and beyond, with commute-aware filtering.",
   },
   {
     icon: ShieldCheck,
@@ -54,7 +54,7 @@ const pillars = [
 
 const stats = [
   { value: "3,000+", label: "Curated listings" },
-  { value: "8", label: "Markets covered" },
+  { value: "12", label: "Districts covered" },
   { value: "QAR 4.2B", label: "Sold last year" },
   { value: "98%", label: "Verified agents" },
 ];
@@ -63,22 +63,22 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
+      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh] md:items-center">
         <HeroBackdrop />
 
-        <div className="container-site relative z-10 pb-14 pt-36 md:pb-24">
+        <div className="container-site relative z-10 pb-14 pt-36 md:pb-16 md:pt-28 md:text-center">
           <p className="rise rise-1 eyebrow !text-paper/80">
-            The Gulf & India · Premium Property
+            Qatar · Premium Property
           </p>
-          <h1 className="rise rise-2 font-display text-display mt-4 max-w-3xl font-medium text-paper text-balance">
+          <h1 className="rise rise-2 font-display text-display mt-4 max-w-3xl font-medium text-paper text-balance md:mx-auto">
             Homes worth the journey.
           </h1>
-          <p className="rise rise-3 mt-5 max-w-xl text-base leading-relaxed text-paper/85 md:text-lg">
+          <p className="rise rise-3 mt-5 max-w-xl text-base leading-relaxed text-paper/85 md:mx-auto md:text-lg">
             A curated marketplace for exceptional residences and investments
-            across Doha, Dubai, Riyadh and Mumbai — with the intelligence to
-            buy well.
+            across Doha, Lusail, The Pearl and Al Rayyan — with the
+            intelligence to buy well.
           </p>
-          <div className="rise rise-4 mt-8">
+          <div className="rise rise-4 mt-8 md:flex md:justify-center">
             <HeroSearch />
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function HomePage() {
             <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-3xl">
               <Image
                 src={IMG.hillsMansion}
-                alt="Emirates Hills lake mansion"
+                alt="West Bay Lagoon waterfront mansion"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -142,8 +142,8 @@ export default function HomePage() {
             </h2>
             <p className="mt-5 leading-relaxed text-paper/70">
               Our Private Office represents a small book of off-market
-              residences — lake mansions in Emirates Hills, full-floor
-              penthouses in West Bay, sea-line apartments in Bandra. Dossiers
+              residences — waterfront mansions in West Bay Lagoon, full-floor
+              penthouses in the Corniche towers, sea-line homes on The Pearl. Dossiers
               are shared under NDA with qualified principals only.
             </p>
             <dl className="mt-8 grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
@@ -152,16 +152,16 @@ export default function HomePage() {
                   Current mandate
                 </dt>
                 <dd className="font-display mt-1 text-2xl">
-                  {formatPrice(78000000, "AED", true)}
+                  {formatPrice(68000000, "QAR", true)}
                 </dd>
-                <dd className="text-sm text-paper/60">Emirates Hills, 7 BR</dd>
+                <dd className="text-sm text-paper/60">West Bay Lagoon, 7 BR</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.16em] text-paper/50">
                   Placed privately in 2025
                 </dt>
                 <dd className="font-display mt-1 text-2xl">14 homes</dd>
-                <dd className="text-sm text-paper/60">across four markets</dd>
+                <dd className="text-sm text-paper/60">across Doha & Lusail</dd>
               </div>
             </dl>
             <div className="mt-8">
@@ -177,18 +177,18 @@ export default function HomePage() {
       <section className="container-site py-20 md:py-28">
         <SectionHeading
           eyebrow="Destinations"
-          title="Four markets, one considered search"
+          title="Qatar's defining addresses"
         />
         <RevealStagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {cityCollections.map((c) => (
-            <StaggerItem key={c.city}>
+          {districtCollections.map((c) => (
+            <StaggerItem key={c.district}>
               <Link
-                href={`/properties?city=${encodeURIComponent(c.city)}`}
+                href={`/properties?district=${encodeURIComponent(c.district)}`}
                 className="card-hover img-zoom group relative block aspect-[3/4] overflow-hidden rounded-2xl"
               >
                 <Image
                   src={c.image}
-                  alt={`${c.city} skyline`}
+                  alt={`${c.district}`}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
@@ -196,7 +196,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5">
                   <h3 className="font-display flex items-center justify-between text-2xl font-medium text-paper">
-                    {c.city}
+                    {c.district}
                     <ArrowUpRight
                       size={20}
                       className="opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"

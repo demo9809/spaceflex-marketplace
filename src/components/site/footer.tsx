@@ -34,13 +34,13 @@ const columns = [
     ],
   },
   {
-    title: "Markets",
+    title: "Districts",
     links: [
-      { label: "Doha", href: "/properties?city=Doha" },
-      { label: "Dubai", href: "/properties?city=Dubai" },
-      { label: "Riyadh", href: "/properties?city=Riyadh" },
-      { label: "Abu Dhabi", href: "/properties?city=Abu+Dhabi" },
-      { label: "Mumbai", href: "/properties?city=Mumbai" },
+      { label: "West Bay", href: "/properties?district=West+Bay" },
+      { label: "The Pearl Island", href: "/properties?district=The+Pearl+Island" },
+      { label: "Lusail Marina", href: "/properties?district=Lusail+Marina" },
+      { label: "Msheireb Downtown", href: "/properties?district=Msheireb+Downtown" },
+      { label: "Al Waab", href: "/properties?district=Al+Waab" },
     ],
   },
 ];
@@ -72,12 +72,12 @@ export function SiteFooter() {
               className="h-10 w-auto"
             />
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              The curated marketplace for premium property across the Gulf and
-              India. Verified agents, market intelligence, and homes worth the
+              The curated marketplace for premium property across Qatar.
+              Verified agents, market intelligence, and homes worth the
               journey.
             </p>
             <p className="mt-6 text-xs uppercase tracking-[0.18em] text-faint">
-              Doha · Dubai · Riyadh · Mumbai
+              Doha · Lusail · The Pearl · Al Rayyan
             </p>
           </div>
 

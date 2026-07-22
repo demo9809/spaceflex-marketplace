@@ -1,6 +1,6 @@
 # SpaceFlex Marketplace
 
-Premium cross-border real estate marketplace for the Gulf & India — Doha, Dubai, Riyadh, Abu Dhabi, Jeddah, Mumbai and Gurugram.
+Premium real estate marketplace for Qatar — West Bay, The Pearl, Lusail, Msheireb, Al Waab and the wider Doha metro.
 
 Built with **Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · Lucide icons**. All routes prerender statically; the app runs with zero backend against a realistic mock-data layer.
 

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const plans = [
   {
     name: "Featured Listing",
-    price: "$49",
+    price: "QAR 180",
     per: "per property / month",
     blurb: "For owners and agents boosting a single property.",
     features: [
@@ -30,7 +30,7 @@ const plans = [
   },
   {
     name: "Agent Professional",
-    price: "$299",
+    price: "QAR 1,090",
     per: "per month",
     blurb: "The working agent's toolkit — our most popular plan.",
     features: [
@@ -46,7 +46,7 @@ const plans = [
   },
   {
     name: "Agency",
-    price: "$999",
+    price: "QAR 3,640",
     per: "per month",
     blurb: "For teams running fifty listings and up.",
     features: [
@@ -63,7 +63,7 @@ const plans = [
 
 const stats = [
   { icon: TrendingUp, value: "9 days", label: "median time to offer for featured listings" },
-  { icon: Users, value: "40,000+", label: "registered buyers and renters across 8 markets" },
+  { icon: Users, value: "40,000+", label: "registered buyers and renters across Qatar" },
   { icon: Camera, value: "2.3×", label: "click-through with our photography standard" },
 ];
 
@@ -174,7 +174,7 @@ export default function ListWithUsPage() {
           ))}
         </div>
         <p className="mt-10 text-center text-sm text-muted">
-          Pay-per-lead available on all plans: $15–50 per verified enquiry,
+          Pay-per-lead available on all plans: QAR 55–180 per verified enquiry,
           charged only on confirmed delivery.
         </p>
       </section>

@@ -11,7 +11,7 @@ import { formatPrice } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Developers & New Projects",
   description:
-    "Off-plan launches and developer profiles across the Gulf and India — with pre-launch access for SpaceFlex members.",
+    "Off-plan launches and developer profiles across Qatar — with pre-launch access for SpaceFlex members.",
 };
 
 export default function DevelopersPage() {
@@ -20,7 +20,7 @@ export default function DevelopersPage() {
       <SectionHeading
         eyebrow="New Launches"
         title="Projects worth waiting for"
-        description="We list a fraction of the region's launches — the ones whose developers have delivered before, on time, to spec."
+        description="We list a fraction of Qatar's launches — the ones whose developers have delivered before, on time, to spec."
       />
 
       <RevealStagger className="grid gap-6 lg:grid-cols-3">

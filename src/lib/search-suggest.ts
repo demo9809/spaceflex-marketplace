@@ -96,11 +96,9 @@ export function suggestionHref(
   extra: Record<string, string> = {}
 ): string {
   const p = new URLSearchParams({ status, ...extra });
-  if (s.kind === "city") p.set("city", s.city);
-  if (s.kind === "community") {
-    p.set("city", s.city);
-    p.set("q", s.community);
-  }
+  /* Every listing is in Qatar — a city hit just clears location filters */
+  if (s.kind === "city") p.delete("district");
+  if (s.kind === "community") p.set("district", s.community);
   if (s.kind === "landmark") {
     /* Typing a workplace or school starts a commute search */
     p.set("hubs", s.landmarkId);

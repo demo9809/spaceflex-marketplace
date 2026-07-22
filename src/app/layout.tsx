@@ -20,11 +20,11 @@ const instrument = Instrument_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "SpaceFlex — Luxury Real Estate Across the Gulf & India",
+    default: "SpaceFlex — Luxury Real Estate in Qatar",
     template: "%s · SpaceFlex",
   },
   description:
-    "The curated marketplace for premium property across Qatar, the UAE, Saudi Arabia and India. Verified agents, market intelligence, and investment-grade homes.",
+    "The curated marketplace for premium property across Qatar — West Bay, The Pearl, Lusail and Msheireb. Verified agents, market intelligence, and investment-grade homes.",
 };
 
 export default function RootLayout({

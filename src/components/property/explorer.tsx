@@ -41,7 +41,20 @@ const types: PropertyType[] = [
   "Duplex",
   "Office",
 ];
-const cities = ["Doha", "Dubai", "Abu Dhabi", "Riyadh", "Jeddah", "Mumbai", "Gurugram"];
+const districts = [
+  "West Bay",
+  "West Bay Lagoon",
+  "Al Dafna",
+  "The Pearl Island",
+  "Viva Bahriya, The Pearl",
+  "Lusail Marina",
+  "Fox Hills, Lusail",
+  "Msheireb Downtown",
+  "Onaiza",
+  "Al Sadd",
+  "Al Waab",
+  "Al Gharrafa",
+];
 const amenityOptions = [
   "Pool",
   "Gym",
@@ -52,16 +65,10 @@ const amenityOptions = [
   "Pet friendly",
 ];
 
-/* Rough USD normalisation so cross-currency sorting stays honest */
-const usdRate: Record<Property["currency"], number> = {
-  USD: 1,
-  QAR: 0.27,
-  AED: 0.27,
-  SAR: 0.27,
-  INR: 0.012,
-};
-const usd = (p: Property) =>
-  p.price * usdRate[p.currency] * (p.status === "rent" ? 300 : 1);
+/* All listings are QAR — normalise rent to a comparable capital figure
+   so a single price sort can span sale and rental stock. */
+const comparableValue = (p: Property) =>
+  p.price * (p.status === "rent" ? 300 : 1);
 
 export function PropertyExplorer() {
   const router = useRouter();
@@ -70,7 +77,7 @@ export function PropertyExplorer() {
   const [status, setStatus] = useState<"all" | "sale" | "rent">(
     (params.get("status") as "sale" | "rent") ?? "all"
   );
-  const [city, setCity] = useState(params.get("city") ?? "all");
+  const [district, setDistrict] = useState(params.get("district") ?? "all");
   const [type, setType] = useState(params.get("type") ?? "all");
   const [beds, setBeds] = useState(params.get("beds") ?? "any");
   const [query, setQuery] = useState(params.get("q") ?? "");
@@ -122,7 +129,7 @@ export function PropertyExplorer() {
   useEffect(() => {
     const p = new URLSearchParams();
     if (status !== "all") p.set("status", status);
-    if (city !== "all") p.set("city", city);
+    if (district !== "all") p.set("district", district);
     if (type !== "all") p.set("type", type);
     if (beds !== "any") p.set("beds", beds);
     if (query) p.set("q", query);
@@ -134,12 +141,12 @@ export function PropertyExplorer() {
     router.replace(`/properties${p.toString() ? `?${p}` : ""}`, {
       scroll: false,
     });
-  }, [status, city, type, beds, query, hubIds, maxCommute, matchMode, router]);
+  }, [status, district, type, beds, query, hubIds, maxCommute, matchMode, router]);
 
   const results = useMemo(() => {
     let list = properties.filter((p) => {
       if (status !== "all" && p.status !== status) return false;
-      if (city !== "all" && p.city !== city) return false;
+      if (district !== "all" && p.community !== district) return false;
       if (type !== "all" && p.type !== type) return false;
       if (beds !== "any" && p.beds < Number(beds)) return false;
       if (maxPrice && p.price > Number(maxPrice)) return false;
@@ -166,10 +173,10 @@ export function PropertyExplorer() {
     });
     switch (sort) {
       case "price-asc":
-        list = [...list].sort((a, b) => usd(a) - usd(b));
+        list = [...list].sort((a, b) => comparableValue(a) - comparableValue(b));
         break;
       case "price-desc":
-        list = [...list].sort((a, b) => usd(b) - usd(a));
+        list = [...list].sort((a, b) => comparableValue(b) - comparableValue(a));
         break;
       case "newest":
         list = [...list].sort((a, b) => a.daysOnMarket - b.daysOnMarket);
@@ -198,7 +205,7 @@ export function PropertyExplorer() {
     return list;
   }, [
     status,
-    city,
+    district,
     type,
     beds,
     query,
@@ -215,7 +222,7 @@ export function PropertyExplorer() {
       label: status === "sale" ? "For Sale" : "For Rent",
       clear: () => setStatus("all"),
     },
-    city !== "all" && { label: city, clear: () => setCity("all") },
+    district !== "all" && { label: district, clear: () => setDistrict("all") },
     type !== "all" && { label: type, clear: () => setType("all") },
     beds !== "any" && { label: `${beds}+ beds`, clear: () => setBeds("any") },
     ...amenities.map((a) => ({
@@ -234,7 +241,7 @@ export function PropertyExplorer() {
       <div className="mb-8">
         <p className="eyebrow">Marketplace</p>
         <h1 className="font-display text-h1 mt-2 font-medium tracking-tight">
-          {city !== "all" ? `Properties in ${city}` : "Every property"}
+          {district !== "all" ? `Properties in ${district}` : "Every property"}
         </h1>
         <p className="mt-2 text-sm text-muted" aria-live="polite">
           {results.length} curated{" "}
@@ -272,13 +279,13 @@ export function PropertyExplorer() {
           </Select>
 
           <Select
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            aria-label="City"
-            className="hidden w-auto min-w-28 sm:block"
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
+            aria-label="District"
+            className="hidden w-auto min-w-32 sm:block"
           >
-            <option value="all">All cities</option>
-            {cities.map((c) => (
+            <option value="all">All districts</option>
+            {districts.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </Select>
@@ -397,7 +404,7 @@ export function PropertyExplorer() {
             className="mt-6"
             onClick={() => {
               setStatus("all");
-              setCity("all");
+              setDistrict("all");
               setType("all");
               setBeds("any");
               setQuery("");
@@ -487,7 +494,7 @@ export function PropertyExplorer() {
                     onMaxMinutes={setMaxCommute}
                     mode={matchMode}
                     onMode={setMatchMode}
-                    city={city}
+                    city="Doha"
                   />
                 </div>
 
@@ -577,10 +584,13 @@ export function PropertyExplorer() {
                 </div>
 
                 <div>
-                  <Label>City</Label>
-                  <Select value={city} onChange={(e) => setCity(e.target.value)}>
-                    <option value="all">All cities</option>
-                    {cities.map((c) => (
+                  <Label>District</Label>
+                  <Select
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                  >
+                    <option value="all">All districts</option>
+                    {districts.map((c) => (
                       <option key={c}>{c}</option>
                     ))}
                   </Select>

@@ -5,7 +5,7 @@ import { ReportCard } from "./report-card";
 export const metadata: Metadata = {
   title: "Market Reports",
   description:
-    "Quarterly research on GCC and Indian property markets — pricing, absorption, yields and forecasts.",
+    "Quarterly research on Qatar's property market — pricing, absorption, yields and forecasts.",
 };
 
 const reports = [
@@ -19,27 +19,27 @@ const reports = [
   },
   {
     id: "r2",
-    title: "Dubai Prime Villa Report",
+    title: "Qatar Prime Villa Report",
     period: "Mid-Year 2026",
     pages: 18,
-    highlights: ["Frond-level Palm pricing", "Emirates Hills record closings", "Renovation cost model"],
+    highlights: ["West Bay Lagoon pricing", "Onaiza record closings", "Renovation cost model"],
     tier: "Free",
   },
   {
     id: "r3",
-    title: "Saudi Giga-Corridor Outlook",
+    title: "Lusail Corridor Outlook",
     period: "2026–2028",
     pages: 32,
-    highlights: ["Riyadh north growth districts", "Vision 2030 supply pipeline", "Institutional entry points"],
-    tier: "Premium · $99",
+    highlights: ["Lusail district absorption", "National Vision 2030 pipeline", "Institutional entry points"],
+    tier: "Premium · QAR 360",
   },
   {
     id: "r4",
-    title: "NRI Capital Flows: Gulf → India",
+    title: "Expat Freehold Report",
     period: "FY 2025–26",
     pages: 21,
-    highlights: ["Remittance-to-property tracking", "Mumbai & Gurugram prime index", "Repatriation rule guide"],
-    tier: "Premium · $99",
+    highlights: ["Freehold vs usufruct demand", "Residency-threshold buying", "Zone-by-zone price index"],
+    tier: "Premium · QAR 360",
   },
 ];
 

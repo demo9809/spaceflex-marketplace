@@ -5,7 +5,7 @@ import { PropertyExplorer } from "@/components/property/explorer";
 export const metadata: Metadata = {
   title: "Properties for Sale & Rent",
   description:
-    "Search curated luxury properties across Doha, Dubai, Riyadh and Mumbai. Filter by type, budget and amenities.",
+    "Search curated luxury properties across Qatar — West Bay, The Pearl, Lusail and Msheireb. Filter by district, budget, amenities and commute.",
 };
 
 function ExplorerSkeleton() {

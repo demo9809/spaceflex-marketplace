@@ -5,7 +5,7 @@ import { Calculators } from "./calculators";
 export const metadata: Metadata = {
   title: "Investment Calculators",
   description:
-    "Mortgage and rental-yield calculators for Gulf and Indian property — model payments, yields and break-even before you offer.",
+    "Mortgage and rental-yield calculators for Qatar property — model payments, yields and break-even before you offer.",
 };
 
 export default function CalculatorsPage() {

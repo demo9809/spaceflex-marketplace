@@ -23,14 +23,19 @@ import { cn } from "@/lib/utils";
 const steps = ["Basics", "Details", "Location", "Media & publish"];
 
 const propertyTypes = ["Apartment", "Villa", "Penthouse", "Townhouse", "Duplex", "Office"];
-const currencies = ["QAR", "AED", "SAR", "INR", "USD"];
+const currencies = ["QAR"];
 const furnishings = ["Unfurnished", "Semi-furnished", "Furnished"];
 const conditions = ["New / off-plan", "Recently renovated", "Well maintained", "As-is"];
 const countries: Record<string, string[]> = {
-  Qatar: ["Doha", "Lusail", "Al Khor"],
-  UAE: ["Dubai", "Abu Dhabi", "Sharjah"],
-  "Saudi Arabia": ["Riyadh", "Jeddah", "Dammam"],
-  India: ["Mumbai", "Gurugram", "Bengaluru"],
+  Qatar: [
+    "Doha",
+    "Lusail",
+    "Al Rayyan",
+    "Al Wakrah",
+    "Al Khor",
+    "Umm Salal",
+    "Al Daayen",
+  ],
 };
 const amenityOptions = [
   "Pool", "Gym", "Concierge", "Covered parking", "Balcony", "Garden",
@@ -678,7 +683,7 @@ export function ListingWizard() {
                     {
                       id: "featured",
                       name: "Featured · 30 days",
-                      price: "$49",
+                      price: "QAR 180",
                       desc: "Homepage carousel and top of search. Median time to offer: 9 days.",
                     },
                   ] as const
