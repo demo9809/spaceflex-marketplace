@@ -32,6 +32,9 @@
   /* Support accent — estate gold */
   --gold: #ae8a4e;
 
+  /* Illustrative map canvas */
+  --map-canvas: #eef1ea;
+
   /* Semantic */
   --success: #2f6b4c;
   --success-tint: #e5efe7;
@@ -71,6 +74,7 @@
   --brass: #5cae8c;
   --brass-deep: #7cc4a6;
   --brass-tint: #14291f;
+  --map-canvas: #0e1d17;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.3);
   --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.4), 0 16px 40px rgb(0 0 0 / 0.5);
 }
@@ -317,6 +321,17 @@ body {
   background-size: 64px 64px;
   animation: grid-pan 24s linear infinite;
   mask-image: radial-gradient(75% 80% at 50% 35%, black 30%, transparent 100%);
+}
+
+/* Commute reach-ring — a slow, calm breath around each hub */
+@keyframes ring-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
+}
+.commute-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring-breathe 4.5s var(--ease-swift) infinite;
 }
 
 /* Lightbox image crossfade */

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -9,6 +10,8 @@ import {
   Clock,
   CornerDownLeft,
   SlidersHorizontal,
+  Navigation,
+  ArrowRight,
   X,
 } from "lucide-react";
 import { suggest, suggestionHref, type Suggestion } from "@/lib/search-suggest";
@@ -284,6 +287,24 @@ export function HeroSearch() {
           </ul>
         )}
       </div>
+
+      {/* Drive-time entry */}
+      <Link
+        href="/drive-time"
+        className="group mt-3 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 py-2 pl-2 pr-4 text-sm text-paper backdrop-blur-md transition-colors hover:border-white/50 hover:bg-white/15"
+      >
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper text-brass">
+          <Navigation size={14} />
+        </span>
+        <span className="font-medium">Find homes by drive time</span>
+        <span className="rounded-full bg-brass px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide text-white">
+          New
+        </span>
+        <ArrowRight
+          size={15}
+          className="text-paper/70 transition-transform duration-200 group-hover:translate-x-0.5"
+        />
+      </Link>
 
       {/* Trending */}
       <div className="mt-4 flex flex-wrap items-center gap-2">

@@ -48,6 +48,12 @@ export interface CommuteLeg {
   minutes: number;
 }
 
+/** A property paired with its evaluated commute verdict. */
+export interface CommuteMatch {
+  property: Property;
+  verdict: CommuteVerdict;
+}
+
 /** Distance + estimated drive time from a property to each landmark. */
 export function commuteLegs(
   property: Property,

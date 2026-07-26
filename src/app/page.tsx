@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { HeroSearch } from "@/components/home/hero-search";
 import { HeroBackdrop } from "@/components/home/hero-backdrop";
+import { DriveTimeBand } from "@/components/home/drive-time-band";
 import { PropertyCard } from "@/components/property/property-card";
 import { AgentCard } from "@/components/agent/agent-card";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -117,6 +118,9 @@ export default function HomePage() {
           ))}
         </RevealStagger>
       </section>
+
+      {/* ── DRIVE-TIME FEATURE BAND ── */}
+      <DriveTimeBand />
 
       {/* ── EDITORIAL SPLIT — PRIVATE OFFICE ── */}
       <section className="bg-ink text-paper">

@@ -4,15 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Heart, Menu, X, ChevronDown } from "lucide-react";
+import { Heart, Menu, X, ChevronDown, Navigation } from "lucide-react";
+import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { useSaved } from "@/lib/store/saved";
 import { useAuth } from "@/lib/store/auth";
 
-const nav = [
+type NavIcon = ComponentType<{ size?: number; className?: string }>;
+
+const nav: { label: string; href: string; icon?: NavIcon }[] = [
   { label: "Buy", href: "/properties?status=sale" },
   { label: "Rent", href: "/properties?status=rent" },
+  { label: "Drive Time", href: "/drive-time", icon: Navigation },
   { label: "New Projects", href: "/developers" },
   { label: "Agents", href: "/agents" },
 ];
@@ -111,12 +115,18 @@ export function SiteHeader() {
               key={item.label}
               href={item.href}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors",
                 light
                   ? "text-white/85 hover:bg-white/10 hover:text-white"
                   : "text-ink-soft hover:bg-brass-tint hover:text-ink"
               )}
             >
+              {item.icon && (
+                <item.icon
+                  size={14}
+                  className={light ? "text-white" : "text-brass"}
+                />
+              )}
               {item.label}
             </Link>
           ))}
@@ -210,21 +220,30 @@ export function SiteHeader() {
         )}
       >
         <nav aria-label="Mobile" className="container-site flex flex-col py-6">
-          {[...nav, ...insights.map(({ label, href }) => ({ label, href }))].map(
-            (item, i) => (
+          {[
+            ...nav,
+            ...insights.map(({ label, href }) => ({
+              label,
+              href,
+              icon: undefined as NavIcon | undefined,
+            })),
+          ].map((item, i) => {
+            const Icon = item.icon;
+            return (
               <Link
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "border-b border-line py-4 font-display text-2xl transition-all duration-300",
+                  "flex items-center gap-2.5 border-b border-line py-4 font-display text-2xl transition-all duration-300",
                   open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
                 )}
                 style={{ transitionDelay: `${60 + i * 40}ms` }}
               >
+                {Icon && <Icon size={20} className="text-brass" />}
                 {item.label}
               </Link>
-            )
-          )}
+            );
+          })}
           <div className="mt-8 flex flex-col gap-3 pb-24">
             <ButtonLink href="/list-property" size="lg">
               List a property

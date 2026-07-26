@@ -20,7 +20,7 @@ import { PropertyCard } from "./property-card";
 import { MapPanel } from "./map-panel";
 import { CommuteFilter } from "./commute-filter";
 import { CompareTray } from "@/components/site/compare-tray";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
@@ -106,16 +106,6 @@ export function PropertyExplorer() {
 
   const toggleHub = (id: string) =>
     setHubIds((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
-
-  /* When opened via the Commute button, scroll the drawer to that section */
-  const [jumpToCommute, setJumpToCommute] = useState(false);
-  useEffect(() => {
-    if (!drawer.shown || !jumpToCommute) return;
-    document
-      .getElementById("commute-section")
-      ?.scrollIntoView({ block: "start", behavior: "smooth" });
-    setJumpToCommute(false);
-  }, [drawer.shown, jumpToCommute]);
 
   /* Lock page scroll while the filter sheet is open */
   useEffect(() => {
@@ -306,16 +296,17 @@ export function PropertyExplorer() {
             )}
           </Select>
 
-          <Button
+          <ButtonLink
+            href={`/drive-time${
+              hubIds.length
+                ? `?hubs=${hubIds.join(",")}&commute=${maxCommute}&match=${matchMode}`
+                : ""
+            }`}
             variant={selectedHubs.length ? "brass" : "outline"}
-            onClick={() => {
-              setFiltersOpen(true);
-              setJumpToCommute(true);
-            }}
             className="gap-2"
           >
             <Route size={15} />
-            <span className="hidden sm:inline">Commute</span>
+            <span className="hidden sm:inline">Drive Time</span>
             {selectedHubs.length > 0 && (
               <span
                 className={cn(
@@ -326,7 +317,7 @@ export function PropertyExplorer() {
                 {selectedHubs.length}
               </span>
             )}
-          </Button>
+          </ButtonLink>
 
           <Button
             variant="outline"
