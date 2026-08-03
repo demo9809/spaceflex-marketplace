@@ -20,7 +20,7 @@ import {
 import { properties } from "@/lib/data/properties";
 import { landmarks, landmarkCategories } from "@/lib/data/landmarks";
 import { evaluateCommute, commuteScore, type CommuteMatch } from "@/lib/geo";
-import type { Landmark, LandmarkCategory, PropertyType } from "@/lib/types";
+import type { Landmark, LandmarkCategory, PropertyCategory, PropertyType } from "@/lib/types";
 import { categoryIcon } from "@/lib/landmark-icons";
 import { PropertyCard } from "./property-card";
 import { CommuteMap } from "./commute-map";
@@ -60,6 +60,9 @@ export function DriveTimeSearch() {
 
   const [status, setStatus] = useState<Status>(
     (params.get("status") as Status) ?? "all"
+  );
+  const [category, setCategory] = useState<PropertyCategory>(
+    (params.get("category") as PropertyCategory) ?? "all"
   );
   
   /* Dynamic list of point of interest IDs */
@@ -125,6 +128,10 @@ export function DriveTimeSearch() {
     return properties
       .filter((p) => {
         if (status !== "all" && p.status !== status) return false;
+        if (category !== "all") {
+          if (category === "commercial" && p.type !== "Office" && p.category !== "commercial") return false;
+          if (category === "residential" && (p.type === "Office" || p.category === "commercial")) return false;
+        }
         if (type !== "all" && p.type !== type) return false;
         if (beds !== "any" && p.beds < Number(beds)) return false;
         if (minPrice && p.price < Number(minPrice)) return false;
@@ -141,7 +148,7 @@ export function DriveTimeSearch() {
       .sort(
         (a, b) => commuteScore(a.verdict, "all") - commuteScore(b.verdict, "all")
       );
-  }, [selectedHubs, maxCommute, status, type, beds, minPrice, maxPrice, minArea, maxArea]);
+  }, [selectedHubs, maxCommute, status, category, type, beds, minPrice, maxPrice, minArea, maxArea]);
 
   const fullSearchHref = useMemo(() => {
     const ids = selectedHubs.map((l) => l.id);
@@ -280,6 +287,40 @@ export function DriveTimeSearch() {
               close();
             }}
           />
+        )}
+      </FilterPopover>
+
+      <FilterPopover
+        label="Category"
+        value={category === "all" ? null : category === "commercial" ? "Commercial" : "Residential"}
+        active={category !== "all"}
+        fullWidth={fullWidth}
+      >
+        {(close) => (
+          <div className="space-y-1">
+            {(
+              [
+                { v: "all", label: "All Categories" },
+                { v: "residential", label: "Residential" },
+                { v: "commercial", label: "Commercial" },
+              ] as const
+            ).map((c) => (
+              <button
+                key={c.v}
+                onClick={() => {
+                  setCategory(c.v);
+                  close();
+                }}
+                className={cn(
+                  "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  category === c.v ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
+                )}
+              >
+                {c.label}
+                {category === c.v && <span className="text-brass">✓</span>}
+              </button>
+            ))}
+          </div>
         )}
       </FilterPopover>
 
@@ -463,6 +504,8 @@ export function DriveTimeSearch() {
               setMaxCommute={setMaxCommute}
               status={status}
               setStatus={setStatus}
+              category={category}
+              setCategory={setCategory}
               type={type}
               setType={setType}
               beds={beds}
@@ -839,6 +882,8 @@ function SetupPanel({
   setMaxCommute,
   status,
   setStatus,
+  category,
+  setCategory,
   type,
   setType,
   beds,
@@ -859,6 +904,8 @@ function SetupPanel({
   setMaxCommute: (n: number) => void;
   status: Status;
   setStatus: (s: Status) => void;
+  category: PropertyCategory;
+  setCategory: (c: PropertyCategory) => void;
   type: string;
   setType: (t: string) => void;
   beds: string;
@@ -1132,6 +1179,34 @@ function SetupPanel({
                     )}
                   >
                     {o.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Category / Property Use Segmented Control */}
+            <div>
+              <p className="text-xs font-medium text-muted mb-2">Property Category</p>
+              <div className="flex rounded-xl border border-line bg-paper p-1">
+                {(
+                  [
+                    { v: "all", label: "All Use" },
+                    { v: "residential", label: "Residential" },
+                    { v: "commercial", label: "Commercial" },
+                  ] as const
+                ).map((c) => (
+                  <button
+                    key={c.v}
+                    type="button"
+                    onClick={() => setCategory(c.v)}
+                    className={cn(
+                      "flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all",
+                      category === c.v
+                        ? "bg-ink text-paper shadow-xs"
+                        : "text-muted hover:text-ink"
+                    )}
+                  >
+                    {c.label}
                   </button>
                 ))}
               </div>

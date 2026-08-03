@@ -1,5 +1,7 @@
 export type ListingStatus = "sale" | "rent";
 
+export type PropertyCategory = "all" | "residential" | "commercial";
+
 export type PropertyType =
   | "Apartment"
   | "Villa"
@@ -13,6 +15,7 @@ export interface Property {
   slug: string;
   title: string;
   type: PropertyType;
+  category?: "residential" | "commercial";
   status: ListingStatus;
   price: number;
   currency: "QAR" | "AED" | "SAR" | "INR" | "USD";
