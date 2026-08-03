@@ -25,6 +25,14 @@ import { Input, Label, Select } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { useScrollNav } from "@/lib/use-scroll-nav";
 
+import {
+  getPropertyTypesForCategory,
+  getAmenitiesForCategory,
+  getSpecConfigForCategory,
+  sanitizeFiltersForCategory,
+  TAXONOMY_CATEGORIES,
+} from "@/lib/taxonomy";
+
 type View = "grid" | "list" | "map";
 type Sort =
   | "featured"
@@ -34,14 +42,6 @@ type Sort =
   | "views"
   | "commute";
 
-const types: PropertyType[] = [
-  "Apartment",
-  "Villa",
-  "Penthouse",
-  "Townhouse",
-  "Duplex",
-  "Office",
-];
 const districts = [
   "West Bay",
   "West Bay Lagoon",
@@ -55,15 +55,6 @@ const districts = [
   "Al Sadd",
   "Al Waab",
   "Al Gharrafa",
-];
-const amenityOptions = [
-  "Pool",
-  "Gym",
-  "Concierge",
-  "Furnished",
-  "Smart home",
-  "Beach access",
-  "Pet friendly",
 ];
 
 /* All listings are QAR — normalise rent to a comparable capital figure
@@ -96,6 +87,19 @@ export function PropertyExplorer() {
   const [isPastIntro, setIsPastIntro] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const drawer = usePresence(filtersOpen);
+
+  /* ── Dynamic Backend Taxonomy Computation ── */
+  const availableTypes = useMemo(() => getPropertyTypesForCategory(category), [category]);
+  const availableAmenities = useMemo(() => getAmenitiesForCategory(category), [category]);
+  const specConfig = useMemo(() => getSpecConfigForCategory(category), [category]);
+
+  /* Smart State Management: Automatically clear invalid filters when switching category */
+  const handleCategoryChange = (newCat: PropertyCategory) => {
+    const sanitized = sanitizeFiltersForCategory(newCat, type, amenities);
+    setCategory(newCat);
+    setType(sanitized.type);
+    setAmenities(sanitized.amenities);
+  };
 
   useEffect(() => {
     if (searchParam === "open") {
@@ -442,13 +446,15 @@ export function PropertyExplorer() {
 
           <Select
             value={category}
-            onChange={(e) => setCategory(e.target.value as PropertyCategory)}
+            onChange={(e) => handleCategoryChange(e.target.value as PropertyCategory)}
             aria-label="Category"
             className="h-10 hidden w-auto min-w-36 px-3 text-xs font-semibold rounded-xl border border-line bg-paper sm:block"
           >
-            <option value="all">All Categories</option>
-            <option value="residential">Residential</option>
-            <option value="commercial">Commercial</option>
+            {TAXONOMY_CATEGORIES.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
           </Select>
 
           <Select
@@ -678,25 +684,19 @@ export function PropertyExplorer() {
                 <div>
                   <Label>Property Use / Category</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(
-                      [
-                        { value: "all", label: "All Categories" },
-                        { value: "residential", label: "Residential" },
-                        { value: "commercial", label: "Commercial" },
-                      ] as const
-                    ).map((c) => (
+                    {TAXONOMY_CATEGORIES.map((c) => (
                       <button
-                        key={c.value}
-                        onClick={() => setCategory(c.value)}
-                        aria-pressed={category === c.value}
+                        key={c.id}
+                        onClick={() => handleCategoryChange(c.id)}
+                        aria-pressed={category === c.id}
                         className={cn(
                           "rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-colors",
-                          category === c.value
+                          category === c.id
                             ? "border-ink bg-ink text-paper"
                             : "border-line text-muted hover:border-ink hover:text-ink"
                         )}
                       >
-                        {c.label}
+                        {c.name}
                       </button>
                     ))}
                   </div>
@@ -705,26 +705,38 @@ export function PropertyExplorer() {
                 <div>
                   <Label>Property type</Label>
                   <div className="flex flex-wrap gap-2">
-                    {["all", ...types].map((t) => (
+                    <button
+                      onClick={() => setType("all")}
+                      aria-pressed={type === "all"}
+                      className={cn(
+                        "rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-colors",
+                        type === "all"
+                          ? "border-ink bg-ink text-paper"
+                          : "border-line text-muted hover:border-ink hover:text-ink"
+                      )}
+                    >
+                      Any Type
+                    </button>
+                    {availableTypes.map((t) => (
                       <button
-                        key={t}
-                        onClick={() => setType(t)}
-                        aria-pressed={type === t}
+                        key={t.id}
+                        onClick={() => setType(t.name)}
+                        aria-pressed={type === t.name}
                         className={cn(
                           "rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-colors",
-                          type === t
+                          type === t.name
                             ? "border-ink bg-ink text-paper"
                             : "border-line text-muted hover:border-ink hover:text-ink"
                         )}
                       >
-                        {t === "all" ? "Any" : t}
+                        {t.name}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <Label>Minimum bedrooms</Label>
+                  <Label>{specConfig.specLabel}</Label>
                   <div className="flex flex-wrap gap-2">
                     {["any", "1", "2", "3", "4", "5"].map((b) => (
                       <button
@@ -774,14 +786,18 @@ export function PropertyExplorer() {
                 <div>
                   <Label>Amenities</Label>
                   <div className="flex flex-wrap gap-2">
-                    {amenityOptions.map((a) => {
-                      const on = amenities.includes(a);
+                    {availableAmenities.map((a) => {
+                      const on = amenities.some(
+                        (x) => x.toLowerCase() === a.name.toLowerCase()
+                      );
                       return (
                         <button
-                          key={a}
+                          key={a.id}
                           onClick={() =>
                             setAmenities((s) =>
-                              on ? s.filter((x) => x !== a) : [...s, a]
+                              on
+                                ? s.filter((x) => x.toLowerCase() !== a.name.toLowerCase())
+                                : [...s, a.name]
                             )
                           }
                           aria-pressed={on}
@@ -792,7 +808,7 @@ export function PropertyExplorer() {
                               : "border-line text-muted hover:border-ink hover:text-ink"
                           )}
                         >
-                          {a}
+                          {a.name}
                         </button>
                       );
                     })}
@@ -898,25 +914,19 @@ export function PropertyExplorer() {
                 Property Category
               </Label>
               <div className="flex gap-2">
-                {(
-                  [
-                    { value: "all", label: "All Use" },
-                    { value: "residential", label: "Residential" },
-                    { value: "commercial", label: "Commercial" },
-                  ] as const
-                ).map((c) => (
+                {TAXONOMY_CATEGORIES.map((c) => (
                   <button
-                    key={c.value}
+                    key={c.id}
                     type="button"
-                    onClick={() => setCategory(c.value)}
+                    onClick={() => handleCategoryChange(c.id)}
                     className={cn(
                       "flex-1 rounded-xl border py-2.5 text-xs font-medium transition-colors",
-                      category === c.value
+                      category === c.id
                         ? "border-ink bg-ink text-paper"
                         : "border-line text-muted hover:border-ink hover:text-ink"
                     )}
                   >
-                    {c.label}
+                    {c.name}
                   </button>
                 ))}
               </div>
@@ -928,28 +938,40 @@ export function PropertyExplorer() {
                 Property Type
               </Label>
               <div className="flex flex-wrap gap-2">
-                {["all", "Apartment", "Villa", "Penthouse", "Townhouse", "Office", "Duplex"].map((t) => (
+                <button
+                  type="button"
+                  onClick={() => setType("all")}
+                  className={cn(
+                    "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                    type === "all"
+                      ? "border-ink bg-ink text-paper"
+                      : "border-line text-muted hover:border-ink hover:text-ink"
+                  )}
+                >
+                  All Types
+                </button>
+                {availableTypes.map((t) => (
                   <button
-                    key={t}
+                    key={t.id}
                     type="button"
-                    onClick={() => setType(t)}
+                    onClick={() => setType(t.name)}
                     className={cn(
                       "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
-                      type === t
+                      type === t.name
                         ? "border-ink bg-ink text-paper"
                         : "border-line text-muted hover:border-ink hover:text-ink"
                     )}
                   >
-                    {t === "all" ? "All Types" : t}
+                    {t.name}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Bedrooms pills */}
+            {/* Specification (Bedrooms / Workstations) pills */}
             <div>
               <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
-                Bedrooms
+                {specConfig.specLabel}
               </Label>
               <div className="flex gap-2">
                 {["any", "1", "2", "3", "4"].map((b) => (
@@ -1016,15 +1038,19 @@ export function PropertyExplorer() {
                 Amenities
               </Label>
               <div className="flex flex-wrap gap-2">
-                {amenityOptions.map((a) => {
-                  const on = amenities.includes(a);
+                {availableAmenities.map((a) => {
+                  const on = amenities.some(
+                    (x) => x.toLowerCase() === a.name.toLowerCase()
+                  );
                   return (
                     <button
-                      key={a}
+                      key={a.id}
                       type="button"
                       onClick={() =>
                         setAmenities((s) =>
-                          on ? s.filter((x) => x !== a) : [...s, a]
+                          on
+                            ? s.filter((x) => x.toLowerCase() !== a.name.toLowerCase())
+                            : [...s, a.name]
                         )
                       }
                       className={cn(
@@ -1034,7 +1060,7 @@ export function PropertyExplorer() {
                           : "border-line text-muted hover:border-ink hover:text-ink"
                       )}
                     >
-                      {a}
+                      {a.name}
                     </button>
                   );
                 })}

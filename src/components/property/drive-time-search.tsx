@@ -21,6 +21,12 @@ import { properties } from "@/lib/data/properties";
 import { landmarks, landmarkCategories } from "@/lib/data/landmarks";
 import { evaluateCommute, commuteScore, type CommuteMatch } from "@/lib/geo";
 import type { Landmark, LandmarkCategory, PropertyCategory, PropertyType } from "@/lib/types";
+import {
+  getPropertyTypesForCategory,
+  getSpecConfigForCategory,
+  sanitizeFiltersForCategory,
+  TAXONOMY_CATEGORIES,
+} from "@/lib/taxonomy";
 import { categoryIcon } from "@/lib/landmark-icons";
 import { PropertyCard } from "./property-card";
 import { CommuteMap } from "./commute-map";
@@ -34,14 +40,6 @@ type Status = "all" | "sale" | "rent";
 
 const starterIds = ["l1", "l7", "l11", "l22"];
 const budgetPresets = [15, 30, 45, 60];
-const propertyTypes: PropertyType[] = [
-  "Apartment",
-  "Villa",
-  "Penthouse",
-  "Townhouse",
-  "Duplex",
-  "Office",
-];
 const bedOptions = ["any", "1", "2", "3", "4", "5"];
 
 const compact = (n: number) =>
@@ -64,6 +62,16 @@ export function DriveTimeSearch() {
   const [category, setCategory] = useState<PropertyCategory>(
     (params.get("category") as PropertyCategory) ?? "all"
   );
+
+  /* Dynamic Backend Taxonomy Computations */
+  const availableTypes = useMemo(() => getPropertyTypesForCategory(category), [category]);
+  const specConfig = useMemo(() => getSpecConfigForCategory(category), [category]);
+
+  const handleCategoryChange = (newCat: PropertyCategory) => {
+    const sanitized = sanitizeFiltersForCategory(newCat, type, []);
+    setCategory(newCat);
+    setType(sanitized.type);
+  };
   
   /* Dynamic list of point of interest IDs */
   const [hubIds, setHubIds] = useState<string[]>(initHubs);
@@ -298,26 +306,20 @@ export function DriveTimeSearch() {
       >
         {(close) => (
           <div className="space-y-1">
-            {(
-              [
-                { v: "all", label: "All Categories" },
-                { v: "residential", label: "Residential" },
-                { v: "commercial", label: "Commercial" },
-              ] as const
-            ).map((c) => (
+            {TAXONOMY_CATEGORIES.map((c) => (
               <button
-                key={c.v}
+                key={c.id}
                 onClick={() => {
-                  setCategory(c.v);
+                  handleCategoryChange(c.id);
                   close();
                 }}
                 className={cn(
                   "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors",
-                  category === c.v ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
+                  category === c.id ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
                 )}
               >
-                {c.label}
-                {category === c.v && <span className="text-brass">✓</span>}
+                {c.name}
+                {category === c.id && <span className="text-brass">✓</span>}
               </button>
             ))}
           </div>
@@ -332,20 +334,33 @@ export function DriveTimeSearch() {
       >
         {(close) => (
           <div className="space-y-1">
-            {["all", ...propertyTypes].map((t) => (
+            <button
+              onClick={() => {
+                setType("all");
+                close();
+              }}
+              className={cn(
+                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                type === "all" ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
+              )}
+            >
+              Any type
+              {type === "all" && <span className="text-brass">✓</span>}
+            </button>
+            {availableTypes.map((t) => (
               <button
-                key={t}
+                key={t.id}
                 onClick={() => {
-                  setType(t);
+                  setType(t.name);
                   close();
                 }}
                 className={cn(
                   "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors",
-                  type === t ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
+                  type === t.name ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
                 )}
               >
-                {t === "all" ? "Any type" : t}
-                {type === t && <span className="text-brass">✓</span>}
+                {t.name}
+                {type === t.name && <span className="text-brass">✓</span>}
               </button>
             ))}
           </div>
@@ -1188,25 +1203,23 @@ function SetupPanel({
             <div>
               <p className="text-xs font-medium text-muted mb-2">Property Category</p>
               <div className="flex rounded-xl border border-line bg-paper p-1">
-                {(
-                  [
-                    { v: "all", label: "All Use" },
-                    { v: "residential", label: "Residential" },
-                    { v: "commercial", label: "Commercial" },
-                  ] as const
-                ).map((c) => (
+                {TAXONOMY_CATEGORIES.map((c) => (
                   <button
-                    key={c.v}
+                    key={c.id}
                     type="button"
-                    onClick={() => setCategory(c.v)}
+                    onClick={() => {
+                      const sanitized = sanitizeFiltersForCategory(c.id, type, []);
+                      setCategory(c.id);
+                      setType(sanitized.type);
+                    }}
                     className={cn(
                       "flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all",
-                      category === c.v
+                      category === c.id
                         ? "bg-ink text-paper shadow-xs"
                         : "text-muted hover:text-ink"
                     )}
                   >
-                    {c.label}
+                    {c.name}
                   </button>
                 ))}
               </div>
@@ -1216,27 +1229,41 @@ function SetupPanel({
             <div>
               <p className="text-xs font-medium text-muted mb-2">Property Type</p>
               <div className="flex flex-wrap gap-1.5">
-                {["all", "Apartment", "Villa", "Penthouse", "Townhouse"].map((t) => (
+                <button
+                  type="button"
+                  onClick={() => setType("all")}
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                    type === "all"
+                      ? "border-ink bg-ink text-paper"
+                      : "border-line bg-paper text-muted hover:border-ink hover:text-ink"
+                  )}
+                >
+                  Any Type
+                </button>
+                {getPropertyTypesForCategory(category).map((t) => (
                   <button
-                    key={t}
+                    key={t.id}
                     type="button"
-                    onClick={() => setType(t)}
+                    onClick={() => setType(t.name)}
                     className={cn(
                       "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
-                      type === t
+                      type === t.name
                         ? "border-ink bg-ink text-paper"
                         : "border-line bg-paper text-muted hover:border-ink hover:text-ink"
                     )}
                   >
-                    {t === "all" ? "Any Type" : t}
+                    {t.name}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Bedrooms Row */}
+            {/* Specification Row */}
             <div>
-              <p className="text-xs font-medium text-muted mb-2">Bedrooms</p>
+              <p className="text-xs font-medium text-muted mb-2">
+                {getSpecConfigForCategory(category).specLabel}
+              </p>
               <div className="flex gap-1.5">
                 {["any", "1", "2", "3", "4"].map((b) => (
                   <button
@@ -1250,7 +1277,7 @@ function SetupPanel({
                         : "border-line bg-paper text-muted hover:border-ink hover:text-ink"
                     )}
                   >
-                    {b === "any" ? "Any" : `${b}+ Beds`}
+                    {b === "any" ? "Any" : `${b}+`}
                   </button>
                 ))}
               </div>
