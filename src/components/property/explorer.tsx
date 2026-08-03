@@ -78,7 +78,8 @@ export function PropertyExplorer() {
   const [beds, setBeds] = useState(params.get("beds") ?? "any");
   const [query, setQuery] = useState(params.get("q") ?? "");
   const [amenities, setAmenities] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState(params.get("minPrice") ?? "");
+  const [maxPrice, setMaxPrice] = useState(params.get("maxPrice") ?? "");
   const [sort, setSort] = useState<Sort>("featured");
   const [view, setView] = useState<View>("grid");
   const searchParam = params.get("search");
@@ -162,6 +163,8 @@ export function PropertyExplorer() {
     if (district !== "all") p.set("district", district);
     if (type !== "all") p.set("type", type);
     if (beds !== "any") p.set("beds", beds);
+    if (minPrice) p.set("minPrice", minPrice);
+    if (maxPrice) p.set("maxPrice", maxPrice);
     if (query) p.set("q", query);
     if (hubIds.length) {
       p.set("hubs", hubIds.join(","));
@@ -171,7 +174,7 @@ export function PropertyExplorer() {
     router.replace(`/properties${p.toString() ? `?${p}` : ""}`, {
       scroll: false,
     });
-  }, [status, category, district, type, beds, query, hubIds, maxCommute, matchMode, router]);
+  }, [status, category, district, type, beds, minPrice, maxPrice, query, hubIds, maxCommute, matchMode, router]);
 
   const results = useMemo(() => {
     let list = properties.filter((p) => {
@@ -183,6 +186,7 @@ export function PropertyExplorer() {
       if (district !== "all" && p.community !== district) return false;
       if (type !== "all" && p.type !== type) return false;
       if (beds !== "any" && p.beds < Number(beds)) return false;
+      if (minPrice && p.price < Number(minPrice)) return false;
       if (maxPrice && p.price > Number(maxPrice)) return false;
       if (
         amenities.length &&
@@ -245,6 +249,7 @@ export function PropertyExplorer() {
     beds,
     query,
     amenities,
+    minPrice,
     maxPrice,
     sort,
     selectedHubs,
@@ -264,6 +269,18 @@ export function PropertyExplorer() {
     district !== "all" && { label: district, clear: () => setDistrict("all") },
     type !== "all" && { label: type, clear: () => setType("all") },
     beds !== "any" && { label: `${beds}+ beds`, clear: () => setBeds("any") },
+    (minPrice || maxPrice) && {
+      label:
+        minPrice && maxPrice
+          ? `QAR ${Number(minPrice).toLocaleString()} - ${Number(maxPrice).toLocaleString()}`
+          : minPrice
+            ? `> QAR ${Number(minPrice).toLocaleString()}`
+            : `< QAR ${Number(maxPrice).toLocaleString()}`,
+      clear: () => {
+        setMinPrice("");
+        setMaxPrice("");
+      },
+    },
     ...amenities.map((a) => ({
       label: a,
       clear: () => setAmenities((s) => s.filter((x) => x !== a)),
@@ -665,22 +682,7 @@ export function PropertyExplorer() {
               </div>
 
               <div className="flex-1 space-y-7 overflow-y-auto px-6 py-6">
-                {/* Multi-landmark commute search */}
-                <div id="commute-section" className="scroll-mt-4">
-                  <CommuteFilter
-                    selectedIds={hubIds}
-                    onToggle={toggleHub}
-                    onClear={() => setHubIds([])}
-                    maxMinutes={maxCommute}
-                    onMaxMinutes={setMaxCommute}
-                    mode={matchMode}
-                    onMode={setMatchMode}
-                    city="Doha"
-                  />
-                </div>
-
-                <div className="h-px bg-line" />
-
+                {/* 1. FIRST FILTER: Property Category Toggle */}
                 <div>
                   <Label>Property Use / Category</Label>
                   <div className="flex flex-wrap gap-2">
@@ -701,6 +703,24 @@ export function PropertyExplorer() {
                     ))}
                   </div>
                 </div>
+
+                <div className="h-px bg-line" />
+
+                {/* Multi-landmark commute search */}
+                <div id="commute-section" className="scroll-mt-4">
+                  <CommuteFilter
+                    selectedIds={hubIds}
+                    onToggle={toggleHub}
+                    onClear={() => setHubIds([])}
+                    maxMinutes={maxCommute}
+                    onMaxMinutes={setMaxCommute}
+                    mode={matchMode}
+                    onMode={setMatchMode}
+                    city="Doha"
+                  />
+                </div>
+
+                <div className="h-px bg-line" />
 
                 <div>
                   <Label>Property type</Label>
@@ -756,18 +776,33 @@ export function PropertyExplorer() {
                   </div>
                 </div>
 
+                {/* Price Range Filter (Min & Max Price) */}
                 <div>
-                  <Label htmlFor="maxprice">
-                    Max price (local currency)
-                  </Label>
-                  <Input
-                    id="maxprice"
-                    type="number"
-                    inputMode="numeric"
-                    placeholder="e.g. 5,000,000"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                  />
+                  <Label>Price Range (QAR)</Label>
+                  <div className="grid grid-cols-2 gap-3 mt-1.5">
+                    <div>
+                      <span className="text-[0.6875rem] font-medium text-muted block mb-1">Minimum Price</span>
+                      <Input
+                        id="minprice"
+                        type="number"
+                        inputMode="numeric"
+                        placeholder="e.g. 5,000"
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[0.6875rem] font-medium text-muted block mb-1">Maximum Price</span>
+                      <Input
+                        id="maxprice"
+                        type="number"
+                        inputMode="numeric"
+                        placeholder="e.g. 50,000"
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -822,9 +857,11 @@ export function PropertyExplorer() {
                   className="flex-1"
                   onClick={() => {
                     setStatus("all");
+                    handleCategoryChange("all");
                     setType("all");
                     setBeds("any");
                     setAmenities([]);
+                    setMinPrice("");
                     setMaxPrice("");
                     setHubIds([]);
                   }}
@@ -992,14 +1029,23 @@ export function PropertyExplorer() {
               </div>
             </div>
 
-            {/* Price Range inputs */}
+            {/* Price Range inputs (Min & Max Price) */}
             <div>
               <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
                 Price Range (QAR)
               </Label>
-              <div className="flex items-center gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 <Input
                   type="number"
+                  inputMode="numeric"
+                  placeholder="Min budget"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  className="h-10 text-xs"
+                />
+                <Input
+                  type="number"
+                  inputMode="numeric"
                   placeholder="Max budget"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
