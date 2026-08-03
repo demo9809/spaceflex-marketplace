@@ -27,6 +27,7 @@ import { CommuteMap } from "./commute-map";
 import { FilterPopover } from "./filter-popover";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { CompareTray } from "@/components/site/compare-tray";
+import { useScrollNav } from "@/lib/use-scroll-nav";
 import { cn } from "@/lib/utils";
 
 type Status = "all" | "sale" | "rent";
@@ -54,6 +55,7 @@ const getLetter = (i: number) => String.fromCharCode(65 + i);
 export function DriveTimeSearch() {
   const router = useRouter();
   const params = useSearchParams();
+  const navVisible = useScrollNav();
   const initHubs = params.get("hubs")?.split(",").filter(Boolean) ?? [];
 
   const [status, setStatus] = useState<Status>(
@@ -438,7 +440,12 @@ export function DriveTimeSearch() {
     <>
       {/* Top filter bar — only in results mode */}
       {hasResults && (
-        <div className="sticky top-16 z-40 border-b border-line bg-paper/90 backdrop-blur-xl md:top-[4.5rem]">
+        <div
+          className={cn(
+            "sticky z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-[top] duration-300 md:top-[4.5rem]",
+            navVisible ? "top-16" : "top-0"
+          )}
+        >
           <div className="container-site">
             <ScrollableRow>{renderFields(false)}</ScrollableRow>
           </div>

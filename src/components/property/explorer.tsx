@@ -388,7 +388,7 @@ export function PropertyExplorer() {
             type="button"
             onClick={() => setSearchModalOpen(true)}
             aria-label="Open full-screen search"
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-line bg-raised px-3 py-2 text-xs text-muted transition-colors hover:border-ink/30 md:hidden"
+            className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl border border-line bg-raised px-3 text-xs font-medium text-muted transition-colors hover:border-ink/30 md:hidden"
           >
             <Search size={14} className="shrink-0 text-faint" />
             <span className="truncate text-ink-soft">
@@ -401,7 +401,7 @@ export function PropertyExplorer() {
           </button>
 
           {/* Desktop Search Input */}
-          <div className="relative hidden min-w-0 flex-1 basis-52 md:block">
+          <div className="relative hidden w-44 lg:w-48 shrink-0 md:block">
             <Search
               size={15}
               className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint"
@@ -409,9 +409,9 @@ export function PropertyExplorer() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search location or building…"
+              placeholder="Search location…"
               aria-label="Search properties"
-              className="pl-9"
+              className="h-10 text-xs pl-9 pr-3 rounded-xl"
             />
           </div>
 
@@ -420,7 +420,7 @@ export function PropertyExplorer() {
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
             aria-label="Listing type"
-            className="w-auto min-w-[5.5rem] px-2 py-2 text-xs md:hidden"
+            className="h-10 w-auto min-w-[7.5rem] px-3 text-xs font-semibold rounded-xl border border-line bg-paper md:hidden"
           >
             <option value="all">Buy & Rent</option>
             <option value="sale">For Sale</option>
@@ -432,7 +432,7 @@ export function PropertyExplorer() {
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
             aria-label="Listing type"
-            className="hidden w-auto min-w-28 sm:block"
+            className="h-10 hidden w-auto min-w-32 px-3 text-xs font-semibold rounded-xl border border-line bg-paper sm:block"
           >
             <option value="all">Buy & Rent</option>
             <option value="sale">For Sale</option>
@@ -443,7 +443,7 @@ export function PropertyExplorer() {
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
             aria-label="District"
-            className="hidden w-auto min-w-32 sm:block"
+            className="h-10 hidden w-auto min-w-36 px-3 text-xs font-medium rounded-xl border border-line bg-paper sm:block"
           >
             <option value="all">All districts</option>
             {districts.map((c) => (
@@ -455,7 +455,7 @@ export function PropertyExplorer() {
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
             aria-label="Sort results"
-            className="hidden w-auto min-w-36 lg:block"
+            className="h-10 hidden w-auto min-w-40 px-3 text-xs font-medium rounded-xl border border-line bg-paper lg:block"
           >
             <option value="featured">Featured first</option>
             <option value="price-asc">Price · low to high</option>
@@ -474,7 +474,7 @@ export function PropertyExplorer() {
                 : ""
             }`}
             variant={selectedHubs.length ? "brass" : "outline"}
-            className="gap-2 shrink-0"
+            className="h-10 px-3.5 text-xs font-semibold gap-2 shrink-0 flex items-center"
           >
             <Route size={15} />
             <span className="hidden sm:inline">Drive Time</span>
@@ -493,7 +493,7 @@ export function PropertyExplorer() {
           <Button
             variant="outline"
             onClick={() => setFiltersOpen(true)}
-            className="gap-1.5 px-3 py-2 text-xs md:gap-2 md:px-4 md:text-sm shrink-0"
+            className="h-10 gap-1.5 px-3 text-xs font-semibold md:gap-2 md:px-4 shrink-0 flex items-center"
             aria-expanded={filtersOpen}
           >
             <SlidersHorizontal size={15} />
@@ -880,6 +880,70 @@ export function PropertyExplorer() {
               </div>
             </div>
 
+            {/* Property Type pills */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Property Type
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {["all", "Apartment", "Villa", "Penthouse", "Townhouse", "Office", "Duplex"].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setType(t)}
+                    className={cn(
+                      "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                      type === t
+                        ? "border-ink bg-ink text-paper"
+                        : "border-line text-muted hover:border-ink hover:text-ink"
+                    )}
+                  >
+                    {t === "all" ? "All Types" : t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bedrooms pills */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Bedrooms
+              </Label>
+              <div className="flex gap-2">
+                {["any", "1", "2", "3", "4"].map((b) => (
+                  <button
+                    key={b}
+                    type="button"
+                    onClick={() => setBeds(b)}
+                    className={cn(
+                      "flex-1 rounded-xl border py-2 text-xs font-medium transition-colors",
+                      beds === b
+                        ? "border-ink bg-ink text-paper"
+                        : "border-line text-muted hover:border-ink hover:text-ink"
+                    )}
+                  >
+                    {b === "any" ? "Any" : `${b}+`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Price Range inputs */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Price Range (QAR)
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  placeholder="Max budget"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  className="h-10 text-xs"
+                />
+              </div>
+            </div>
+
             {/* District quick picks */}
             <div>
               <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
@@ -902,6 +966,55 @@ export function PropertyExplorer() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Amenities selection */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Amenities
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {amenityOptions.map((a) => {
+                  const on = amenities.includes(a);
+                  return (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() =>
+                        setAmenities((s) =>
+                          on ? s.filter((x) => x !== a) : [...s, a]
+                        )
+                      }
+                      className={cn(
+                        "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                        on
+                          ? "border-brass bg-brass-tint text-ink"
+                          : "border-line text-muted hover:border-ink hover:text-ink"
+                      )}
+                    >
+                      {a}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sort order selection */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Sort Results
+              </Label>
+              <Select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as Sort)}
+                className="w-full text-xs"
+              >
+                <option value="featured">Featured first</option>
+                <option value="price-asc">Price · low to high</option>
+                <option value="price-desc">Price · high to low</option>
+                <option value="newest">Newest</option>
+                <option value="views">Most viewed</option>
+              </Select>
             </div>
           </div>
 
