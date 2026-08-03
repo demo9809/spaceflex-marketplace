@@ -396,14 +396,21 @@ export function PropertyExplorer() {
         )}
       >
         <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap md:overflow-visible">
-          {/* Mobile Search Trigger Icon */}
+          {/* Mobile Full-Width Search Trigger Box */}
           <button
             type="button"
             onClick={() => setSearchModalOpen(true)}
             aria-label="Open full-screen search"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-line bg-raised text-ink transition-colors hover:border-ink/40 md:hidden"
+            className="flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-line bg-raised px-3.5 text-xs font-medium text-muted transition-colors hover:border-ink/40 md:hidden"
           >
-            <Search size={16} />
+            <Search size={15} className="shrink-0 text-faint" />
+            <span className="truncate text-ink-soft">
+              {query
+                ? query
+                : district !== "all"
+                  ? district
+                  : "Search location…"}
+            </span>
           </button>
 
           {/* Desktop Search Input */}
@@ -420,18 +427,6 @@ export function PropertyExplorer() {
               className="h-10 text-xs pl-9 pr-3 rounded-xl"
             />
           </div>
-
-          {/* Mobile Primary Filter Controls */}
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as typeof status)}
-            aria-label="Listing type"
-            className="h-10 w-auto min-w-[7.5rem] px-3 text-xs font-semibold rounded-xl border border-line bg-paper md:hidden"
-          >
-            <option value="all">Buy & Rent</option>
-            <option value="sale">For Sale</option>
-            <option value="rent">For Rent</option>
-          </Select>
 
           {/* Desktop Selects */}
           <Select
