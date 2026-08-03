@@ -396,21 +396,14 @@ export function PropertyExplorer() {
         )}
       >
         <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap md:overflow-visible">
-          {/* Mobile Search Trigger */}
+          {/* Mobile Search Trigger Icon */}
           <button
             type="button"
             onClick={() => setSearchModalOpen(true)}
             aria-label="Open full-screen search"
-            className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl border border-line bg-raised px-3 text-xs font-medium text-muted transition-colors hover:border-ink/30 md:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-line bg-raised text-ink transition-colors hover:border-ink/40 md:hidden"
           >
-            <Search size={14} className="shrink-0 text-faint" />
-            <span className="truncate text-ink-soft">
-              {query
-                ? query
-                : district !== "all"
-                  ? district
-                  : "Search location…"}
-            </span>
+            <Search size={16} />
           </button>
 
           {/* Desktop Search Input */}
@@ -438,17 +431,6 @@ export function PropertyExplorer() {
             <option value="all">Buy & Rent</option>
             <option value="sale">For Sale</option>
             <option value="rent">For Rent</option>
-          </Select>
-
-          <Select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as PropertyCategory)}
-            aria-label="Category"
-            className="h-10 w-auto min-w-[7.5rem] px-3 text-xs font-semibold rounded-xl border border-line bg-paper md:hidden"
-          >
-            <option value="all">All Uses</option>
-            <option value="residential">Residential</option>
-            <option value="commercial">Commercial</option>
           </Select>
 
           {/* Desktop Selects */}
