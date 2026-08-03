@@ -15,11 +15,10 @@ import { useAiAssistant } from "@/lib/store/ai-assistant-context";
 
 type NavIcon = ComponentType<{ size?: number; className?: string }>;
 
-const nav: { label: string; href: string; icon?: NavIcon; isAi?: boolean }[] = [
+const nav: { label: string; href: string; icon?: NavIcon }[] = [
   { label: "Buy", href: "/properties?status=sale" },
   { label: "Rent", href: "/properties?status=rent" },
   { label: "Drive Time", href: "/drive-time", icon: Navigation },
-  { label: "AI Advisor", href: "#ai", icon: Sparkles, isAi: true },
   { label: "New Projects", href: "/developers" },
   { label: "Agents", href: "/agents" },
 ];
@@ -120,46 +119,26 @@ export function SiteHeader() {
 
         {/* Desktop nav */}
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-          {nav.map((item) => {
-            if (item.isAi) {
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => openAi()}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all shadow-2xs",
-                    light
-                      ? "bg-white/20 text-white hover:bg-white/30"
-                      : "bg-brass-tint text-brass hover:bg-brass hover:text-white"
-                  )}
-                >
-                  <Sparkles size={14} fill="currentColor" className="animate-pulse" />
-                  {item.label}
-                </button>
-              );
-            }
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  light
-                    ? "text-white/85 hover:bg-white/10 hover:text-white"
-                    : "text-ink-soft hover:bg-brass-tint hover:text-ink"
-                )}
-              >
-                {item.icon && (
-                  <item.icon
-                    size={14}
-                    className={light ? "text-white" : "text-brass"}
-                  />
-                )}
-                {item.label}
-              </Link>
-            );
-          })}
+          {nav.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                light
+                  ? "text-white/85 hover:bg-white/10 hover:text-white"
+                  : "text-ink-soft hover:bg-brass-tint hover:text-ink"
+              )}
+            >
+              {item.icon && (
+                <item.icon
+                  size={14}
+                  className={light ? "text-white" : "text-brass"}
+                />
+              )}
+              {item.label}
+            </Link>
+          ))}
           <div className="group relative">
             <button
               className={cn(
