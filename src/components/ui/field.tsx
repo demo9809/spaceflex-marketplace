@@ -6,7 +6,7 @@ import type {
 } from "react";
 
 const fieldBase =
-  "w-full rounded-xl border border-line bg-raised px-4 text-sm text-ink placeholder:text-faint transition-colors duration-200 hover:border-line-strong focus:border-brass focus:outline-none focus-visible:outline-none";
+  "w-full rounded-xl border border-line bg-raised px-4 text-sm text-ink placeholder:text-faint transition-all duration-200 hover:border-line-strong focus:border-brass focus:ring-2 focus:ring-brass/20 focus:outline-none outline-none";
 
 export function Input({
   className,

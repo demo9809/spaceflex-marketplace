@@ -146,8 +146,8 @@ body {
 /* Visible, elegant focus */
 :focus-visible {
   outline: 2px solid var(--brass);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline-offset: 2px;
+  border-radius: inherit;
 }
 
 /* ── Typography helpers ── */
