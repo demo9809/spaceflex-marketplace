@@ -4,19 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Heart, Menu, X, ChevronDown, Navigation } from "lucide-react";
+import { Heart, Menu, X, ChevronDown, Navigation, Sparkles } from "lucide-react";
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { useSaved } from "@/lib/store/saved";
 import { useAuth } from "@/lib/store/auth";
+import { useScrollNav } from "@/lib/use-scroll-nav";
+import { useAiAssistant } from "@/lib/store/ai-assistant-context";
 
 type NavIcon = ComponentType<{ size?: number; className?: string }>;
 
-const nav: { label: string; href: string; icon?: NavIcon }[] = [
+const nav: { label: string; href: string; icon?: NavIcon; isAi?: boolean }[] = [
   { label: "Buy", href: "/properties?status=sale" },
   { label: "Rent", href: "/properties?status=rent" },
   { label: "Drive Time", href: "/drive-time", icon: Navigation },
+  { label: "AI Advisor", href: "#ai", icon: Sparkles, isAi: true },
   { label: "New Projects", href: "/developers" },
   { label: "Agents", href: "/agents" },
 ];
@@ -30,9 +33,11 @@ const insights = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navVisible = useScrollNav();
   const pathname = usePathname();
   const { saved } = useSaved();
   const { authed } = useAuth();
+  const { openAi } = useAiAssistant();
 
   /* Pages whose hero extends dark artwork beneath the header —
      the header renders light-on-dark until the user scrolls. */
@@ -77,7 +82,12 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-[60]">
+    <header
+      className={cn(
+        "sticky top-0 z-[60] transition-transform duration-300 ease-in-out",
+        !navVisible && !open && "-translate-y-full md:translate-y-0"
+      )}
+    >
       {/* Background layer carries the blur so the fixed mobile menu
           below is not trapped by a backdrop-filter containing block. */}
       <div
@@ -110,26 +120,46 @@ export function SiteHeader() {
 
         {/* Desktop nav */}
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-          {nav.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                light
-                  ? "text-white/85 hover:bg-white/10 hover:text-white"
-                  : "text-ink-soft hover:bg-brass-tint hover:text-ink"
-              )}
-            >
-              {item.icon && (
-                <item.icon
-                  size={14}
-                  className={light ? "text-white" : "text-brass"}
-                />
-              )}
-              {item.label}
-            </Link>
-          ))}
+          {nav.map((item) => {
+            if (item.isAi) {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => openAi()}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all shadow-2xs",
+                    light
+                      ? "bg-white/20 text-white hover:bg-white/30"
+                      : "bg-brass-tint text-brass hover:bg-brass hover:text-white"
+                  )}
+                >
+                  <Sparkles size={14} fill="currentColor" className="animate-pulse" />
+                  {item.label}
+                </button>
+              );
+            }
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                  light
+                    ? "text-white/85 hover:bg-white/10 hover:text-white"
+                    : "text-ink-soft hover:bg-brass-tint hover:text-ink"
+                )}
+              >
+                {item.icon && (
+                  <item.icon
+                    size={14}
+                    className={light ? "text-white" : "text-brass"}
+                  />
+                )}
+                {item.label}
+              </Link>
+            );
+          })}
           <div className="group relative">
             <button
               className={cn(

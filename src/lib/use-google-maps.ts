@@ -12,7 +12,9 @@ import { useEffect, useState } from "react";
 
 export type MapsStatus = "loading" | "ready" | "error" | "unconfigured";
 
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const API_KEY =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
+  "AIzaSyBuznVpoy7xUNFkz089Kjm51oD0Hw_SQ7w";
 const SCRIPT_ID = "google-maps-js";
 
 declare global {

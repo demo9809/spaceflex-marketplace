@@ -26,6 +26,7 @@ import { PropertyMap } from "@/components/property/property-map";
 import { ContactCard } from "@/components/agent/contact-card";
 import { PropertyCard } from "@/components/property/property-card";
 import { SaveButton } from "@/components/property/save-button";
+import { MobilePropertyBar } from "@/components/property/mobile-property-bar";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeading } from "@/components/site/section-heading";
 import { CompareTray } from "@/components/site/compare-tray";
@@ -263,22 +264,7 @@ export default async function PropertyDetailPage({
       )}
 
       {/* Mobile sticky action bar */}
-      <div className="fixed inset-x-0 bottom-16 z-40 border-t border-line bg-paper/95 p-3 backdrop-blur-xl md:hidden">
-        <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="font-display truncate text-lg font-semibold">
-              {propertyPrice(property, true)}
-            </p>
-            <p className="truncate text-xs text-muted">{property.community}</p>
-          </div>
-          <a
-            href="#facts"
-            className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper"
-          >
-            Request viewing
-          </a>
-        </div>
-      </div>
+      <MobilePropertyBar property={property} />
 
       <CompareTray />
     </>

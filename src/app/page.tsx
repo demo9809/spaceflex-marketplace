@@ -102,7 +102,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FEATURED LISTINGS ── */}
-      <section className="container-site py-20 md:py-28">
+      <section className="container-site pt-12 pb-6 md:pt-16 md:pb-8">
         <SectionHeading
           eyebrow="The Collection"
           title="Featured residences, hand-selected weekly"
@@ -124,7 +124,7 @@ export default function HomePage() {
 
       {/* ── EDITORIAL SPLIT — PRIVATE OFFICE ── */}
       <section className="bg-ink text-paper">
-        <div className="container-site grid items-center gap-12 py-20 md:py-28 lg:grid-cols-2 lg:gap-20">
+        <div className="container-site grid items-center gap-12 py-12 md:py-16 lg:grid-cols-2 lg:gap-20">
           <Reveal>
             <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-3xl">
               <Image

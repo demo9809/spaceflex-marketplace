@@ -115,12 +115,14 @@ export function HeroSearch() {
 
   return (
     <div className="w-full max-w-3xl text-left">
-      {/* Utility row — listing type, then refinements, grouped left */}
+      {/* Utility row — listing type, then refinements, grouped left.
+          Toggle and chips share one explicit height so the whole row
+          reads as a single, level set of controls. */}
       <div className="flex flex-wrap items-center gap-3">
         <div
           role="tablist"
           aria-label="Listing type"
-          className="inline-flex rounded-full bg-white/15 p-1 backdrop-blur-md"
+          className="inline-flex h-11 items-center rounded-full bg-white/15 p-1 backdrop-blur-md"
         >
           {(["sale", "rent"] as const).map((s) => (
             <button
@@ -129,7 +131,7 @@ export function HeroSearch() {
               aria-selected={status === s}
               onClick={() => setStatus(s)}
               className={cn(
-                "rounded-full px-6 py-2 text-sm font-medium transition-all duration-200",
+                "flex h-full items-center rounded-full px-6 text-sm font-medium transition-all duration-200",
                 status === s
                   ? "bg-paper text-ink shadow-card"
                   : "text-paper/85 hover:text-paper"
@@ -140,12 +142,12 @@ export function HeroSearch() {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="hidden flex-wrap items-center gap-2 sm:flex">
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
             aria-label="Property type"
-            className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
+            className="select-arrow-light h-11 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
           >
             <option value="all">Any type</option>
             {types.map((t) => (
@@ -159,7 +161,7 @@ export function HeroSearch() {
             value={beds}
             onChange={(e) => setBeds(e.target.value)}
             aria-label="Minimum bedrooms"
-            className="select-arrow-light h-9 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
+            className="select-arrow-light h-11 appearance-none rounded-full border border-white/25 bg-white/10 pl-4 pr-9 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50 focus:outline-none [&>option]:text-ink"
           >
             <option value="any">Any beds</option>
             {["1", "2", "3", "4", "5"].map((b) => (
@@ -175,7 +177,7 @@ export function HeroSearch() {
               const p = new URLSearchParams({ status, ...extra() });
               router.push(`/properties?${p.toString()}`);
             }}
-            className="flex h-9 items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50"
+            className="flex h-11 items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 text-[0.8125rem] text-paper backdrop-blur-sm transition-colors hover:border-white/50"
           >
             <SlidersHorizontal size={13} />
             All filters
@@ -183,13 +185,19 @@ export function HeroSearch() {
         </div>
       </div>
 
-      {/* Search + suggestions */}
+      {/* Search + suggestions — a single modern capsule: soft glass card,
+          circular location marker, hairline divider, brass focus glow. */}
       <div ref={boxRef} className="relative mt-3">
         <form
           onSubmit={submit}
-          className="flex items-center gap-2 rounded-2xl bg-paper p-2 shadow-modal md:rounded-full"
+          className={cn(
+            "group flex items-center gap-1 rounded-full bg-paper/95 p-1.5 shadow-modal ring-1 ring-black/[0.06] backdrop-blur-xl transition-all duration-300",
+            "focus-within:shadow-lift focus-within:ring-2 focus-within:ring-brass/50"
+          )}
         >
-          <MapPin size={18} className="ml-3 shrink-0 text-faint" />
+          <span className="ml-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brass-tint text-brass transition-colors group-focus-within:bg-brass group-focus-within:text-white">
+            <MapPin size={16} />
+          </span>
           <input
             ref={inputRef}
             value={query}
@@ -205,7 +213,7 @@ export function HeroSearch() {
             aria-expanded={open}
             aria-controls="hero-suggestions"
             role="combobox"
-            className="h-11 w-full bg-transparent text-[0.9375rem] text-ink placeholder:text-faint focus:outline-none"
+            className="h-11 min-w-0 flex-1 bg-transparent px-2 text-[0.9375rem] text-ink placeholder:text-faint focus:outline-none"
           />
           {query && (
             <button
@@ -220,9 +228,10 @@ export function HeroSearch() {
               <X size={15} />
             </button>
           )}
+          <span className="hidden h-6 w-px shrink-0 bg-line sm:block" />
           <button
             type="submit"
-            className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-ink px-6 text-sm font-medium text-paper transition-all hover:bg-ink-soft active:scale-[0.98]"
+            className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-ink px-6 text-sm font-medium text-paper transition-all hover:bg-ink-soft hover:shadow-lift active:scale-[0.98]"
           >
             <Search size={15} />
             <span className="hidden sm:inline">Search</span>
@@ -288,26 +297,8 @@ export function HeroSearch() {
         )}
       </div>
 
-      {/* Drive-time entry */}
-      <Link
-        href="/drive-time"
-        className="group mt-3 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 py-2 pl-2 pr-4 text-sm text-paper backdrop-blur-md transition-colors hover:border-white/50 hover:bg-white/15"
-      >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper text-brass">
-          <Navigation size={14} />
-        </span>
-        <span className="font-medium">Find homes by drive time</span>
-        <span className="rounded-full bg-brass px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide text-white">
-          New
-        </span>
-        <ArrowRight
-          size={15}
-          className="text-paper/70 transition-transform duration-200 group-hover:translate-x-0.5"
-        />
-      </Link>
-
-      {/* Trending */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      {/* Trending — directly under the search box */}
+      <div className="mt-4 hidden flex-wrap items-center gap-2 sm:flex">
         <span className="text-xs uppercase tracking-[0.14em] text-paper/70">
           Trending
         </span>
@@ -325,6 +316,24 @@ export function HeroSearch() {
           </button>
         ))}
       </div>
+
+      {/* Drive-time entry — below trending */}
+      <Link
+        href="/drive-time"
+        className="group mt-4 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 py-2 pl-2 pr-4 text-sm text-paper backdrop-blur-md transition-colors hover:border-white/50 hover:bg-white/15"
+      >
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper text-brass">
+          <Navigation size={14} />
+        </span>
+        <span className="font-medium">Find homes by drive time</span>
+        <span className="rounded-full bg-brass px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide text-white">
+          New
+        </span>
+        <ArrowRight
+          size={15}
+          className="text-paper/70 transition-transform duration-200 group-hover:translate-x-0.5"
+        />
+      </Link>
     </div>
   );
 }

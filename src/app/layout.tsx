@@ -6,6 +6,9 @@ import { SiteFooter } from "@/components/site/footer";
 import { MobileTabBar } from "@/components/site/mobile-tab-bar";
 import { SavedProvider } from "@/lib/store/saved";
 import { AuthProvider } from "@/lib/store/auth";
+import { AiAssistantProvider } from "@/lib/store/ai-assistant-context";
+import { AiAssistantDrawer } from "@/components/site/ai-assistant-drawer";
+import { AiFloatingButton } from "@/components/site/ai-floating-button";
 
 const display = Plus_Jakarta_Sans({
   variable: "--font-display-family",
@@ -40,10 +43,14 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <SavedProvider>
-            <SiteHeader />
-            <main className="flex-1 pb-16 md:pb-0">{children}</main>
-            <SiteFooter />
-            <MobileTabBar />
+            <AiAssistantProvider>
+              <SiteHeader />
+              <main className="flex-1 pb-16 md:pb-0">{children}</main>
+              <SiteFooter />
+              <MobileTabBar />
+              <AiAssistantDrawer />
+              <AiFloatingButton />
+            </AiAssistantProvider>
           </SavedProvider>
         </AuthProvider>
       </body>

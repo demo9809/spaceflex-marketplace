@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
@@ -23,6 +23,7 @@ import { CompareTray } from "@/components/site/compare-tray";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
+import { useScrollNav } from "@/lib/use-scroll-nav";
 
 type View = "grid" | "list" | "map";
 type Sort =
@@ -73,6 +74,7 @@ const comparableValue = (p: Property) =>
 export function PropertyExplorer() {
   const router = useRouter();
   const params = useSearchParams();
+  const navVisible = useScrollNav();
 
   const [status, setStatus] = useState<"all" | "sale" | "rent">(
     (params.get("status") as "sale" | "rent") ?? "all"
@@ -85,8 +87,24 @@ export function PropertyExplorer() {
   const [maxPrice, setMaxPrice] = useState("");
   const [sort, setSort] = useState<Sort>("featured");
   const [view, setView] = useState<View>("grid");
+  const searchParam = params.get("search");
+  const [searchModalOpen, setSearchModalOpen] = useState(searchParam === "open");
+  const introRef = useRef<HTMLDivElement>(null);
+  const [isPastIntro, setIsPastIntro] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const drawer = usePresence(filtersOpen);
+
+  useEffect(() => {
+    if (searchParam === "open") {
+      setSearchModalOpen(true);
+    }
+  }, [searchParam]);
+
+  useEffect(() => {
+    const handleOpenModal = () => setSearchModalOpen(true);
+    window.addEventListener("sf:open-search-modal", handleOpenModal);
+    return () => window.removeEventListener("sf:open-search-modal", handleOpenModal);
+  }, []);
 
   /* ── Multi-landmark commute filter ── */
   const [hubIds, setHubIds] = useState<string[]>(
@@ -107,13 +125,27 @@ export function PropertyExplorer() {
   const toggleHub = (id: string) =>
     setHubIds((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
-  /* Lock page scroll while the filter sheet is open */
+  /* Detect when user scrolls past page intro on mobile */
   useEffect(() => {
-    document.body.style.overflow = filtersOpen ? "hidden" : "";
+    const onScroll = () => {
+      if (introRef.current) {
+        const rect = introRef.current.getBoundingClientRect();
+        // Top-16 header is 64px tall on mobile
+        setIsPastIntro(rect.bottom <= 64);
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Lock page scroll while filter sheet or mobile search overlay is open */
+  useEffect(() => {
+    document.body.style.overflow = filtersOpen || searchModalOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [filtersOpen]);
+  }, [filtersOpen, searchModalOpen]);
 
   /* Keep URL shareable */
   useEffect(() => {
@@ -228,7 +260,7 @@ export function PropertyExplorer() {
   return (
     <div className="container-site pb-24 pt-8 md:pt-12">
       {/* Heading */}
-      <div className="mb-8">
+      <div className="mb-6" ref={introRef}>
         <p className="eyebrow">Marketplace</p>
         <h1 className="font-display text-h1 mt-2 font-medium tracking-tight">
           {district !== "all" ? `Properties in ${district}` : "Every property"}
@@ -240,10 +272,136 @@ export function PropertyExplorer() {
         </p>
       </div>
 
-      {/* Toolbar */}
-      <div className="sticky top-16 z-30 -mx-2 mb-8 rounded-2xl border border-line bg-paper/90 p-2 backdrop-blur-xl md:top-[4.5rem]">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative min-w-0 flex-1 basis-52">
+      {/* Content Section Search & Filter Card (Mobile only when NOT sticky) */}
+      <div className="mb-6 space-y-3 rounded-2xl border border-line bg-raised/60 p-3.5 shadow-sm md:hidden">
+        {/* Search Bar Input */}
+        <div className="relative flex items-center">
+          <Search
+            size={16}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint"
+          />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search location, district, or building…"
+            aria-label="Search properties"
+            className="h-10 bg-paper pl-9 pr-8 text-xs"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+              aria-label="Clear search text"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+
+        {/* Quick Filters Row */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          {/* Status Pills */}
+          <div className="flex shrink-0 gap-1 rounded-xl border border-line bg-paper p-1">
+            {(
+              [
+                { value: "all", label: "All" },
+                { value: "sale", label: "Sale" },
+                { value: "rent", label: "Rent" },
+              ] as const
+            ).map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => setStatus(s.value)}
+                className={cn(
+                  "rounded-lg px-2.5 py-1 text-xs font-medium transition-colors",
+                  status === s.value
+                    ? "bg-ink text-paper"
+                    : "text-muted hover:text-ink"
+                )}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+
+          {/* District Select */}
+          <Select
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
+            aria-label="District"
+            className="h-8 w-auto shrink-0 bg-paper px-2.5 py-1 text-xs"
+          >
+            <option value="all">All Districts</option>
+            {districts.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </Select>
+
+          {/* Filters Modal Button */}
+          <Button
+            variant="outline"
+            onClick={() => setFiltersOpen(true)}
+            className="ml-auto h-8 shrink-0 gap-1.5 bg-paper px-3 py-1 text-xs"
+          >
+            <SlidersHorizontal size={14} />
+            Filters
+            {activeChips.length > 0 && (
+              <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-brass text-[0.625rem] font-bold text-white">
+                {activeChips.length}
+              </span>
+            )}
+          </Button>
+        </div>
+
+        {/* Active Chips in Content Section */}
+        {activeChips.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 border-t border-line/60 pt-2">
+            {activeChips.map((chip) => (
+              <button
+                key={chip.label}
+                onClick={chip.clear}
+                className="flex items-center gap-1.5 rounded-full bg-brass-tint px-2.5 py-1 text-[0.6875rem] font-medium text-ink transition-colors hover:bg-brass hover:text-white"
+              >
+                {chip.label}
+                <X size={10} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sticky Toolbar */}
+      <div
+        className={cn(
+          "sticky z-50 transition-all duration-300 mb-8",
+          isPastIntro
+            ? "block -mx-[calc(50vw-50%)] px-[calc(50vw-50%)] border-b border-line bg-paper/95 py-3.5 backdrop-blur-xl shadow-sm"
+            : "hidden md:block py-2 border-0 bg-transparent",
+          navVisible ? "top-16 md:top-[4.5rem]" : "top-0 md:top-[4.5rem]"
+        )}
+      >
+        <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap md:overflow-visible">
+          {/* Mobile Search Trigger */}
+          <button
+            type="button"
+            onClick={() => setSearchModalOpen(true)}
+            aria-label="Open full-screen search"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-line bg-raised px-3 py-2 text-xs text-muted transition-colors hover:border-ink/30 md:hidden"
+          >
+            <Search size={14} className="shrink-0 text-faint" />
+            <span className="truncate text-ink-soft">
+              {query
+                ? query
+                : district !== "all"
+                  ? district
+                  : "Search location…"}
+            </span>
+          </button>
+
+          {/* Desktop Search Input */}
+          <div className="relative hidden min-w-0 flex-1 basis-52 md:block">
             <Search
               size={15}
               className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint"
@@ -257,6 +415,19 @@ export function PropertyExplorer() {
             />
           </div>
 
+          {/* Mobile Primary Filter Controls */}
+          <Select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as typeof status)}
+            aria-label="Listing type"
+            className="w-auto min-w-[5.5rem] px-2 py-2 text-xs md:hidden"
+          >
+            <option value="all">Buy & Rent</option>
+            <option value="sale">For Sale</option>
+            <option value="rent">For Rent</option>
+          </Select>
+
+          {/* Desktop Selects */}
           <Select
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
@@ -303,7 +474,7 @@ export function PropertyExplorer() {
                 : ""
             }`}
             variant={selectedHubs.length ? "brass" : "outline"}
-            className="gap-2"
+            className="gap-2 shrink-0"
           >
             <Route size={15} />
             <span className="hidden sm:inline">Drive Time</span>
@@ -322,11 +493,11 @@ export function PropertyExplorer() {
           <Button
             variant="outline"
             onClick={() => setFiltersOpen(true)}
-            className="gap-2"
+            className="gap-1.5 px-3 py-2 text-xs md:gap-2 md:px-4 md:text-sm shrink-0"
             aria-expanded={filtersOpen}
           >
             <SlidersHorizontal size={15} />
-            Filters
+            <span className="hidden sm:inline">Filters</span>
             {activeChips.length > 0 && (
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brass text-[0.6875rem] font-bold text-white">
                 {activeChips.length}
@@ -364,8 +535,9 @@ export function PropertyExplorer() {
           </div>
         </div>
 
+        {/* Desktop Active Filter Chips */}
         {activeChips.length > 0 && (
-          <div className="flex flex-wrap gap-2 px-1 pb-1 pt-2">
+          <div className="hidden flex-wrap gap-2 px-1 pb-1 pt-2 md:flex">
             {activeChips.map((chip) => (
               <button
                 key={chip.label}
@@ -638,6 +810,112 @@ export function PropertyExplorer() {
             </aside>
           </>
         )}
+
+      {/* Mobile Full-Screen Search Modal */}
+      {searchModalOpen && (
+        <div className="fixed inset-0 z-[90] flex flex-col bg-paper md:hidden">
+          {/* Header with Search Input and Done button */}
+          <div className="flex items-center gap-3 border-b border-line px-4 py-3">
+            <div className="relative flex-1">
+              <Search
+                size={16}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint"
+              />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search location, district, or building…"
+                autoFocus
+                className="pl-9 pr-8 text-sm"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+                  aria-label="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setSearchModalOpen(false)}
+              className="text-sm font-semibold text-brass hover:underline shrink-0"
+            >
+              Done
+            </button>
+          </div>
+
+          {/* Search options & quick selections */}
+          <div className="flex-1 space-y-6 overflow-y-auto p-5">
+            {/* Listing type selector */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                Listing Type
+              </Label>
+              <div className="flex gap-2">
+                {(
+                  [
+                    { value: "all", label: "Buy & Rent" },
+                    { value: "sale", label: "For Sale" },
+                    { value: "rent", label: "For Rent" },
+                  ] as const
+                ).map((s) => (
+                  <button
+                    key={s.value}
+                    type="button"
+                    onClick={() => setStatus(s.value)}
+                    className={cn(
+                      "flex-1 rounded-xl border py-2.5 text-xs font-medium transition-colors",
+                      status === s.value
+                        ? "border-ink bg-ink text-paper"
+                        : "border-line text-muted hover:border-ink hover:text-ink"
+                    )}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* District quick picks */}
+            <div>
+              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                District
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {["all", ...districts].map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => setDistrict(d)}
+                    className={cn(
+                      "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                      district === d
+                        ? "border-ink bg-ink text-paper"
+                        : "border-line text-muted hover:border-ink hover:text-ink"
+                    )}
+                  >
+                    {d === "all" ? "All Districts" : d}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer CTA */}
+          <div className="border-t border-line bg-raised p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            <Button
+              className="w-full"
+              onClick={() => setSearchModalOpen(false)}
+            >
+              Show {results.length} {results.length === 1 ? "Listing" : "Listings"}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <CompareTray />
     </div>
