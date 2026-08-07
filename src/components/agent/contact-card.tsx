@@ -14,6 +14,7 @@ import {
 import type { Agent } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/field";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export function ContactCard({
@@ -85,12 +86,7 @@ export function ContactCard({
           </div>
           <div>
             <Label htmlFor="cc-phone">Phone</Label>
-            <Input
-              id="cc-phone"
-              type="tel"
-              required
-              placeholder="+974 5555 0100"
-            />
+            <PhoneInput id="cc-phone" required />
           </div>
           <div>
             <Label htmlFor="cc-msg">Message</Label>
