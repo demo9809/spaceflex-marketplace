@@ -100,6 +100,7 @@ export interface Agent {
   verified: boolean;
   specialties: string[];
   bio: string;
+  phone?: string;
 }
 
 export interface Developer {

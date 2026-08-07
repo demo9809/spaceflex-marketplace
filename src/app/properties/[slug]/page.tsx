@@ -264,7 +264,7 @@ export default async function PropertyDetailPage({
       )}
 
       {/* Mobile sticky action bar */}
-      <MobilePropertyBar property={property} />
+      <MobilePropertyBar property={property} agent={agent} />
 
       <CompareTray />
     </>

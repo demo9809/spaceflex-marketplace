@@ -19,15 +19,33 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+export interface HistorySession {
+  id: string;
+  title: string;
+  preview: string;
+  date: string;
+  messages: ChatMessage[];
+}
+
 interface AiAssistantState {
   isOpen: boolean;
   openAi: (initialQuery?: string) => void;
   closeAi: () => void;
   toggleAi: () => void;
+  activeTab: "chat" | "history";
+  setActiveTab: (tab: "chat" | "history") => void;
   messages: ChatMessage[];
   isTyping: boolean;
   sendMessage: (text: string) => void;
   clearMessages: () => void;
+  historySessions: HistorySession[];
+  loadHistorySession: (id: string) => void;
+  deleteHistorySession: (id: string) => void;
+  startNewChat: () => void;
+  isWide: boolean;
+  toggleWide: () => void;
+  activeCategory: string;
+  setActiveCategory: (cat: string) => void;
 }
 
 const AiAssistantContext = createContext<AiAssistantState | null>(null);
@@ -46,13 +64,84 @@ const INITIAL_WELCOME_MESSAGE: ChatMessage = {
   timestamp: "Just now",
 };
 
+const DEFAULT_HISTORY_SESSIONS: HistorySession[] = [
+  {
+    id: "hist-1",
+    title: "Villas in Lusail under QAR 4.5M",
+    preview: "Found 3 prime villas in Fox Hills and North Island...",
+    date: "Today, 10:42 AM",
+    messages: [
+      {
+        id: "msg-h1-1",
+        sender: "user",
+        text: "Find me a villa under QAR 4M in Lusail.",
+        timestamp: "10:41 AM",
+      },
+      {
+        id: "msg-h1-2",
+        sender: "ai",
+        text: "Here are prime villas and townhouses in Lusail under QAR 4.5M. Lusail offers world-class infrastructure and sustainable smart-city design.",
+        properties: properties.filter((p) => p.type === "Villa" || p.type === "Townhouse").slice(0, 2),
+        timestamp: "10:42 AM",
+      },
+    ],
+  },
+  {
+    id: "hist-2",
+    title: "Beachfront Apartments in Viva Bahriya",
+    preview: "Recommended 2-bedroom units with direct sea views...",
+    date: "Yesterday",
+    messages: [
+      {
+        id: "msg-h2-1",
+        sender: "user",
+        text: "Show beachfront apartments in Viva Bahriya",
+        timestamp: "Yesterday",
+      },
+      {
+        id: "msg-h2-2",
+        sender: "ai",
+        text: "Here are premier beachfront residences in Viva Bahriya featuring direct beach access and private marina views.",
+        properties: properties.filter((p) => p.community.includes("Pearl")).slice(0, 2),
+        timestamp: "Yesterday",
+      },
+    ],
+  },
+  {
+    id: "hist-3",
+    title: "High Yield Investment Units",
+    preview: "Analyzed rental ROI projected at 8.4% net yield...",
+    date: "Aug 4, 2026",
+    messages: [
+      {
+        id: "msg-h3-1",
+        sender: "user",
+        text: "I need an investment property with high rental yield.",
+        timestamp: "Aug 4",
+      },
+      {
+        id: "msg-h3-2",
+        sender: "ai",
+        text: "For high rental yield (projected 7.5%–9.2% net ROI), I recommend luxury apartments in Viva Bahriya and Lusail Marina.",
+        properties: properties.slice(0, 2),
+        timestamp: "Aug 4",
+      },
+    ],
+  },
+];
+
 export function AiAssistantProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"chat" | "history">("chat");
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_WELCOME_MESSAGE]);
+  const [historySessions, setHistorySessions] = useState<HistorySession[]>(DEFAULT_HISTORY_SESSIONS);
   const [isTyping, setIsTyping] = useState(false);
+  const [isWide, setIsWide] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("For You");
 
   const openAi = useCallback((initialQuery?: string) => {
     setIsOpen(true);
+    setActiveTab("chat");
     if (initialQuery) {
       setTimeout(() => {
         handleSendMessage(initialQuery);
@@ -68,8 +157,29 @@ export function AiAssistantProvider({ children }: { children: ReactNode }) {
     setIsOpen((prev) => !prev);
   }, []);
 
+  const toggleWide = useCallback(() => {
+    setIsWide((prev) => !prev);
+  }, []);
+
   const clearMessages = useCallback(() => {
     setMessages([INITIAL_WELCOME_MESSAGE]);
+  }, []);
+
+  const startNewChat = useCallback(() => {
+    setMessages([INITIAL_WELCOME_MESSAGE]);
+    setActiveTab("chat");
+  }, []);
+
+  const loadHistorySession = useCallback((id: string) => {
+    const found = historySessions.find((s) => s.id === id);
+    if (found) {
+      setMessages(found.messages);
+      setActiveTab("chat");
+    }
+  }, [historySessions]);
+
+  const deleteHistorySession = useCallback((id: string) => {
+    setHistorySessions((prev) => prev.filter((s) => s.id !== id));
   }, []);
 
   const handleSendMessage = (text: string) => {
@@ -96,7 +206,23 @@ export function AiAssistantProvider({ children }: { children: ReactNode }) {
         suggestedFollowups: response.suggestedFollowups,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      setMessages((prev) => [...prev, aiMsg]);
+
+      setMessages((prevMessages) => {
+        const nextMessages = [...prevMessages, aiMsg];
+        // Automatically append to history
+        setHistorySessions((prevHist) => [
+          {
+            id: `hist-${Date.now()}`,
+            title: text.slice(0, 36) + (text.length > 36 ? "…" : ""),
+            preview: response.text.slice(0, 60) + "…",
+            date: "Just now",
+            messages: nextMessages,
+          },
+          ...prevHist,
+        ]);
+        return nextMessages;
+      });
+
       setIsTyping(false);
     }, 1200);
   };
@@ -108,10 +234,20 @@ export function AiAssistantProvider({ children }: { children: ReactNode }) {
         openAi,
         closeAi,
         toggleAi,
+        activeTab,
+        setActiveTab,
         messages,
         isTyping,
         sendMessage: handleSendMessage,
         clearMessages,
+        historySessions,
+        loadHistorySession,
+        deleteHistorySession,
+        startNewChat,
+        isWide,
+        toggleWide,
+        activeCategory,
+        setActiveCategory,
       }}
     >
       {children}

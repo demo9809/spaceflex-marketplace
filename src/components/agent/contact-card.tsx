@@ -14,6 +14,7 @@ import {
 import type { Agent } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/field";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export function ContactCard({
   agent,
@@ -25,7 +26,7 @@ export function ContactCard({
   const [sent, setSent] = useState(false);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-raised shadow-card">
+    <div id="enquire" className="overflow-hidden rounded-2xl border border-line bg-raised shadow-card scroll-mt-24">
       <div className="flex items-center gap-4 border-b border-line p-5">
         <Link
           href={`/agents/${agent.slug}`}
@@ -103,14 +104,22 @@ export function ContactCard({
             Request viewing
           </Button>
           <div className="grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline" className="w-full">
-              <Phone size={15} />
-              Call
-            </Button>
-            <Button type="button" variant="outline" className="w-full">
-              <MessageCircle size={15} />
-              WhatsApp
-            </Button>
+            <a
+              href={`tel:${(agent.phone || "+974 5555 0100").replace(/[^0-9+]/g, "")}`}
+              className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-line bg-surface px-4 text-xs font-semibold text-ink hover:bg-brass-tint hover:text-brass transition-all cursor-pointer"
+            >
+              <Phone size={15} className="text-brass" />
+              <span>Call</span>
+            </a>
+            <a
+              href={`https://wa.me/${(agent.phone || "+974 5555 0100").replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${agent.name.split(" ")[0]}, I'd like to enquire about ${context}.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-[#25D366] px-4 text-xs font-semibold text-white hover:bg-[#20bd5a] transition-all cursor-pointer shadow-2xs"
+            >
+              <WhatsAppIcon size={16} className="text-white" />
+              <span>WhatsApp</span>
+            </a>
           </div>
           <p className="text-center text-[0.6875rem] leading-relaxed text-faint">
             By enquiring you agree to our terms. Your number is only shared

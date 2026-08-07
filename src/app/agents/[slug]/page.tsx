@@ -14,6 +14,7 @@ import { PropertyCard } from "@/components/property/property-card";
 import { ContactCard } from "@/components/agent/contact-card";
 import { Badge } from "@/components/ui/badge";
 import { CompareTray } from "@/components/site/compare-tray";
+import { MobileAgentBar } from "@/components/agent/mobile-agent-bar";
 
 export function generateStaticParams() {
   return agents.map((a) => ({ slug: a.slug }));
@@ -192,6 +193,7 @@ export default async function AgentProfilePage({
         </aside>
       </div>
 
+      <MobileAgentBar agent={agent} />
       <CompareTray />
     </>
   );
