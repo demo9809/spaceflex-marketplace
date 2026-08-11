@@ -189,9 +189,6 @@ export default async function PropertyDetailPage({
               </p>
             </section>
 
-            {/* Listed by */}
-            <ListedBy property={property} agent={agent} />
-
             {/* Amenities */}
             <section aria-labelledby="amenities" className="mt-10">
               <h2 id="amenities" className="font-display text-h3 font-medium">
@@ -242,6 +239,7 @@ export default async function PropertyDetailPage({
                 />
               </div>
             )}
+            <ListedBy property={property} agent={agent} />
           </aside>
         </div>
       </div>

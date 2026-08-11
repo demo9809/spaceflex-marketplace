@@ -12,22 +12,26 @@ import type { Agent, Property } from "@/lib/types";
 import { agencyForAgent } from "@/lib/data/agencies";
 import { Badge } from "@/components/ui/badge";
 
+import { cn } from "@/lib/utils";
+
 /* "Listed by" — makes the listing party explicit: a verified brokerage,
    an independent agent, or a private owner. The enquiry contact below
    (ContactCard) is separate; this answers "who is behind this listing". */
 export function ListedBy({
   property,
   agent,
+  className,
 }: {
   property: Property;
   agent: Agent;
+  className?: string;
 }) {
   const kind = property.listingKind ?? "agency";
   const agency = kind === "agency" ? agencyForAgent(agent.id) : undefined;
 
   return (
-    <section aria-labelledby="listed-by" className="mt-10">
-      <h2 id="listed-by" className="font-display text-h3 font-medium">
+    <section aria-labelledby="listed-by" className={cn(className)}>
+      <h2 id="listed-by" className="font-display text-lg font-semibold">
         Listed by
       </h2>
 
