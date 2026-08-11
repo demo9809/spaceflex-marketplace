@@ -39,15 +39,15 @@ export function MobileTabBar() {
                 type="button"
                 onClick={() => openAi()}
                 className={cn(
-                  "relative flex flex-col items-center justify-center gap-1 text-[0.625rem] font-bold transition-all",
-                  isOpen ? "text-brass" : "text-ink"
+                  "relative flex flex-col items-center justify-center gap-1 text-[0.625rem] font-bold transition-all cursor-pointer",
+                  isOpen ? "text-indigo-600" : "text-ink"
                 )}
               >
-                <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-[#0b241d] via-[#166246] via-[#248e67] to-[#d4af37] text-white shadow-[0_0_15px_rgba(22,98,70,0.6)]">
+                <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-[0_2px_10px_rgba(99,102,241,0.4)]">
                   <Sparkles size={16} fill="currentColor" className="animate-pulse text-amber-200" />
-                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-amber-400 animate-ping opacity-80" />
+                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-sky-400 animate-ping opacity-80" />
                 </span>
-                <span className="bg-gradient-to-r from-[#166246] via-[#248e67] to-[#b39359] bg-clip-text text-transparent font-extrabold">
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600 bg-clip-text text-transparent font-extrabold">
                   {tab.label}
                 </span>
               </button>
