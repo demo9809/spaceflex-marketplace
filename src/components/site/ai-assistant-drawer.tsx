@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Sparkles,
@@ -312,9 +313,14 @@ export function AiAssistantDrawer() {
               <div className="flex-1 flex flex-col justify-between py-2 space-y-5 animate-in fade-in">
                 {/* Centered AI Greeting Hero */}
                 <div className="flex flex-col items-center justify-center text-center pt-5 px-2">
-                  <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-[0_8px_24px_rgba(99,102,241,0.35)] ring-4 ring-indigo-100/70">
-                    <Sparkles size={24} fill="currentColor" className="animate-pulse text-amber-200" />
-                    <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-paper bg-sky-400 shadow-xs" />
+                  <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden ring-4 ring-indigo-200/80 shadow-[0_8px_24px_rgba(99,102,241,0.35)]">
+                    <Image
+                      src="/ai-avatar.png"
+                      alt="SpaceFlex AI"
+                      width={56}
+                      height={56}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                   <h2 className="font-display text-xl font-bold text-ink flex items-center gap-1.5">
                     Hello Guest 👋
@@ -499,8 +505,14 @@ function MessageBubble({
 
   return (
     <div className="flex items-start gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-[0_2px_10px_rgba(99,102,241,0.3)]">
-        <Sparkles size={15} fill="currentColor" className="text-amber-200" />
+      <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full overflow-hidden ring-2 ring-indigo-400/50 shadow-xs">
+        <Image
+          src="/ai-avatar.png"
+          alt="SpaceFlex AI"
+          width={32}
+          height={32}
+          className="h-full w-full object-cover"
+        />
       </div>
 
       <div className="min-w-0 flex-1 space-y-3">

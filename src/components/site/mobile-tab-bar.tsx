@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, Heart, Compass, Sparkles, User } from "lucide-react";
@@ -38,16 +39,32 @@ export function MobileTabBar() {
                 key={tab.label}
                 type="button"
                 onClick={() => openAi()}
-                className={cn(
-                  "relative flex flex-col items-center justify-center gap-1 text-[0.625rem] font-bold transition-all cursor-pointer",
-                  isOpen ? "text-indigo-600" : "text-ink"
-                )}
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.625rem] transition-all cursor-pointer"
               >
-                <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-[0_2px_10px_rgba(99,102,241,0.4)]">
-                  <Sparkles size={16} fill="currentColor" className="animate-pulse text-amber-200" />
-                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-sky-400 animate-ping opacity-80" />
+                <span
+                  className={cn(
+                    "relative flex h-8.5 w-8.5 items-center justify-center rounded-full overflow-hidden transition-all duration-300",
+                    isOpen
+                      ? "ring-2 ring-indigo-500 shadow-[0_2px_12px_rgba(99,102,241,0.4)] scale-105"
+                      : "ring-1 ring-indigo-300/40 shadow-xs opacity-90 hover:opacity-100 hover:scale-105"
+                  )}
+                >
+                  <Image
+                    src="/ai-avatar.png"
+                    alt="SpaceFlex AI"
+                    width={34}
+                    height={34}
+                    className="h-full w-full object-cover"
+                  />
                 </span>
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600 bg-clip-text text-transparent font-extrabold">
+                <span
+                  className={cn(
+                    "transition-colors",
+                    isOpen
+                      ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600 bg-clip-text text-transparent font-extrabold"
+                      : "text-faint hover:text-ink font-medium"
+                  )}
+                >
                   {tab.label}
                 </span>
               </button>

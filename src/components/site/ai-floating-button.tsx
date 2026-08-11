@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
 import { useAiAssistant } from "@/lib/store/ai-assistant-context";
 import { cn } from "@/lib/utils";
 
@@ -23,10 +23,15 @@ export function AiFloatingButton() {
         "ring-1 ring-indigo-200/60 hover:ring-indigo-300"
       )}
     >
-      {/* Icon Badge */}
-      <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-xs transition-transform duration-300 group-hover:rotate-6">
-        <Sparkles size={18} fill="currentColor" className="text-amber-200" />
-        <span className="absolute inset-0 rounded-full bg-indigo-400/30 animate-ping opacity-40" />
+      {/* Round 3D AI Avatar Badge */}
+      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full overflow-hidden ring-2 ring-indigo-400/40 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <Image
+          src="/ai-avatar.png"
+          alt="SpaceFlex AI Advisor"
+          width={40}
+          height={40}
+          className="h-full w-full object-cover"
+        />
       </div>
 
       {/* Label */}
