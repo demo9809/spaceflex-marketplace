@@ -15,21 +15,27 @@ export function AiFloatingButton() {
       onClick={() => openAi()}
       aria-label="Open SpaceFlex AI Assistant"
       className={cn(
-        "fixed bottom-6 right-6 z-40 hidden md:flex items-center gap-3 rounded-full p-2 pr-5 text-white transition-all duration-300 hover:scale-105 active:scale-95 group",
-        "bg-gradient-to-r from-[#0b241d] via-[#166246] via-[#248e67] to-[#d4af37]",
-        "shadow-[0_0_30px_rgba(22,98,70,0.55),0_0_15px_rgba(212,175,55,0.35)] hover:shadow-[0_0_40px_rgba(22,98,70,0.75),0_0_20px_rgba(212,175,55,0.5)] border border-white/20"
+        "fixed bottom-6 right-6 z-40 hidden md:flex items-center gap-3 rounded-full p-2 pr-5 transition-all duration-300 hover:scale-[1.03] active:scale-95 group cursor-pointer",
+        // Soft cool-toned Gemini-style gradient (sky, indigo, purple with subtle warm accent)
+        "bg-[linear-gradient(110deg,#e0f2fe_0%,#e0e7ff_40%,#f3e8ff_75%,#fef3c7_100%)]",
+        // Glass frosted effect & luminous subtle glow
+        "backdrop-blur-xl border border-white/90 shadow-[0_8px_30px_rgba(99,102,241,0.18),0_2px_8px_rgba(168,85,247,0.12)] hover:shadow-[0_12px_36px_rgba(99,102,241,0.28),0_4px_16px_rgba(168,85,247,0.2)]",
+        "ring-1 ring-indigo-200/60 hover:ring-indigo-300"
       )}
     >
-      <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-black/20 backdrop-blur-md">
-        <Sparkles size={20} fill="currentColor" className="animate-pulse text-amber-200" />
-        <span className="absolute inset-0 rounded-full bg-amber-400/30 animate-ping opacity-60" />
+      {/* Icon Badge */}
+      <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-500 text-white shadow-xs transition-transform duration-300 group-hover:rotate-6">
+        <Sparkles size={18} fill="currentColor" className="text-amber-200" />
+        <span className="absolute inset-0 rounded-full bg-indigo-400/30 animate-ping opacity-40" />
       </div>
+
+      {/* Label */}
       <div className="flex flex-col text-left pr-0.5">
-        <span className="text-[0.625rem] font-extrabold uppercase tracking-wider text-amber-300/90 flex items-center gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+        <span className="text-[0.625rem] font-extrabold uppercase tracking-wider text-indigo-950/80 flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse" />
           AI Advisor
         </span>
-        <span className="font-display text-xs font-bold text-white tracking-tight">
+        <span className="font-display text-xs font-bold text-slate-900 tracking-tight">
           Ask SpaceFlex AI
         </span>
       </div>

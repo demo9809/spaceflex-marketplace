@@ -153,7 +153,7 @@ export function AiAssistantDrawer() {
       <div
         onClick={closeAi}
         aria-hidden="true"
-        className="fixed inset-0 z-[99] bg-black/40 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+        className="fixed inset-0 z-[99] bg-black/40 md:bg-transparent backdrop-blur-xs md:backdrop-blur-none transition-opacity duration-300 animate-in fade-in"
       />
 
       {/* Floating Drawer Panel (Desktop: Right Floating Panel with margins & rounded corners, Mobile: Full-Screen) */}
@@ -161,7 +161,7 @@ export function AiAssistantDrawer() {
         role="dialog"
         aria-label="SpaceFlex AI Assistant"
         className={cn(
-          "fixed z-[100] flex flex-col bg-paper transition-all duration-300 ease-out shadow-[0_20px_60px_-15px_rgba(8,40,34,0.25)] border border-line/80",
+          "fixed z-[100] flex flex-col bg-paper transition-all duration-300 ease-out shadow-[0_20px_60px_-15px_rgba(8,40,34,0.25)] md:shadow-[0_24px_70px_-15px_rgba(0,0,0,0.25),0_0_1px_rgba(0,0,0,0.2)] border border-line/80",
           // Mobile layout: full height attached right
           "top-0 bottom-0 right-0 w-full",
           // Desktop layout: floating card with matching top, bottom, and right side gaps!
