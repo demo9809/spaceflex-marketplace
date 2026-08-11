@@ -19,6 +19,7 @@ import {
   MessageSquare,
   ChevronRight,
   Filter,
+  MapPin,
 } from "lucide-react";
 import { useAiAssistant, type ChatMessage } from "@/lib/store/ai-assistant-context";
 import { propertyPrice } from "@/lib/format";
@@ -522,65 +523,85 @@ function MessageBubble({
           </p>
         </div>
 
-        {/* Embedded Property Cards */}
+        {/* Embedded Property Result Cards (AI Recommendation Component) */}
         {message.properties && message.properties.length > 0 && (
-          <div className="space-y-2 pt-1">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
-              <Building2 size={12} className="text-brass" /> Recommended Properties
-            </p>
-            <div className="space-y-2">
-              {message.properties.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/properties/${p.slug}`}
-                  onClick={onCloseDrawer}
-                  className="group flex gap-3 overflow-hidden rounded-2xl border border-line bg-paper p-2.5 shadow-xs transition-all hover:border-brass hover:shadow-md"
-                >
-                  <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-surface">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.images[0]}
-                      alt={p.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <span className="absolute left-1 top-1 rounded-md bg-ink/80 px-1.5 py-0.5 text-[0.5625rem] font-bold text-white uppercase">
-                      {p.status === "sale" ? "Sale" : "Rent"}
-                    </span>
-                  </div>
-                  <div className="flex flex-1 flex-col justify-between py-0.5 min-w-0">
-                    <div>
-                      <p className="font-bold text-brass text-xs">
-                        {propertyPrice(p)}
-                      </p>
-                      <h4 className="truncate text-xs font-semibold text-ink group-hover:text-brass transition-colors">
-                        {p.title}
-                      </h4>
-                      <p className="truncate text-[0.6875rem] text-muted">
-                        {p.community}, {p.city}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between text-[0.625rem] text-faint">
-                      <span>{p.beds} Beds · {p.baths} Baths · {p.areaSqft.toLocaleString()} sqft</span>
-                      <span className="flex items-center gap-0.5 text-brass font-medium group-hover:translate-x-0.5 transition-transform">
-                        View <ArrowRight size={10} />
+          <div className="space-y-2.5 pt-1">
+            <div className="flex items-center justify-between px-0.5">
+              <p className="text-[0.6875rem] font-extrabold uppercase tracking-widest text-indigo-950/80 flex items-center gap-1.5">
+                <span className="text-amber-500 font-bold text-xs" aria-hidden="true">✦</span>
+                RECOMMENDED FOR YOU
+              </p>
+              <span className="text-[0.625rem] font-semibold text-muted bg-surface/80 px-2 py-0.5 rounded-full border border-line/60">
+                {message.properties.length} {message.properties.length === 1 ? "property" : "properties"}
+              </span>
+            </div>
+
+            <div className="space-y-2.5">
+              {message.properties.map((p) => {
+                const isCommercial = p.category === "commercial" || p.type === "Office" || p.beds === 0;
+                const factsString = isCommercial
+                  ? `${p.type}   ·   ${p.fitOut || p.furnishing}   ·   ${p.areaSqft.toLocaleString()} sqft`
+                  : `${p.beds} Beds   ·   ${p.baths} Baths   ·   ${p.areaSqft.toLocaleString()} sqft`;
+
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/properties/${p.slug}`}
+                    onClick={onCloseDrawer}
+                    className="group relative flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-3.5 overflow-hidden rounded-[16px] border border-line/90 bg-paper p-2.5 md:p-3 shadow-2xs transition-all duration-200 hover:border-brass/50 hover:bg-surface/50 hover:shadow-card cursor-pointer"
+                  >
+                    {/* LEFT: Landscape Image with refined status badge */}
+                    <div className="relative w-full md:w-[136px] aspect-[16/10] shrink-0 overflow-hidden rounded-[14px] bg-surface">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.images[0]}
+                        alt={p.title}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+                      />
+                      <span className="absolute left-1.5 top-1.5 rounded-md bg-slate-950/70 backdrop-blur-xs px-2 py-0.5 text-[0.5625rem] font-bold uppercase tracking-wider text-white border border-white/10">
+                        {p.status === "sale" ? "Sale" : "Rent"}
                       </span>
                     </div>
-                  </div>
-                </Link>
-              ))}
+
+                    {/* MIDDLE: Content Hierarchy (Price -> Name -> Location -> Key Facts) */}
+                    <div className="flex flex-1 flex-col justify-center min-w-0 py-0.5">
+                      <p className="font-display text-base font-bold text-[#166246] tracking-tight">
+                        {propertyPrice(p)}
+                      </p>
+                      <h4 className="mt-0.5 truncate text-xs font-bold text-ink transition-colors group-hover:text-brass">
+                        {p.title}
+                      </h4>
+                      <p className="mt-0.5 flex items-center gap-1 text-[0.6875rem] text-muted">
+                        <MapPin size={11} className="shrink-0 text-faint" />
+                        <span className="truncate">{p.community}, {p.city}</span>
+                      </p>
+                      <p className="mt-1.5 text-[0.6875rem] font-medium text-muted/80 truncate">
+                        {factsString}
+                      </p>
+                    </div>
+
+                    {/* RIGHT: Compact View Action */}
+                    <div className="flex items-center justify-end md:shrink-0 pt-1 md:pt-0 border-t md:border-t-0 border-line/40 md:pl-2">
+                      <span className="flex items-center gap-1 text-xs font-bold text-[#166246] transition-all group-hover:translate-x-1 group-hover:text-brass">
+                        View property <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Suggested Quick Prompts */}
+        {/* Suggested Follow-up Queries */}
         {message.suggestedFollowups && message.suggestedFollowups.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {message.suggestedFollowups.map((prompt) => (
               <button
                 key={prompt}
                 type="button"
                 onClick={() => onPromptClick(prompt)}
-                className="rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-brass hover:bg-brass-tint hover:text-brass text-left cursor-pointer"
+                className="rounded-full border border-line bg-surface/60 px-3 py-1 text-xs font-medium text-muted transition-all hover:border-brass/40 hover:bg-brass-tint/40 hover:text-ink text-left cursor-pointer"
               >
                 {prompt}
               </button>
