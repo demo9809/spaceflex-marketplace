@@ -14,6 +14,12 @@ import {
   Check,
   Share2,
   ChevronRight,
+  Building2,
+  Layers,
+  LayoutGrid,
+  KeyRound,
+  Wrench,
+  Receipt,
 } from "lucide-react";
 import { getProperty, properties, similarProperties } from "@/lib/data/properties";
 import { getAgent } from "@/lib/data/agents";
@@ -61,18 +67,51 @@ export default async function PropertyDetailPage({
   const agent = getAgent(property.agentId)!;
   const similar = similarProperties(property);
 
-  const facts = [
-    property.beds > 0 && {
-      icon: BedDouble,
-      label: "Bedrooms",
-      value: String(property.beds),
-    },
-    { icon: Bath, label: "Bathrooms", value: String(property.baths) },
-    { icon: Ruler, label: "Built area", value: formatArea(property.areaSqft) },
-    { icon: CalendarDays, label: "Year built", value: String(property.yearBuilt) },
-    { icon: Car, label: "Parking", value: `${property.parking} bays` },
-    { icon: Sofa, label: "Furnishing", value: property.furnishing },
-  ].filter(Boolean) as { icon: typeof BedDouble; label: string; value: string }[];
+  const isCommercial =
+    property.category === "commercial" ||
+    property.type === "Office" ||
+    property.beds === 0;
+
+  const facts = isCommercial
+    ? [
+        { icon: Building2, label: "Property type", value: property.type },
+        property.totalFloors && {
+          icon: Layers,
+          label: "Total floors",
+          value: `${property.totalFloors} floors`,
+        },
+        property.totalUnits && {
+          icon: LayoutGrid,
+          label: "Total units / spaces",
+          value: `${property.totalUnits} units`,
+        },
+        property.availableUnits && {
+          icon: KeyRound,
+          label: "Available units",
+          value: `${property.availableUnits} units`,
+        },
+        { icon: Ruler, label: "Total built area", value: formatArea(property.areaSqft) },
+        { icon: CalendarDays, label: "Year built", value: String(property.yearBuilt) },
+        { icon: Car, label: "Parking capacity", value: `${property.parking} bays` },
+        { icon: Wrench, label: "Fit-out / Furnishing", value: property.fitOut || property.furnishing },
+        property.serviceCharge && {
+          icon: Receipt,
+          label: "Service charge",
+          value: property.serviceCharge,
+        },
+      ].filter(Boolean) as { icon: typeof Building2; label: string; value: string }[]
+    : [
+        property.beds > 0 && {
+          icon: BedDouble,
+          label: "Bedrooms",
+          value: String(property.beds),
+        },
+        { icon: Bath, label: "Bathrooms", value: String(property.baths) },
+        { icon: Ruler, label: "Built area", value: formatArea(property.areaSqft) },
+        { icon: CalendarDays, label: "Year built", value: String(property.yearBuilt) },
+        { icon: Car, label: "Parking", value: `${property.parking} bays` },
+        { icon: Sofa, label: "Furnishing", value: property.furnishing },
+      ].filter(Boolean) as { icon: typeof BedDouble; label: string; value: string }[];
 
   return (
     <>
@@ -158,10 +197,10 @@ export default async function PropertyDetailPage({
               </p>
             </div>
 
-            {/* Key facts */}
+            {/* Key facts / Building facts */}
             <section aria-labelledby="facts" className="mt-10">
               <h2 id="facts" className="font-display text-h3 font-medium">
-                Key facts
+                {isCommercial ? "Building facts" : "Key facts"}
               </h2>
               <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {facts.map((f) => (

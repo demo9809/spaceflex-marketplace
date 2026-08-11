@@ -48,6 +48,12 @@ export interface Property {
   views: number;
   rentYield?: number;
   floorPlan?: string;
+  /* Commercial building facts */
+  totalFloors?: number;
+  totalUnits?: number;
+  availableUnits?: number;
+  fitOut?: string;
+  serviceCharge?: string;
 }
 
 export type LandmarkCategory =
