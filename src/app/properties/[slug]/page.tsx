@@ -29,6 +29,7 @@ import { MortgageWidget } from "@/components/property/mortgage-widget";
 import { ListedBy } from "@/components/property/listed-by";
 import { GettingAround } from "@/components/property/getting-around";
 import { PropertyMap } from "@/components/property/property-map";
+import { AmenitiesList } from "@/components/property/amenities-list";
 import { ContactCard } from "@/components/agent/contact-card";
 import { PropertyCard } from "@/components/property/property-card";
 import { SaveButton } from "@/components/property/save-button";
@@ -229,21 +230,10 @@ export default async function PropertyDetailPage({
             </section>
 
             {/* Amenities */}
-            <section aria-labelledby="amenities" className="mt-10">
-              <h2 id="amenities" className="font-display text-h3 font-medium">
-                Amenities
-              </h2>
-              <ul className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-                {property.amenities.map((a) => (
-                  <li key={a} className="flex items-center gap-2.5 text-sm">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brass-tint text-brass">
-                      <Check size={13} />
-                    </span>
-                    {a}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <AmenitiesList
+              amenities={property.amenities}
+              isCommercial={isCommercial}
+            />
 
             {/* Location */}
             <section aria-labelledby="location" className="mt-10">
