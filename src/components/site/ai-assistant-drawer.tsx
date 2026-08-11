@@ -551,7 +551,7 @@ function MessageBubble({
                     className="group relative flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-3.5 overflow-hidden rounded-[16px] border border-line/90 bg-paper p-2.5 md:p-3 shadow-2xs transition-all duration-200 hover:border-brass/50 hover:bg-surface/50 hover:shadow-card cursor-pointer"
                   >
                     {/* LEFT: Landscape Image with refined status badge */}
-                    <div className="relative w-full md:w-[136px] aspect-[16/10] shrink-0 overflow-hidden rounded-[14px] bg-surface">
+                    <div className="relative w-full md:w-[140px] md:h-[110px] aspect-[16/10] shrink-0 overflow-hidden rounded-[14px] bg-surface">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={p.images[0]}
@@ -565,24 +565,24 @@ function MessageBubble({
 
                     {/* MIDDLE: Content Hierarchy (Price -> Name -> Location -> Key Facts) */}
                     <div className="flex flex-1 flex-col justify-center min-w-0 py-0.5">
-                      <p className="font-display text-base font-bold text-[#166246] tracking-tight">
+                      <p className="font-display text-sm md:text-base font-bold text-[#166246] tracking-tight whitespace-nowrap">
                         {propertyPrice(p)}
                       </p>
-                      <h4 className="mt-0.5 truncate text-xs font-bold text-ink transition-colors group-hover:text-brass">
+                      <h4 className="mt-0.5 line-clamp-1 md:line-clamp-2 text-xs font-bold text-ink transition-colors group-hover:text-brass leading-snug">
                         {p.title}
                       </h4>
-                      <p className="mt-0.5 flex items-center gap-1 text-[0.6875rem] text-muted">
+                      <p className="mt-0.5 flex items-center gap-1 text-[0.6875rem] text-muted truncate">
                         <MapPin size={11} className="shrink-0 text-faint" />
                         <span className="truncate">{p.community}, {p.city}</span>
                       </p>
-                      <p className="mt-1.5 text-[0.6875rem] font-medium text-muted/80 truncate">
+                      <p className="mt-1 text-[0.6875rem] font-medium text-muted/80 truncate">
                         {factsString}
                       </p>
                     </div>
 
                     {/* RIGHT: Compact View Action */}
                     <div className="flex items-center justify-end md:shrink-0 pt-1 md:pt-0 border-t md:border-t-0 border-line/40 md:pl-2">
-                      <span className="flex items-center gap-1 text-xs font-bold text-[#166246] transition-all group-hover:translate-x-1 group-hover:text-brass">
+                      <span className="flex items-center gap-1 text-xs font-bold text-[#166246] transition-all group-hover:translate-x-1 group-hover:text-brass whitespace-nowrap">
                         View property <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </div>
