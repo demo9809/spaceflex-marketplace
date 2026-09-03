@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ss-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="100%" stop-color="#292524" />
+    </linearGradient>
+    <linearGradient id="ss-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="ss-sand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5f5f4" />
+      <stop offset="100%" stop-color="#d6d3d1" />
+    </linearGradient>
+    <filter id="ss-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded canvas -->
+  <rect width="200" height="200" rx="44" fill="url(#ss-bg)" />
+  
+  <!-- Subtle border ring -->
+  <rect x="3" y="3" width="194" height="194" rx="41" fill="none" stroke="url(#ss-amber)" stroke-width="1.5" stroke-opacity="0.3" />
+
+  <!-- Salt & Stone geometric interlocking emblem (Hexagon stone facet + wave) -->
+  <g filter="url(#ss-shadow)">
+    <!-- Hexagonal Stone Facet Outer -->
+    <polygon points="100,38 132,56 132,92 100,110 68,92 68,56" 
+             fill="none" 
+             stroke="url(#ss-amber)" 
+             stroke-width="3" 
+             stroke-linejoin="round" />
+             
+    <!-- Inner faceted geometry lines -->
+    <line x1="100" y1="38" x2="100" y2="74" stroke="url(#ss-sand)" stroke-width="2" />
+    <line x1="68" y1="92" x2="100" y2="74" stroke="url(#ss-sand)" stroke-width="2" />
+    <line x1="132" y1="92" x2="100" y2="74" stroke="url(#ss-sand)" stroke-width="2" />
+    <line x1="100" y1="110" x2="100" y2="74" stroke="url(#ss-amber)" stroke-width="2" />
+
+    <!-- Center pearl / crystal dot -->
+    <circle cx="100" cy="74" r="4.5" fill="url(#ss-sand)" />
+  </g>
+
+  <!-- Typography -->
+  <text x="100" y="136" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', serif" 
+        font-size="13.5" 
+        font-weight="700" 
+        letter-spacing="3.5" 
+        fill="url(#ss-sand)" 
+        text-anchor="middle">SALT &amp; STONE</text>
+        
+  <text x="100" y="155" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="8.5" 
+        font-weight="600" 
+        letter-spacing="4.5" 
+        fill="url(#ss-amber)" 
+        text-anchor="middle">REALTY</text>
+
+  <text x="100" y="174" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="6.5" 
+        font-weight="400" 
+        letter-spacing="2" 
+        fill="#a8a29e" 
+        text-anchor="middle">THE PEARL · QATAR</text>
+</svg>

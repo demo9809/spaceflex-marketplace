@@ -559,7 +559,7 @@ function MessageBubble({
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                       />
                       <span className="absolute left-1.5 top-1.5 rounded-md bg-slate-950/70 backdrop-blur-xs px-2 py-0.5 text-[0.5625rem] font-bold uppercase tracking-wider text-white border border-white/10">
-                        {p.status === "sale" ? "Sale" : "Rent"}
+                        Rent
                       </span>
                     </div>
 

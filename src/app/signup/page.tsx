@@ -11,7 +11,7 @@ export default function SignUpPage() {
   return (
     <AuthShell
       title="Create your account"
-      subtitle="Save searches, follow agents, and get first access to new launches."
+      subtitle="Save homes, follow agents, and get first access to new launches."
       footer={
         <>
           Already have an account?{" "}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BadgeCheck, ShieldCheck, Building2, Users } from "lucide-react";
 import {
@@ -27,8 +28,8 @@ export async function generateMetadata({
   const agency = getAgency(slug);
   if (!agency) return {};
   return {
-    title: `${agency.name} — Brokerage`,
-    description: `${agency.tagline}. ${agency.activeListings} live listings across the SpaceFlex marketplace.`,
+    title: `${agency.name} — Real Estate Agency`,
+    description: `${agency.tagline}. ${agency.activeListings} live rental listings across the SpaceFlex marketplace.`,
   };
 }
 
@@ -45,7 +46,7 @@ export default async function AgencyPage({
   const listings = agencyListings(agency.id);
 
   const stats = [
-    { label: "Live listings", value: String(agency.activeListings) },
+    { label: "Live rentals", value: String(listings.length || agency.activeListings) },
     { label: "Advisors", value: String(team.length) },
     { label: "Established", value: String(agency.since) },
     { label: "Licence", value: agency.licenseNo },
@@ -56,9 +57,22 @@ export default async function AgencyPage({
       <section className="border-b border-line bg-surface">
         <div className="container-site py-14 md:py-20">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
-            <span className="font-display flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-ink text-3xl font-semibold text-paper shadow-lift">
-              {agency.logoInitials}
-            </span>
+            {agency.logo ? (
+              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-3xl border border-line bg-surface shadow-lift">
+                <Image
+                  src={agency.logo}
+                  alt={agency.name}
+                  fill
+                  priority
+                  sizes="96px"
+                  className="object-contain"
+                />
+              </div>
+            ) : (
+              <span className="font-display flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-ink text-3xl font-semibold text-paper shadow-lift">
+                {agency.logoInitials}
+              </span>
+            )}
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="font-display text-h1 font-medium tracking-tight">
@@ -70,7 +84,7 @@ export default async function AgencyPage({
                   </Badge>
                 )}
                 <Badge tone="outline">
-                  <Building2 size={12} /> Brokerage
+                  <Building2 size={12} /> Licensed Agency
                 </Badge>
               </div>
               <p className="mt-2 text-muted">
@@ -119,8 +133,8 @@ export default async function AgencyPage({
         {listings.length > 0 && (
           <section aria-labelledby="agency-listings" className="mt-20">
             <SectionHeading
-              eyebrow="Portfolio"
-              title={`Live listings from ${agency.name}`}
+              eyebrow="Rental Portfolio"
+              title={`Live rentals from ${agency.name}`}
             />
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {listings.map((p) => (
@@ -133,7 +147,7 @@ export default async function AgencyPage({
         <div className="mt-20 flex flex-col items-center gap-4 rounded-3xl bg-ink px-6 py-14 text-center text-paper">
           <Users size={24} className="text-brass-deep" />
           <h2 className="font-display text-h3 max-w-md font-medium text-balance">
-            Are you a brokerage? List your portfolio on SpaceFlex.
+            Are you a licensed agency? List your portfolio on SpaceFlex.
           </h2>
           <ButtonLink href="/list-with-us" variant="inverted" size="lg">
             Partner with us

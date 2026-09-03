@@ -12,6 +12,7 @@ import { HeroBackdrop } from "@/components/home/hero-backdrop";
 import { DriveTimeBand } from "@/components/home/drive-time-band";
 import { PropertyCard } from "@/components/property/property-card";
 import { AgentCard } from "@/components/agent/agent-card";
+import { AgencyCard } from "@/components/agency/agency-card";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, RevealStagger, StaggerItem } from "@/components/motion/reveal";
 import { CompareTray } from "@/components/site/compare-tray";
@@ -19,6 +20,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { featuredProperties, IMG } from "@/lib/data/properties";
 import { agents } from "@/lib/data/agents";
+import { agencies } from "@/lib/data/agencies";
 import { projects, developers } from "@/lib/data/developers";
 import { articles } from "@/lib/data/articles";
 import { formatPrice } from "@/lib/format";
@@ -290,19 +292,20 @@ export default function HomePage() {
         </RevealStagger>
       </section>
 
-      {/* ── AGENTS ── */}
+      {/* ── AGENCIES ── */}
       <section className="border-t border-line bg-surface">
         <div className="container-site py-20 md:py-28">
           <SectionHeading
-            eyebrow="Advisory"
-            title="Advisors who know the building, not just the district"
-            href="/agents"
-            linkLabel="Meet all agents"
+            eyebrow="Licensed Brokerages"
+            title="Qatar's leading real estate agencies"
+            description="Licensed brokerages and their dedicated advisors representing premier rental portfolios across Qatar."
+            href="/agencies"
+            linkLabel="View all agencies"
           />
           <RevealStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {agents.slice(0, 4).map((a) => (
-              <StaggerItem key={a.id}>
-                <AgentCard agent={a} />
+            {agencies.map((ag) => (
+              <StaggerItem key={ag.id}>
+                <AgencyCard agency={ag} />
               </StaggerItem>
             ))}
           </RevealStagger>

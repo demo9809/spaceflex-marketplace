@@ -323,10 +323,10 @@ function processAiQuery(userQuery: string): {
   // Scenario 4: High Rental Yield / Investment
   if (query.includes("yield") || query.includes("investment") || query.includes("rental")) {
     const matched = properties.filter(
-      (p) => p.status === "sale" && (p.community.includes("Pearl") || p.community.includes("Lusail"))
+      (p) => p.community.includes("Pearl") || p.community.includes("Lusail")
     );
     return {
-      text: "For high rental yield (projected 7.5%–9.2% net ROI), I recommend luxury apartments in Viva Bahriya (The Pearl) and Lusail Marina. These properties experience high occupancy from executive expats and diplomatic staff.",
+      text: "For prime rentals, I recommend luxury residences in Viva Bahriya (The Pearl) and Lusail Marina. These properties experience high occupancy from executive expats and diplomatic staff.",
       properties: matched.slice(0, 3),
       suggestedFollowups: [
         "Calculate estimated monthly rental income",
@@ -354,13 +354,13 @@ function processAiQuery(userQuery: string): {
 
   // Scenario 6: Budget recommendation
   if (query.includes("budget") || query.includes("price") || query.includes("qar")) {
-    const matched = properties.filter((p) => p.status === "sale" && p.price <= 3500000);
+    const matched = properties.filter((p) => p.price <= 20000);
     return {
-      text: "Here are top-value investment properties and homes under QAR 3.5M across Qatar's premier communities.",
+      text: "Here are top-value rental residences under QAR 20,000/month across Qatar's premier communities.",
       properties: matched.slice(0, 3),
       suggestedFollowups: [
         "Filter for rent under QAR 15k/mo",
-        "Show homes with zero down payment",
+        "Show homes near metro stations",
         "Compare price per sqft by district",
       ],
     };

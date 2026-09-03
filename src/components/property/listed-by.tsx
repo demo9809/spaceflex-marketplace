@@ -61,9 +61,21 @@ export function ListedBy({
             href={`/agencies/${agency.slug}`}
             className="group flex items-start gap-4 p-5 transition-colors hover:bg-brass-tint/40 md:p-6"
           >
-            <span className="font-display flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-ink text-lg font-semibold text-paper">
-              {agency.logoInitials}
-            </span>
+            {agency.logo ? (
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-line bg-surface shadow-xs">
+                <Image
+                  src={agency.logo}
+                  alt={agency.name}
+                  fill
+                  sizes="56px"
+                  className="object-contain"
+                />
+              </div>
+            ) : (
+              <span className="font-display flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-ink text-lg font-semibold text-paper">
+                {agency.logoInitials}
+              </span>
+            )}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-display text-lg font-semibold">
@@ -74,7 +86,7 @@ export function ListedBy({
                     <BadgeCheck size={12} /> Verified
                   </Badge>
                 )}
-                <Badge tone="outline">Brokerage</Badge>
+                <Badge tone="outline">Agency</Badge>
               </div>
               <p className="mt-1 text-sm text-muted">{agency.tagline}</p>
             </div>

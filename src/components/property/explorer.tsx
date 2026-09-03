@@ -67,9 +67,7 @@ export function PropertyExplorer() {
   const params = useSearchParams();
   const navVisible = useScrollNav();
 
-  const [status, setStatus] = useState<"all" | "sale" | "rent">(
-    (params.get("status") as "sale" | "rent") ?? "all"
-  );
+  const status = "rent";
   const [category, setCategory] = useState<PropertyCategory>(
     (params.get("category") as PropertyCategory) ?? "all"
   );
@@ -158,7 +156,7 @@ export function PropertyExplorer() {
   /* Keep URL shareable */
   useEffect(() => {
     const p = new URLSearchParams();
-    if (status !== "all") p.set("status", status);
+
     if (category !== "all") p.set("category", category);
     if (district !== "all") p.set("district", district);
     if (type !== "all") p.set("type", type);
@@ -174,11 +172,11 @@ export function PropertyExplorer() {
     router.replace(`/properties${p.toString() ? `?${p}` : ""}`, {
       scroll: false,
     });
-  }, [status, category, district, type, beds, minPrice, maxPrice, query, hubIds, maxCommute, matchMode, router]);
+  }, [category, district, type, beds, minPrice, maxPrice, query, hubIds, maxCommute, matchMode, router]);
 
   const results = useMemo(() => {
     let list = properties.filter((p) => {
-      if (status !== "all" && p.status !== status) return false;
+      if (p.status !== "rent") return false;
       if (category !== "all") {
         if (category === "commercial" && p.type !== "Office" && p.category !== "commercial") return false;
         if (category === "residential" && (p.type === "Office" || p.category === "commercial")) return false;
@@ -242,7 +240,7 @@ export function PropertyExplorer() {
     }
     return list;
   }, [
-    status,
+
     category,
     district,
     type,
@@ -258,10 +256,7 @@ export function PropertyExplorer() {
   ]);
 
   const activeChips = [
-    status !== "all" && {
-      label: status === "sale" ? "For Sale" : "For Rent",
-      clear: () => setStatus("all"),
-    },
+
     category !== "all" && {
       label: category === "commercial" ? "Commercial" : "Residential",
       clear: () => setCategory("all"),
@@ -301,8 +296,7 @@ export function PropertyExplorer() {
         </h1>
         <p className="mt-2 text-sm text-muted" aria-live="polite">
           {results.length} curated{" "}
-          {results.length === 1 ? "listing" : "listings"}
-          {status !== "all" && ` for ${status === "sale" ? "sale" : "rent"}`}
+          {results.length === 1 ? "listing" : "listings"} for rent
         </p>
       </div>
 
@@ -335,30 +329,7 @@ export function PropertyExplorer() {
 
         {/* Quick Filters Row */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-          {/* Status Pills */}
-          <div className="flex shrink-0 gap-1 rounded-xl border border-line bg-paper p-1">
-            {(
-              [
-                { value: "all", label: "All" },
-                { value: "sale", label: "Sale" },
-                { value: "rent", label: "Rent" },
-              ] as const
-            ).map((s) => (
-              <button
-                key={s.value}
-                type="button"
-                onClick={() => setStatus(s.value)}
-                className={cn(
-                  "rounded-lg px-2.5 py-1 text-xs font-medium transition-colors",
-                  status === s.value
-                    ? "bg-ink text-paper"
-                    : "text-muted hover:text-ink"
-                )}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
+
 
           {/* District Select */}
           <Select
@@ -449,17 +420,7 @@ export function PropertyExplorer() {
             />
           </div>
 
-          {/* Desktop Selects */}
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as typeof status)}
-            aria-label="Listing type"
-            className="h-10 hidden w-auto min-w-32 px-3 text-xs font-semibold rounded-xl border border-line bg-paper sm:block"
-          >
-            <option value="all">Buy & Rent</option>
-            <option value="sale">For Sale</option>
-            <option value="rent">For Rent</option>
-          </Select>
+
 
           <Select
             value={category}
@@ -601,7 +562,6 @@ export function PropertyExplorer() {
             variant="outline"
             className="mt-6"
             onClick={() => {
-              setStatus("all");
               setDistrict("all");
               setType("all");
               setBeds("any");
@@ -856,7 +816,6 @@ export function PropertyExplorer() {
                   variant="outline"
                   className="flex-1"
                   onClick={() => {
-                    setStatus("all");
                     handleCategoryChange("all");
                     setType("all");
                     setBeds("any");
@@ -915,35 +874,7 @@ export function PropertyExplorer() {
 
           {/* Search options & quick selections */}
           <div className="flex-1 space-y-6 overflow-y-auto p-5">
-            {/* Listing type selector */}
-            <div>
-              <Label className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
-                Listing Type
-              </Label>
-              <div className="flex gap-2">
-                {(
-                  [
-                    { value: "all", label: "Buy & Rent" },
-                    { value: "sale", label: "For Sale" },
-                    { value: "rent", label: "For Rent" },
-                  ] as const
-                ).map((s) => (
-                  <button
-                    key={s.value}
-                    type="button"
-                    onClick={() => setStatus(s.value)}
-                    className={cn(
-                      "flex-1 rounded-xl border py-2.5 text-xs font-medium transition-colors",
-                      status === s.value
-                        ? "border-ink bg-ink text-paper"
-                        : "border-line text-muted hover:border-ink hover:text-ink"
-                    )}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             {/* Category / Property Use selector */}
             <div>

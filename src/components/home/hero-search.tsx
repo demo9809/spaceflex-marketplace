@@ -31,7 +31,7 @@ function SuggestionIcon({ s }: { s: Suggestion }) {
 
 export function HeroSearch() {
   const router = useRouter();
-  const [status, setStatus] = useState<"sale" | "rent">("sale");
+  const status = "rent";
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [beds, setBeds] = useState("any");
@@ -115,34 +115,8 @@ export function HeroSearch() {
 
   return (
     <div className="w-full max-w-3xl text-left">
-      {/* Utility row — listing type, then refinements, grouped left.
-          Toggle and chips share one explicit height so the whole row
-          reads as a single, level set of controls. */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div
-          role="tablist"
-          aria-label="Listing type"
-          className="inline-flex h-11 items-center rounded-full bg-white/15 p-1 backdrop-blur-md"
-        >
-          {(["sale", "rent"] as const).map((s) => (
-            <button
-              key={s}
-              role="tab"
-              aria-selected={status === s}
-              onClick={() => setStatus(s)}
-              className={cn(
-                "flex h-full items-center rounded-full px-6 text-sm font-medium transition-all duration-200",
-                status === s
-                  ? "bg-paper text-ink shadow-card"
-                  : "text-paper/85 hover:text-paper"
-              )}
-            >
-              {s === "sale" ? "Buy" : "Rent"}
-            </button>
-          ))}
-        </div>
-
-        <div className="hidden flex-wrap items-center gap-2 sm:flex">
+      {/* Refinements grouped left */}
+      <div className="flex flex-wrap items-center gap-2">
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -183,7 +157,6 @@ export function HeroSearch() {
             All filters
           </button>
         </div>
-      </div>
 
       {/* Search + suggestions — a single modern capsule: soft glass card,
           circular location marker, hairline divider, brass focus glow. */}

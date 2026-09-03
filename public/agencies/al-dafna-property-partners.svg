@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="100%" stop-color="#27272a" />
+    </linearGradient>
+    <linearGradient id="ad-maroon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a81c44" />
+      <stop offset="100%" stop-color="#700d2b" />
+    </linearGradient>
+    <linearGradient id="ad-silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#d4d4d8" />
+    </linearGradient>
+    <filter id="ad-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded canvas -->
+  <rect width="200" height="200" rx="44" fill="url(#ad-bg)" />
+  
+  <!-- Subtle border ring -->
+  <rect x="3" y="3" width="194" height="194" rx="41" fill="none" stroke="url(#ad-maroon)" stroke-width="2" stroke-opacity="0.4" />
+
+  <!-- Modernist Architectural Towers Monogram (AD) -->
+  <g filter="url(#ad-shadow)">
+    <!-- Tower 1 (Left) -->
+    <rect x="66" y="58" width="18" height="42" rx="4" fill="url(#ad-maroon)" />
+    <!-- Tower 2 (Center - Tallest) -->
+    <rect x="91" y="44" width="18" height="56" rx="4" fill="url(#ad-silver)" />
+    <!-- Tower 3 (Right) -->
+    <rect x="116" y="52" width="18" height="48" rx="4" fill="url(#ad-maroon)" opacity="0.85" />
+    
+    <!-- Horizon baseline -->
+    <line x1="58" y1="106" x2="142" y2="106" stroke="url(#ad-silver)" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- Typography -->
+  <text x="100" y="132" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="14" 
+        font-weight="800" 
+        letter-spacing="4" 
+        fill="url(#ad-silver)" 
+        text-anchor="middle">AL DAFNA</text>
+        
+  <text x="100" y="152" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="8" 
+        font-weight="600" 
+        letter-spacing="3" 
+        fill="url(#ad-maroon)" 
+        text-anchor="middle">PROPERTY PARTNERS</text>
+
+  <text x="100" y="172" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="6.5" 
+        font-weight="500" 
+        letter-spacing="2" 
+        fill="#a1a1aa" 
+        text-anchor="middle">COMMERCIAL &amp; PRIME</text>
+</svg>

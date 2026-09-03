@@ -11,7 +11,7 @@ export default function SignInPage() {
   return (
     <AuthShell
       title="Welcome back"
-      subtitle="Sign in to your saved searches, collections and enquiries."
+      subtitle="Sign in to your saved collections and enquiries."
       footer={
         <>
           New to SpaceFlex?{" "}

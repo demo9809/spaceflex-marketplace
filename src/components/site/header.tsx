@@ -16,17 +16,16 @@ import { useAiAssistant } from "@/lib/store/ai-assistant-context";
 type NavIcon = ComponentType<{ size?: number; className?: string }>;
 
 const nav: { label: string; href: string; icon?: NavIcon }[] = [
-  { label: "Buy", href: "/properties?status=sale" },
-  { label: "Rent", href: "/properties?status=rent" },
+  { label: "Explore", href: "/properties" },
   { label: "Drive Time", href: "/drive-time", icon: Navigation },
   { label: "New Projects", href: "/developers" },
-  { label: "Agents", href: "/agents" },
+  { label: "Agencies", href: "/agencies" },
 ];
 
 const insights = [
   { label: "The Journal", href: "/journal", note: "Market stories & guides" },
   { label: "Market Reports", href: "/reports", note: "Quarterly research" },
-  { label: "Calculators", href: "/calculators", note: "Mortgage & yield tools" },
+  { label: "Calculators", href: "/calculators", note: "Rental yield & tools" },
 ];
 
 export function SiteHeader() {

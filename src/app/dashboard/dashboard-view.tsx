@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Heart,
-  Search,
-  MessageCircle,
+  LayoutDashboard,
   Bell,
   CalendarDays,
   Settings,
@@ -15,16 +14,14 @@ import { useSaved } from "@/lib/store/saved";
 import { useAuth } from "@/lib/store/auth";
 import { properties } from "@/lib/data/properties";
 import { PropertyCard } from "@/components/property/property-card";
-import { MessagesPanel } from "./messages";
 import { SignInForm } from "@/app/signin/signin-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { id: "overview", label: "Overview", icon: Search },
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "saved", label: "Saved", icon: Heart },
-  { id: "messages", label: "Messages", icon: MessageCircle },
   { id: "viewings", label: "Viewings", icon: CalendarDays },
   { id: "settings", label: "Settings", icon: Settings },
 ];
@@ -51,7 +48,8 @@ const viewings = [
 export function DashboardView() {
   const params = useSearchParams();
   const router = useRouter();
-  const tab = params.get("tab") ?? "overview";
+  const tabParam = params.get("tab") ?? "overview";
+  const tab = tabs.some((t) => t.id === tabParam) ? tabParam : "overview";
   const { saved } = useSaved();
   const { authed, hydrated, signOut } = useAuth();
   const savedItems = properties.filter((p) => saved.includes(p.id));
@@ -75,7 +73,7 @@ export function DashboardView() {
             Sign in to continue
           </h1>
           <p className="mt-2 text-sm text-muted">
-            Your inbox, saved homes and viewings live behind your account.
+            Your saved homes and viewings live behind your account.
           </p>
           <div className="mt-8">
             <SignInForm redirect={false} />
@@ -87,15 +85,9 @@ export function DashboardView() {
 
   return (
     <div className="container-site py-6 md:py-14">
-      {/* Heading collapses on mobile in Messages so the chat fills the screen */}
-      <div
-        className={cn(
-          "flex-wrap items-end justify-between gap-4",
-          tab === "messages" ? "hidden md:flex" : "flex"
-        )}
-      >
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Buyer workspace</p>
+          <p className="eyebrow">Resident workspace</p>
           <h1 className="font-display text-h2 mt-2 font-medium tracking-tight">
             Good afternoon, Alex
           </h1>
@@ -122,10 +114,7 @@ export function DashboardView() {
       <div
         role="tablist"
         aria-label="Dashboard sections"
-        className={cn(
-          "no-scrollbar flex gap-1 overflow-x-auto border-b border-line",
-          tab === "messages" ? "mt-0 md:mt-8" : "mt-8"
-        )}
+        className="no-scrollbar mt-8 flex gap-1 overflow-x-auto border-b border-line"
       >
         {tabs.map((t) => (
           <button
@@ -142,18 +131,13 @@ export function DashboardView() {
           >
             <t.icon size={15} />
             {t.label}
-            {t.id === "messages" && (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brass text-[0.6875rem] font-bold text-white">
-                1
-              </span>
-            )}
           </button>
         ))}
       </div>
 
       {/* ── OVERVIEW ── */}
       {tab === "overview" && (
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-line bg-raised p-6 shadow-card">
             <p className="text-xs uppercase tracking-[0.14em] text-muted">
               Saved properties
@@ -164,15 +148,6 @@ export function DashboardView() {
             <ButtonLink href="/saved" variant="outline" size="sm" className="mt-4">
               View collection
             </ButtonLink>
-          </div>
-          <div className="rounded-2xl border border-line bg-raised p-6 shadow-card">
-            <p className="text-xs uppercase tracking-[0.14em] text-muted">
-              Saved searches
-            </p>
-            <p className="font-display mt-1 text-4xl font-semibold">2</p>
-            <p className="mt-2 text-sm text-muted">
-              “Lusail · 2BR+ · under QAR 4.5M” has 3 new matches.
-            </p>
           </div>
           <div className="rounded-2xl bg-ink p-6 text-paper shadow-card">
             <p className="text-xs uppercase tracking-[0.14em] text-paper/60">
@@ -186,13 +161,13 @@ export function DashboardView() {
             </p>
           </div>
 
-          <div className="lg:col-span-3">
+          <div className="md:col-span-2">
             <h2 className="font-display mt-4 text-h3 font-medium">
-              New matches for your search
+              Recommended for you
             </h2>
             <div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {properties
-                .filter((p) => p.city === "Doha" && p.status === "sale")
+                .filter((p) => p.city === "Doha" && p.status === "rent")
                 .slice(0, 3)
                 .map((p) => (
                   <PropertyCard key={p.id} property={p} />
@@ -218,9 +193,6 @@ export function DashboardView() {
             ))}
           </div>
         ))}
-
-      {/* ── MESSAGES ── */}
-      {tab === "messages" && <MessagesPanel />}
 
       {/* ── VIEWINGS ── */}
       {tab === "viewings" && (
@@ -266,7 +238,7 @@ export function DashboardView() {
           {[
             {
               title: "Email alerts",
-              desc: "New matches for saved searches, weekly digest.",
+              desc: "Weekly digest and curated property updates.",
               on: true,
             },
             {

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="me-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081c15" />
+      <stop offset="100%" stop-color="#1b4332" />
+    </linearGradient>
+    <linearGradient id="me-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3e5ab" />
+      <stop offset="50%" stop-color="#d4af37" />
+      <stop offset="100%" stop-color="#aa7c11" />
+    </linearGradient>
+    <filter id="me-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded canvas -->
+  <rect width="200" height="200" rx="44" fill="url(#me-bg)" />
+  
+  <!-- Subtle border ring -->
+  <rect x="3" y="3" width="194" height="194" rx="41" fill="none" stroke="url(#me-gold)" stroke-width="1.5" stroke-opacity="0.3" />
+
+  <!-- Outer diamond / meridian frame -->
+  <g filter="url(#me-shadow)">
+    <rect x="70" y="36" width="60" height="60" rx="8" transform="rotate(45 100 66)" fill="none" stroke="url(#me-gold)" stroke-width="2.5" />
+    
+    <!-- Architectural M Monogram / Peak -->
+    <path d="M 68 86 L 68 52 L 84 74 L 100 52 L 116 74 L 132 52 L 132 86" 
+          fill="none" 
+          stroke="url(#me-gold)" 
+          stroke-width="5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+
+    <!-- Center diamond accent -->
+    <polygon points="100,72 104,78 100,84 96,78" fill="url(#me-gold)" />
+  </g>
+
+  <!-- Brand Typography -->
+  <text x="100" y="128" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Cinzel', 'Trajan Pro', serif" 
+        font-size="15" 
+        font-weight="700" 
+        letter-spacing="4.5" 
+        fill="url(#me-gold)" 
+        text-anchor="middle">MERIDIAN</text>
+        
+  <line x1="62" y1="141" x2="138" y2="141" stroke="url(#me-gold)" stroke-width="0.75" stroke-opacity="0.6" />
+  
+  <text x="100" y="156" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="9" 
+        font-weight="500" 
+        letter-spacing="5" 
+        fill="#ffffff" 
+        fill-opacity="0.85" 
+        text-anchor="middle">ESTATES</text>
+  
+  <text x="100" y="174" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" 
+        font-size="6.5" 
+        font-weight="400" 
+        letter-spacing="2.5" 
+        fill="url(#me-gold)" 
+        fill-opacity="0.7" 
+        text-anchor="middle">QATAR</text>
+</svg>

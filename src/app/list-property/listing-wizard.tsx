@@ -67,7 +67,7 @@ interface Draft {
 }
 
 const empty: Draft = {
-  status: "sale",
+  status: "rent",
   type: "",
   title: "",
   description: "",
@@ -242,32 +242,7 @@ export function ListingWizard() {
         {/* ── STEP 1: BASICS ── */}
         {step === 0 && (
           <div className="space-y-7">
-            <div>
-              <Label>Listing type</Label>
-              <div
-                role="tablist"
-                aria-label="Listing type"
-                className="inline-flex rounded-full bg-surface p-1"
-              >
-                {(["sale", "rent"] as const).map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    role="tab"
-                    aria-selected={draft.status === s}
-                    onClick={() => set("status", s)}
-                    className={cn(
-                      "rounded-full px-6 py-2 text-sm font-medium transition-all",
-                      draft.status === s
-                        ? "bg-ink text-paper shadow-card"
-                        : "text-muted hover:text-ink"
-                    )}
-                  >
-                    {s === "sale" ? "For Sale" : "For Rent"}
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             <div>
               <Label>Property type</Label>
@@ -733,7 +708,7 @@ export function ListingWizard() {
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Type</dt>
                   <dd className="font-medium">
-                    {draft.type || "—"} · {draft.status === "sale" ? "Sale" : "Rent"}
+                    {draft.type || "—"} · Rent
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">

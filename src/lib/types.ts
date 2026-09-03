@@ -79,6 +79,7 @@ export interface Agency {
   id: string;
   slug: string;
   name: string;
+  logo?: string;
   logoInitials: string;
   city: string;
   since: number;

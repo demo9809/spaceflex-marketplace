@@ -77,7 +77,7 @@ export function PropertyCard({
         <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between p-3">
           <div className="flex flex-wrap gap-1.5">
             <Badge tone="inverted">
-              {property.status === "sale" ? "For Sale" : "For Rent"}
+              For Rent
             </Badge>
             {property.exclusive && <Badge tone="brass">Exclusive</Badge>}
           </div>

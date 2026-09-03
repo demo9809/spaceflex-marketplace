@@ -8,10 +8,9 @@ const columns = [
   {
     title: "Marketplace",
     links: [
-      { label: "Buy property", href: "/properties?status=sale" },
-      { label: "Rent property", href: "/properties?status=rent" },
+      { label: "Explore rentals", href: "/properties" },
       { label: "New projects", href: "/developers" },
-      { label: "Find an agent", href: "/agents" },
+      { label: "Real estate agencies", href: "/agencies" },
       { label: "Compare properties", href: "/compare" },
     ],
   },
@@ -20,8 +19,7 @@ const columns = [
     links: [
       { label: "The Journal", href: "/journal" },
       { label: "Market reports", href: "/reports" },
-      { label: "Mortgage calculator", href: "/calculators" },
-      { label: "Yield calculator", href: "/calculators#yield" },
+      { label: "Rental yield calculator", href: "/calculators" },
     ],
   },
   {

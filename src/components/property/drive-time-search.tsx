@@ -56,9 +56,7 @@ export function DriveTimeSearch() {
   const navVisible = useScrollNav();
   const initHubs = params.get("hubs")?.split(",").filter(Boolean) ?? [];
 
-  const [status, setStatus] = useState<Status>(
-    (params.get("status") as Status) ?? "all"
-  );
+  const status = "rent";
   const [category, setCategory] = useState<PropertyCategory>(
     (params.get("category") as PropertyCategory) ?? "all"
   );
@@ -125,17 +123,16 @@ export function DriveTimeSearch() {
       p.set("commute", String(maxCommute));
       p.set("match", "all");
     }
-    if (status !== "all") p.set("status", status);
     if (type !== "all") p.set("type", type);
     if (beds !== "any") p.set("beds", beds);
     router.replace(`/drive-time${p.toString() ? `?${p}` : ""}`, { scroll: false });
-  }, [selectedHubs, maxCommute, status, type, beds, router]);
+  }, [selectedHubs, maxCommute, type, beds, router]);
 
   const matches: CommuteMatch[] = useMemo(() => {
     if (!selectedHubs.length) return [];
     return properties
       .filter((p) => {
-        if (status !== "all" && p.status !== status) return false;
+        if (p.status !== "rent") return false;
         if (category !== "all") {
           if (category === "commercial" && p.type !== "Office" && p.category !== "commercial") return false;
           if (category === "residential" && (p.type === "Office" || p.category === "commercial")) return false;
@@ -156,7 +153,7 @@ export function DriveTimeSearch() {
       .sort(
         (a, b) => commuteScore(a.verdict, "all") - commuteScore(b.verdict, "all")
       );
-  }, [selectedHubs, maxCommute, status, category, type, beds, minPrice, maxPrice, minArea, maxArea]);
+  }, [selectedHubs, maxCommute, category, type, beds, minPrice, maxPrice, minArea, maxArea]);
 
   const fullSearchHref = useMemo(() => {
     const ids = selectedHubs.map((l) => l.id);
@@ -166,11 +163,10 @@ export function DriveTimeSearch() {
       p.set("commute", String(maxCommute));
       p.set("match", "all");
     }
-    if (status !== "all") p.set("status", status);
     if (type !== "all") p.set("type", type);
     if (beds !== "any") p.set("beds", beds);
     return `/properties${p.toString() ? `?${p}` : ""}`;
-  }, [selectedHubs, maxCommute, status, type, beds]);
+  }, [selectedHubs, maxCommute, type, beds]);
 
   const priceSummary =
     minPrice && maxPrice
@@ -190,9 +186,6 @@ export function DriveTimeSearch() {
           ? `≥ ${compact(Number(minArea))}`
           : null;
 
-  const statusLabel =
-    status === "sale" ? "Buy" : status === "rent" ? "Rent" : "Buy & Rent";
-
   const letterBadge = (l: string) => (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brass text-[0.625rem] font-bold text-white">
       {l}
@@ -203,39 +196,6 @@ export function DriveTimeSearch() {
      or stacked full-width in the left column (setup mode). */
   const renderFields = (fullWidth: boolean) => (
     <>
-      <FilterPopover
-        label="Buy & Rent"
-        value={statusLabel}
-        active={status !== "all"}
-        fullWidth={fullWidth}
-      >
-        {(close) => (
-          <div className="space-y-1">
-            {(
-              [
-                { v: "all", label: "Buy & Rent" },
-                { v: "sale", label: "Buy" },
-                { v: "rent", label: "Rent" },
-              ] as const
-            ).map((o) => (
-              <button
-                key={o.v}
-                onClick={() => {
-                  setStatus(o.v);
-                  close();
-                }}
-                className={cn(
-                  "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors",
-                  status === o.v ? "bg-brass-tint font-medium text-ink" : "hover:bg-surface"
-                )}
-              >
-                {o.label}
-                {status === o.v && <span className="text-brass">✓</span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </FilterPopover>
 
       {/* Dynamic Points of Interest */}
       {selectedHubs.map((hub, i) => (
@@ -517,8 +477,6 @@ export function DriveTimeSearch() {
               hubIds={hubIds}
               maxCommute={maxCommute}
               setMaxCommute={setMaxCommute}
-              status={status}
-              setStatus={setStatus}
               category={category}
               setCategory={setCategory}
               type={type}
@@ -895,8 +853,6 @@ function SetupPanel({
   hubIds,
   maxCommute,
   setMaxCommute,
-  status,
-  setStatus,
   category,
   setCategory,
   type,
@@ -917,8 +873,6 @@ function SetupPanel({
   hubIds: string[];
   maxCommute: number;
   setMaxCommute: (n: number) => void;
-  status: Status;
-  setStatus: (s: Status) => void;
   category: PropertyCategory;
   setCategory: (c: PropertyCategory) => void;
   type: string;
@@ -1171,33 +1125,7 @@ function SetupPanel({
 
         {showFilters && (
           <div className="space-y-4 pt-2 border-t border-line/60">
-            {/* Listing Type Segmented Control */}
-            <div>
-              <p className="text-xs font-medium text-muted mb-2">Listing Type</p>
-              <div className="flex rounded-xl border border-line bg-paper p-1">
-                {(
-                  [
-                    { v: "all", label: "Buy & Rent" },
-                    { v: "sale", label: "Buy" },
-                    { v: "rent", label: "Rent" },
-                  ] as const
-                ).map((o) => (
-                  <button
-                    key={o.v}
-                    type="button"
-                    onClick={() => setStatus(o.v)}
-                    className={cn(
-                      "flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all",
-                      status === o.v
-                        ? "bg-ink text-paper shadow-xs"
-                        : "text-muted hover:text-ink"
-                    )}
-                  >
-                    {o.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             {/* Category / Property Use Segmented Control */}
             <div>

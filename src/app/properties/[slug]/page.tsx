@@ -25,7 +25,7 @@ import { getProperty, properties, similarProperties } from "@/lib/data/propertie
 import { getAgent } from "@/lib/data/agents";
 import { propertyPrice, pricePerSqft, formatArea } from "@/lib/format";
 import { Gallery } from "@/components/property/gallery";
-import { MortgageWidget } from "@/components/property/mortgage-widget";
+
 import { ListedBy } from "@/components/property/listed-by";
 import { GettingAround } from "@/components/property/getting-around";
 import { PropertyMap } from "@/components/property/property-map";
@@ -152,7 +152,7 @@ export default async function PropertyDetailPage({
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone="neutral">
-                    {property.status === "sale" ? "For Sale" : "For Rent"}
+                    For Rent
                   </Badge>
                   <Badge tone="outline">{property.type}</Badge>
                   {property.exclusive && <Badge tone="brass">Exclusive</Badge>}
@@ -246,28 +246,13 @@ export default async function PropertyDetailPage({
             {/* Commute / connectivity */}
             <GettingAround property={property} />
 
-            {/* Mortgage — mobile placement */}
-            {property.status === "sale" && (
-              <div className="mt-10 lg:hidden">
-                <MortgageWidget
-                  price={property.price}
-                  currency={property.currency}
-                />
-              </div>
-            )}
+
           </div>
 
           {/* ── Sidebar ── */}
           <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
             <ContactCard agent={agent} context={property.title} />
-            {property.status === "sale" && (
-              <div className="hidden lg:block">
-                <MortgageWidget
-                  price={property.price}
-                  currency={property.currency}
-                />
-              </div>
-            )}
+
             <ListedBy property={property} agent={agent} />
           </aside>
         </div>
