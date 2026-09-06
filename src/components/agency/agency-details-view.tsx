@@ -31,6 +31,145 @@ import { useSaved } from "@/lib/store/saved";
 import { AgencyReviewsSection } from "./agency-reviews-section";
 import { cn } from "@/lib/utils";
 
+function AgencyHeroBackground({
+  coverImage,
+  agencyName,
+}: {
+  coverImage?: string;
+  agencyName: string;
+}) {
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 select-none overflow-hidden"
+      aria-hidden="true"
+    >
+      {/* 1. Optional Verified Agency Cover Image Layer */}
+      {coverImage && (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={coverImage}
+            alt={agencyName}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-[0.14] mix-blend-luminosity filter contrast-125"
+          />
+          {/* Subtle gradient scrim to guarantee maximum contrast and readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-paper via-surface/90 to-surface/60 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface/95 via-surface/85 to-transparent" />
+        </div>
+      )}
+
+      {/* 2. Soft Neutral Gradient Base */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-surface/75 via-paper/90 to-paper" />
+
+      {/* 3. Subtle Radial Ambient Lighting */}
+      {/* Warm estate gold glow at top-right */}
+      <div
+        className="absolute -top-24 right-0 md:right-12 h-96 w-96 rounded-full blur-3xl opacity-60 pointer-events-none z-[2]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(174, 138, 78, 0.12) 0%, rgba(174, 138, 78, 0.03) 50%, transparent 70%)",
+        }}
+      />
+      {/* Deep brand emerald glow at bottom-left */}
+      <div
+        className="absolute -bottom-20 -left-16 h-80 w-80 rounded-full blur-3xl opacity-50 pointer-events-none z-[2]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(19, 63, 47, 0.08) 0%, rgba(19, 63, 47, 0.02) 50%, transparent 70%)",
+        }}
+      />
+
+      {/* 4. Architectural Drafting Grid & Geometric Precision Nodes */}
+      <svg
+        className="absolute inset-0 h-full w-full z-[3] text-ink/[0.035] [mask-image:radial-gradient(ellipse_90%_80%_at_70%_25%,black_30%,transparent_90%)]"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="agency-hero-grid"
+            width="48"
+            height="48"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 48 0 L 0 0 0 48"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+            />
+            {/* Precision intersection crosshairs (+) */}
+            <path
+              d="M 22 24 L 26 24 M 24 22 L 24 26"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.75"
+              className="text-brass/30"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#agency-hero-grid)" />
+      </svg>
+
+      {/* 5. Abstract Map-Inspired Contours / City Cadastral Curves */}
+      <svg
+        viewBox="0 0 1200 400"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 h-full w-full z-[3] pointer-events-none opacity-[0.5] [mask-image:linear-gradient(to_bottom,black_40%,transparent_95%)]"
+      >
+        {/* Soft contour curves evoking coastline, masterplans and topography */}
+        <path
+          d="M300 -50 C 500 80, 750 30, 950 160 C 1100 250, 1250 210, 1350 290"
+          stroke="var(--gold)"
+          strokeWidth="1.2"
+          strokeOpacity="0.18"
+          strokeDasharray="4 6"
+        />
+        <path
+          d="M200 -20 C 420 120, 680 70, 900 210 C 1080 320, 1220 280, 1320 370"
+          stroke="var(--brass)"
+          strokeWidth="1"
+          strokeOpacity="0.12"
+        />
+        <path
+          d="M150 40 C 360 180, 620 140, 840 270 C 1020 380, 1180 340, 1280 430"
+          stroke="currentColor"
+          className="text-ink"
+          strokeWidth="0.75"
+          strokeOpacity="0.06"
+        />
+        <path
+          d="M500 -80 C 700 30, 920 10, 1100 120 C 1220 200, 1340 170, 1420 240"
+          stroke="var(--gold)"
+          strokeWidth="0.75"
+          strokeOpacity="0.12"
+        />
+        {/* Subtle geometric surveyor axis ring */}
+        <circle
+          cx="1050"
+          cy="90"
+          r="140"
+          stroke="var(--brass)"
+          strokeWidth="1"
+          strokeOpacity="0.08"
+          strokeDasharray="3 5"
+        />
+        <circle
+          cx="1050"
+          cy="90"
+          r="60"
+          stroke="var(--gold)"
+          strokeWidth="0.75"
+          strokeOpacity="0.1"
+        />
+      </svg>
+    </div>
+  );
+}
+
 interface AgencyDetailsViewProps {
   agency: Agency;
   team: Agent[];
@@ -130,9 +269,12 @@ export function AgencyDetailsView({
 
   return (
     <div className="min-h-screen bg-paper">
-      {/* ── 1. Compact, Premium Hero Section ── */}
-      <section id="overview" className="border-b border-line bg-surface/60">
-        <div className="container-site py-8 md:py-12">
+      {/* ── 1. Compact, Premium Hero Section with Subtle Architectural Depth ── */}
+      <section id="overview" className="relative overflow-hidden border-b border-line bg-surface/50">
+        {/* Subtle Brand Background Treatment */}
+        <AgencyHeroBackground coverImage={agency.coverImage} agencyName={agency.name} />
+
+        <div className="container-site relative z-10 py-8 md:py-12">
           {/* Breadcrumb row */}
           <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs text-muted">
             <Link href="/" className="hover:text-ink transition-colors">
@@ -151,7 +293,7 @@ export function AgencyDetailsView({
             <div className="flex flex-col sm:flex-row items-start gap-5 max-w-3xl">
               {/* Logo frame */}
               {agency.logo ? (
-                <div className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-2xl border border-line bg-surface p-2 shadow-xs ring-4 ring-brass/10">
+                <div className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-2xl border border-line/80 bg-paper p-2 shadow-xs ring-4 ring-brass/10 hover:ring-brass/20 transition-all">
                   <Image
                     src={agency.logo}
                     alt={agency.name}
@@ -207,7 +349,7 @@ export function AgencyDetailsView({
               {/* Prominent Rating Card */}
               <div
                 onClick={() => scrollToSection("reviews")}
-                className="group cursor-pointer rounded-2xl border border-line bg-raised p-4 transition-all hover:border-brass hover:shadow-card"
+                className="group cursor-pointer rounded-2xl border border-line/80 bg-paper/85 backdrop-blur-md p-4 transition-all hover:border-brass/70 hover:shadow-card"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-baseline gap-2">
@@ -256,7 +398,7 @@ export function AgencyDetailsView({
                   <button
                     type="button"
                     onClick={() => scrollToSection("properties")}
-                    className="flex-1 flex h-10 items-center justify-center gap-1.5 rounded-xl border border-line bg-surface px-3 text-xs font-semibold text-ink hover:bg-brass-tint hover:text-brass transition-all cursor-pointer"
+                    className="flex-1 flex h-10 items-center justify-center gap-1.5 rounded-xl border border-line/80 bg-paper/85 backdrop-blur-sm px-3 text-xs font-semibold text-ink hover:bg-brass-tint hover:text-brass transition-all cursor-pointer"
                   >
                     <span>View Properties ({listings.length || agency.activeListings})</span>
                   </button>
@@ -266,10 +408,10 @@ export function AgencyDetailsView({
                     onClick={() => toggleSaved(`agency-${agency.id}`)}
                     title={agencySaved ? "Saved to favourites" : "Save agency"}
                     className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-xl border border-line transition-all active:scale-95 cursor-pointer shrink-0",
+                      "flex h-10 w-10 items-center justify-center rounded-xl border border-line/80 transition-all active:scale-95 cursor-pointer shrink-0",
                       agencySaved
                         ? "bg-danger-tint text-danger border-danger/30"
-                        : "bg-surface text-muted hover:text-ink hover:bg-raised"
+                        : "bg-paper/85 backdrop-blur-sm text-muted hover:text-ink hover:bg-raised"
                     )}
                   >
                     <Heart size={16} className={agencySaved ? "fill-danger" : ""} />
@@ -279,7 +421,7 @@ export function AgencyDetailsView({
                     type="button"
                     onClick={handleShare}
                     title="Share agency profile"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-surface text-muted hover:text-ink hover:bg-raised transition-all active:scale-95 cursor-pointer shrink-0"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-line/80 bg-paper/85 backdrop-blur-sm text-muted hover:text-ink hover:bg-raised transition-all active:scale-95 cursor-pointer shrink-0"
                   >
                     {copied ? <Check size={15} className="text-success" /> : <Share2 size={15} />}
                   </button>
@@ -290,7 +432,7 @@ export function AgencyDetailsView({
 
           {/* ── 2. Compact Customer-Facing Trust & Credentials Bar ── */}
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 border-t border-line/80 pt-6">
-            <div className="rounded-xl border border-line bg-raised/70 p-3 text-center sm:text-left">
+            <div className="rounded-xl border border-line/80 bg-paper/80 backdrop-blur-sm p-3 text-center sm:text-left shadow-2xs">
               <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted block">
                 Licence & Compliance
               </span>
@@ -300,7 +442,7 @@ export function AgencyDetailsView({
               </p>
             </div>
 
-            <div className="rounded-xl border border-line bg-raised/70 p-3 text-center sm:text-left">
+            <div className="rounded-xl border border-line/80 bg-paper/80 backdrop-blur-sm p-3 text-center sm:text-left shadow-2xs">
               <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted block">
                 Active Listings
               </span>
@@ -309,7 +451,7 @@ export function AgencyDetailsView({
               </p>
             </div>
 
-            <div className="rounded-xl border border-line bg-raised/70 p-3 text-center sm:text-left">
+            <div className="rounded-xl border border-line/80 bg-paper/80 backdrop-blur-sm p-3 text-center sm:text-left shadow-2xs">
               <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted block">
                 Licensed Advisors
               </span>
@@ -318,7 +460,7 @@ export function AgencyDetailsView({
               </p>
             </div>
 
-            <div className="rounded-xl border border-line bg-raised/70 p-3 text-center sm:text-left">
+            <div className="rounded-xl border border-line/80 bg-paper/80 backdrop-blur-sm p-3 text-center sm:text-left shadow-2xs">
               <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted block">
                 Experience
               </span>
@@ -327,7 +469,7 @@ export function AgencyDetailsView({
               </p>
             </div>
 
-            <div className="rounded-xl border border-line bg-raised/70 p-3 text-center sm:text-left col-span-2 sm:col-span-1">
+            <div className="rounded-xl border border-line/80 bg-paper/80 backdrop-blur-sm p-3 text-center sm:text-left shadow-2xs col-span-2 sm:col-span-1">
               <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-muted block">
                 Response Speed
               </span>

@@ -94,6 +94,7 @@ export interface Agency {
   phone?: string;
   email?: string;
   responseTime?: string;
+  coverImage?: string;
 }
 
 export interface Agent {
