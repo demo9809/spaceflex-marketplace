@@ -368,7 +368,10 @@ export function PropertyExplorer() {
       {/* Sticky Toolbar */}
       <div
         className={cn(
-          "sticky top-[calc(4rem+env(safe-area-inset-top,0px))] md:top-[4.5rem] z-40 mb-8 border-b border-line bg-paper/95 py-3 backdrop-blur-xl transition-all duration-300 md:border-0 md:bg-transparent md:py-2 md:backdrop-blur-none"
+          "sticky z-40 mb-8 border-b border-line bg-paper/95 py-3 backdrop-blur-xl transition-[top] duration-300 ease-out md:border-0 md:bg-transparent md:py-2 md:backdrop-blur-none md:top-[4.5rem]",
+          navVisible
+            ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
+            : "top-[env(safe-area-inset-top,0px)]"
         )}
       >
         <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap md:overflow-visible">

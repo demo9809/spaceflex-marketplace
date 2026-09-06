@@ -458,8 +458,10 @@ export function DriveTimeSearch() {
       {hasResults && (
         <div
           className={cn(
-            "sticky z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-[top] duration-300 md:top-[4.5rem]",
-            navVisible ? "top-16" : "top-0"
+            "sticky z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-[top] duration-300 ease-out md:top-[4.5rem]",
+            navVisible
+              ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
+              : "top-[env(safe-area-inset-top,0px)]"
           )}
         >
           <div className="container-site">

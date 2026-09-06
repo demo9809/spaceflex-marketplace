@@ -82,7 +82,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-in-out",
+        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-out will-change-transform",
         !navVisible && !open && "-translate-y-full md:translate-y-0"
       )}
     >
