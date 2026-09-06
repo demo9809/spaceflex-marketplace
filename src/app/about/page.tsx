@@ -99,7 +99,7 @@ export default function AboutPage() {
         </ol>
       </section>
 
-      <section id="careers" className="container-site pb-20 md:pb-28">
+      <section id="careers" className="container-site pb-10 md:pb-28">
         <div className="rounded-3xl bg-ink px-6 py-14 text-center text-paper md:px-16">
           <p className="eyebrow">Careers</p>
           <h2 className="font-display text-h2 mx-auto mt-3 max-w-xl font-medium text-balance">

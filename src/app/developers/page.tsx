@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function DevelopersPage() {
   return (
-    <div className="container-site py-14 md:py-20">
+    <div className="container-site pt-10 pb-10 md:py-20">
       <SectionHeading
         eyebrow="New Launches"
         title="Projects worth waiting for"

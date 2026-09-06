@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function AgenciesPage() {
   return (
     <>
-      <div className="container-site py-14 md:py-20">
+      <div className="container-site pt-8 pb-10 md:py-20">
         <SectionHeading
           eyebrow="Agency Directory"
           title="Every agency verified. Every licence confirmed."

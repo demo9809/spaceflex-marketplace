@@ -59,7 +59,7 @@ export function SiteFooter() {
           : "border-t border-line bg-surface"
       }
     >
-      <div className="container-site py-16 md:py-20">
+      <div className="container-site pt-10 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
           <div className="max-w-sm">
             <Image

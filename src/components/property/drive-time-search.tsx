@@ -470,7 +470,7 @@ export function DriveTimeSearch() {
         </div>
       )}
 
-      <div className="container-site pb-24 pt-6">
+      <div className="container-site pb-10 pt-6 md:pb-20">
         {!hasResults ? (
           /* ── SETUP MODE — modern elegant SetupPanel on left, full height map on right ── */
           <div className="grid gap-8 lg:grid-cols-[minmax(0,25rem)_1fr]">

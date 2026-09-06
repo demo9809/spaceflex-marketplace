@@ -275,7 +275,7 @@ export function PropertyExplorer() {
   ].filter(Boolean) as { label: string; clear: () => void }[];
 
   return (
-    <div className="container-site pb-24 pt-8 md:pt-12">
+    <div className="container-site pb-10 pt-8 md:pb-16 md:pt-12">
       {/* Heading */}
       <div className="mb-6" ref={introRef}>
         <p className="eyebrow">Marketplace</p>

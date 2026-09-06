@@ -25,7 +25,7 @@ const sections = [
 
 export default function LegalPage() {
   return (
-    <div className="container-site max-w-3xl py-14 md:py-20">
+    <div className="container-site max-w-3xl pt-10 pb-10 md:py-20">
       <p className="eyebrow">Legal</p>
       <h1 className="font-display text-h1 mt-2 font-medium tracking-tight">
         The fine print, in plain language

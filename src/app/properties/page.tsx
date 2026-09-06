@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 function ExplorerSkeleton() {
   return (
-    <div className="container-site pb-24 pt-12">
+    <div className="container-site pb-10 pt-12 md:pb-16">
       <div className="skeleton h-8 w-40 rounded-full" />
       <div className="skeleton mt-4 h-14 w-full max-w-lg rounded-2xl" />
       <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -355,7 +355,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="container-site pb-20 md:pb-28">
+      <section className="container-site pb-10 md:pb-28">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center text-paper md:px-16 md:py-24">
             <div className="grain absolute inset-0" />

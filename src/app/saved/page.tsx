@@ -13,7 +13,7 @@ export default function SavedPage() {
   const items = properties.filter((p) => saved.includes(p.id));
 
   return (
-    <div className="container-site py-14 md:py-20">
+    <div className="container-site pt-10 pb-10 md:py-20">
       <p className="eyebrow">Your collection</p>
       <h1 className="font-display text-h1 mt-2 font-medium tracking-tight">
         Saved properties

@@ -23,7 +23,7 @@ const offices = [
 
 export default function ContactPage() {
   return (
-    <div className="container-site grid gap-14 py-14 md:py-20 lg:grid-cols-[1fr_24rem]">
+    <div className="container-site grid gap-14 pt-10 pb-10 md:py-20 lg:grid-cols-[1fr_24rem]">
       <div>
         <p className="eyebrow">Contact</p>
         <h1 className="font-display text-h1 mt-2 font-medium tracking-tight">

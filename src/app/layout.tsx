@@ -56,7 +56,7 @@ export default function RootLayout({
           <SavedProvider>
             <AiAssistantProvider>
               <SiteHeader />
-              <main className="flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">{children}</main>
+              <main className="flex-1">{children}</main>
               <SiteFooter />
               <MobileTabBar />
               <AiAssistantDrawer />

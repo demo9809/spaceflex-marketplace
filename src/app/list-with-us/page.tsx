@@ -113,7 +113,7 @@ export default function ListWithUsPage() {
         </div>
       </section>
 
-      <section id="plans" className="container-site py-20 md:py-28">
+      <section id="plans" className="container-site pt-12 pb-10 md:py-28">
         <SectionHeading
           eyebrow="Plans"
           title="Transparent pricing, no lock-in"

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 function DriveTimeSkeleton() {
   return (
-    <div className="container-site grid gap-8 pb-28 pt-8 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-10 lg:pt-12">
+    <div className="container-site grid gap-8 pb-10 pt-8 md:pb-24 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-10 lg:pt-12">
       <div className="space-y-4">
         <div className="skeleton h-7 w-40 rounded-full" />
         <div className="skeleton h-10 w-64 rounded-2xl" />

@@ -64,7 +64,7 @@ export default async function ProjectPage({
         <Gallery images={pr.images} title={pr.name} />
       </div>
 
-      <div className="grid gap-10 py-10 lg:grid-cols-[1fr_24rem] lg:gap-14">
+      <div className="grid gap-10 pt-6 pb-10 md:py-10 lg:grid-cols-[1fr_24rem] lg:gap-14">
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="brass">{pr.status}</Badge>

@@ -45,7 +45,7 @@ const reports = [
 
 export default function ReportsPage() {
   return (
-    <div className="container-site py-14 md:py-20">
+    <div className="container-site pt-10 pb-10 md:py-20">
       <SectionHeading
         eyebrow="Research Desk"
         title="Market reports built from transaction data"

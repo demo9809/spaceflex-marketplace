@@ -32,7 +32,7 @@ export default async function ArticlePage({
   const related = articles.filter((a) => a.id !== article.id).slice(0, 3);
 
   return (
-    <article className="pb-20">
+    <article className="pb-10 md:pb-20">
       <header className="container-site max-w-4xl pt-12 text-center md:pt-20">
         <p className="eyebrow">{article.category}</p>
         <h1 className="font-display text-h1 mt-4 font-medium tracking-tight text-balance">

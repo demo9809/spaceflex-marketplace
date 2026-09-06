@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CalculatorsPage() {
   return (
-    <div className="container-site py-14 md:py-20">
+    <div className="container-site pt-10 pb-10 md:py-20">
       <SectionHeading
         eyebrow="Tools"
         title="Run the numbers before the viewing"

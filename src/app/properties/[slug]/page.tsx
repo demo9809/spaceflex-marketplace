@@ -260,7 +260,7 @@ export default async function PropertyDetailPage({
 
       {/* Similar */}
       {similar.length > 0 && (
-        <section className="container-site py-20 md:py-24">
+        <section className="container-site pt-12 pb-10 md:py-24">
           <SectionHeading
             eyebrow="Keep exploring"
             title="Similar residences"
