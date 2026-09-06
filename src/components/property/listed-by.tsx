@@ -121,36 +121,28 @@ export function ListedBy({
 
         {/* ── Agency facts strip ── */}
         {agency && (
-          <dl className="grid grid-cols-4 border-t border-line text-center">
-            <div className="border-r border-line p-4">
-              <dd className="font-display text-lg font-semibold">
-                <AgencyRating agencyId={agency.id} variant="small" />
-              </dd>
-              <dt className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
-                Rating
-              </dt>
-            </div>
-            <div className="border-r border-line p-4">
-              <dd className="font-display text-lg font-semibold">
+          <dl className="grid grid-cols-3 divide-x divide-line border-t border-line bg-surface/30">
+            <div className="flex flex-col items-center justify-center py-3.5 px-2 text-center">
+              <dd className="font-display text-lg font-semibold text-ink leading-tight">
                 {agency.activeListings}
               </dd>
-              <dt className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+              <dt className="mt-1 text-[0.6875rem] uppercase tracking-[0.08em] text-muted leading-tight text-center">
                 Live listings
               </dt>
             </div>
-            <div className="border-r border-line p-4">
-              <dd className="font-display text-lg font-semibold">
+            <div className="flex flex-col items-center justify-center py-3.5 px-2 text-center">
+              <dd className="font-display text-lg font-semibold text-ink leading-tight">
                 {agency.since}
               </dd>
-              <dt className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+              <dt className="mt-1 text-[0.6875rem] uppercase tracking-[0.08em] text-muted leading-tight text-center">
                 Established
               </dt>
             </div>
-            <div className="p-4">
-              <dd className="font-display text-lg font-semibold">
+            <div className="flex flex-col items-center justify-center py-3.5 px-2 text-center">
+              <dd className="font-display text-lg font-semibold text-ink leading-tight">
                 {agency.licenseNo.split("-")[0]}
               </dd>
-              <dt className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+              <dt className="mt-1 text-[0.6875rem] uppercase tracking-[0.08em] text-muted leading-tight text-center">
                 Regulated
               </dt>
             </div>
