@@ -180,7 +180,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CITY COLLECTIONS ── */}
-      <section className="container-site py-20 md:py-28">
+      <section className="container-site py-10 md:py-28">
         <SectionHeading
           eyebrow="Destinations"
           title="Qatar's defining addresses"
@@ -218,7 +218,7 @@ export default function HomePage() {
 
       {/* ── PILLARS ── */}
       <section className="border-y border-line bg-surface">
-        <div className="container-site py-20 md:py-28">
+        <div className="container-site py-10 md:py-28">
           <SectionHeading
             eyebrow="Why SpaceFlex"
             title="Built for buyers who do their homework"
@@ -313,7 +313,7 @@ export default function HomePage() {
       </section>
 
       {/* ── JOURNAL ── */}
-      <section className="container-site py-20 md:py-28">
+      <section className="container-site py-10 md:py-28">
         <SectionHeading
           eyebrow="The Journal"
           title="Intelligence before inventory"
