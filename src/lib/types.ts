@@ -87,6 +87,13 @@ export interface Agency {
   activeListings: number;
   verified: boolean;
   tagline: string;
+  description?: string;
+  specialization?: string[];
+  areasServed?: string[];
+  officeAddress?: string;
+  phone?: string;
+  email?: string;
+  responseTime?: string;
 }
 
 export interface Agent {

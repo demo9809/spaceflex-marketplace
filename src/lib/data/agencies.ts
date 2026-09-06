@@ -15,6 +15,24 @@ export const agencies: Agency[] = [
     activeListings: 68,
     verified: true,
     tagline: "Qatar's prime residential brokerage",
+    description:
+      "Founded in 2009, Meridian Estates is Qatar's premier residential real estate brokerage. Specializing in prime waterfront villas, branded towers, and diplomatic residences across Doha, our senior advisory team provides discreet private-client advisory, comprehensive tenancy management, and an unmatched portfolio of luxury homes.",
+    specialization: [
+      "Prime Residential",
+      "Luxury Waterfront",
+      "Diplomatic Leases",
+      "Penthouses",
+    ],
+    areasServed: [
+      "West Bay",
+      "The Pearl Island",
+      "West Bay Lagoon",
+      "Lusail Marina",
+    ],
+    officeAddress: "Level 32, Tornado Tower, West Bay, Doha, Qatar",
+    phone: "+974 4499 8000",
+    email: "enquiries@meridianestates.qa",
+    responseTime: "under 15 minutes",
   },
   {
     id: "ag2",
@@ -28,6 +46,24 @@ export const agencies: Agency[] = [
     activeListings: 124,
     verified: true,
     tagline: "Private-client advisory across Qatar",
+    description:
+      "Corniche & Co. provides bespoke real estate advisory and curated leasing across Doha. Specializing in high-profile residential transactions, executive expat placements, and luxury residences, our multi-lingual team offers discreet, end-to-end guidance from initial viewings to contract registration.",
+    specialization: [
+      "Private-Client Advisory",
+      "High-Net-Worth Estates",
+      "Island Residences",
+      "Expat Relocation",
+    ],
+    areasServed: [
+      "The Pearl Island",
+      "Lusail City",
+      "West Bay",
+      "Msheireb Downtown",
+    ],
+    officeAddress: "Porto Arabia Tower 14, The Pearl, Doha, Qatar",
+    phone: "+974 4488 2200",
+    email: "concierge@corniche.qa",
+    responseTime: "under 20 minutes",
   },
   {
     id: "ag3",
@@ -41,6 +77,19 @@ export const agencies: Agency[] = [
     activeListings: 41,
     verified: true,
     tagline: "Commercial and investment advisory, Qatar",
+    description:
+      "Al Dafna Property Partners is Qatar's trusted advisor for institutional leasing, corporate headquarters, and commercial investments. Established in 2016, we guide multinational corporations, financial institutions, and family offices through commercial lease acquisitions with complete regulatory compliance.",
+    specialization: [
+      "Commercial Real Estate",
+      "Investment Advisory",
+      "Corporate Headquarters",
+      "Mixed-Use Portfolios",
+    ],
+    areasServed: ["Al Dafna", "West Bay", "Lusail Marina", "Al Sadd"],
+    officeAddress: "Burj Al Dafna, Floor 18, Diplomatic District, Doha, Qatar",
+    phone: "+974 4455 1100",
+    email: "leasing@aldafna.qa",
+    responseTime: "under 30 minutes",
   },
   {
     id: "ag4",
@@ -54,6 +103,24 @@ export const agencies: Agency[] = [
     activeListings: 52,
     verified: true,
     tagline: "Island residences, built for expat investors",
+    description:
+      "Salt & Stone Realty curates island residences and coastal homes designed for expatriate professionals and international investors. We provide transparent rental solutions, furnished long-term tenancies, and dedicated asset care backed by Qatar's highest regulatory standards.",
+    specialization: [
+      "Island Living",
+      "Expat Investment",
+      "Beachfront Villas",
+      "Townhouses",
+    ],
+    areasServed: [
+      "Qetaifan Islands",
+      "The Pearl Island",
+      "Lusail Waterfront",
+      "Fox Hills",
+    ],
+    officeAddress: "Qetaifan Island South, Coastal Pavilion Suite 4, Lusail, Qatar",
+    phone: "+974 4433 9900",
+    email: "hello@saltstone.qa",
+    responseTime: "under 25 minutes",
   },
 ];
 
