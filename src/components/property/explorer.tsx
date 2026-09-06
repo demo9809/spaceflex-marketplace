@@ -368,7 +368,7 @@ export function PropertyExplorer() {
       {/* Sticky Toolbar */}
       <div
         className={cn(
-          "sticky z-40 mb-8 border-b border-line bg-paper/95 py-3 backdrop-blur-xl transition-[top] duration-300 ease-out md:border-0 md:bg-transparent md:py-2 md:backdrop-blur-none md:top-[4.5rem]",
+          "sticky z-40 mb-8 -mx-[clamp(1.25rem,4vw,3rem)] px-[clamp(1.25rem,4vw,3rem)] border-b border-line bg-paper/95 py-3 backdrop-blur-xl shadow-2xs transition-[top] duration-300 ease-out md:top-[4.5rem]",
           navVisible
             ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
             : "top-[env(safe-area-inset-top,0px)]"
