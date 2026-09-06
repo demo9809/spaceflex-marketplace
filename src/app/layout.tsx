@@ -30,8 +30,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a1712" },
+    { media: "(prefers-color-scheme: light)", color: "transparent" },
+    { media: "(prefers-color-scheme: dark)", color: "transparent" },
   ],
 };
 
@@ -42,6 +42,14 @@ export const metadata: Metadata = {
   },
   description:
     "The curated marketplace for premium property across Qatar — West Bay, The Pearl, Lusail and Msheireb. Verified agents, market intelligence, and investment-grade homes.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "SpaceFlex",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
@@ -54,6 +62,10 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${instrument.variable} antialiased`}
     >
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
       <body className="min-h-[100dvh] flex flex-col">
         <AuthProvider>
           <SavedProvider>

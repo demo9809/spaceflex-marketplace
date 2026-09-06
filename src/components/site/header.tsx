@@ -79,11 +79,24 @@ export function SiteHeader() {
     };
   }, [open]);
 
+  useEffect(() => {
+    // Dynamically synchronize theme-color meta tag for transparent iOS status bar during scroll
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute(
+        "content",
+        !navVisible ? "transparent" : scrolled ? "#ffffff" : "transparent"
+      );
+    }
+  }, [navVisible, scrolled]);
+
   return (
     <header
       className={cn(
-        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-out will-change-transform",
-        !navVisible && !open && "-translate-y-full md:translate-y-0"
+        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ease-out will-change-transform",
+        !navVisible &&
+          !open &&
+          "-translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto"
       )}
     >
       {/* Background layer carries the blur so the fixed mobile menu
@@ -92,6 +105,7 @@ export function SiteHeader() {
         aria-hidden
         className={cn(
           "absolute inset-0 transition-all duration-300",
+          !navVisible && !open && "opacity-0 md:opacity-100",
           open
             ? "bg-paper"
             : scrolled

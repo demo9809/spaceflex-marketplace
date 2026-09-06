@@ -28,6 +28,7 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { useAgencyReviews } from "@/lib/store/review-store";
 import { useLeadCapture } from "@/lib/store/lead-store";
 import { useSaved } from "@/lib/store/saved";
+import { useScrollNav } from "@/lib/use-scroll-nav";
 import { AgencyReviewsSection } from "./agency-reviews-section";
 import { cn } from "@/lib/utils";
 
@@ -185,6 +186,7 @@ export function AgencyDetailsView({
   const ratingData = getAgencyRating(agency.id);
   const { openLeadModal } = useLeadCapture();
   const { isSaved, toggleSaved } = useSaved();
+  const navVisible = useScrollNav();
 
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<
@@ -483,7 +485,14 @@ export function AgencyDetailsView({
       </section>
 
       {/* ── 3. Sticky In-Page Section Navigation Tabs ── */}
-      <div className="sticky top-[4rem] md:top-[4.5rem] z-30 border-b border-line bg-paper/95 backdrop-blur-xl">
+      <div
+        className={cn(
+          "sticky z-30 border-b border-line bg-paper/95 backdrop-blur-xl transition-all duration-300 ease-out md:top-[4.5rem]",
+          navVisible
+            ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
+            : "top-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]"
+        )}
+      >
         <div className="container-site flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-2.5">
           {[
             { id: "overview", label: "Overview" },

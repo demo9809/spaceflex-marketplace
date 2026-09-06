@@ -131,6 +131,10 @@
   }
 }
 
+html {
+  background-color: var(--paper);
+}
+
 html,
 body {
   /* Prevent horizontal micro-wobble without creating a scroll container */
