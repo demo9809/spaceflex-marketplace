@@ -92,17 +92,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  useEffect(() => {
-    // Dynamically synchronize theme-color meta tag for transparent iOS status bar during scroll
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute(
-        "content",
-        !navVisible ? "transparent" : scrolled ? "#ffffff" : "transparent"
-      );
-    }
-  }, [navVisible, scrolled]);
-
   return (
     <>
       <header

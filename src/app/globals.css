@@ -133,12 +133,6 @@
 
 html {
   background-color: var(--paper);
-}
-
-html,
-body {
-  /* Prevent horizontal micro-wobble without creating a scroll container */
-  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -149,6 +143,7 @@ body {
   font-feature-settings: "ss01", "cv05";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 ::selection {

@@ -36,9 +36,8 @@ export function MobileTabBar() {
     <nav
       aria-label="Bottom navigation"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/90 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl md:hidden transition-all duration-300 ease-out will-change-transform",
-        !navVisible &&
-          "translate-y-full opacity-0 pointer-events-none border-transparent bg-transparent backdrop-blur-none"
+        "fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/90 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl md:hidden transition-transform duration-300 ease-out will-change-transform",
+        !navVisible && "translate-y-full pointer-events-none"
       )}
     >
       <div className="grid h-16 grid-cols-5">
