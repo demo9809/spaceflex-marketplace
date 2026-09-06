@@ -4,6 +4,7 @@ import { BadgeCheck, ShieldCheck, ArrowRight, Building2, Users } from "lucide-re
 import type { Agency } from "@/lib/types";
 import { agencyAgents, agencyListings } from "@/lib/data/agencies";
 import { Badge } from "@/components/ui/badge";
+import { AgencyRating } from "./agency-rating";
 
 export function AgencyCard({ agency }: { agency: Agency }) {
   const team = agencyAgents(agency.id);
@@ -49,15 +50,21 @@ export function AgencyCard({ agency }: { agency: Agency }) {
 
         {/* Agency Name & Tagline */}
         <div className="mt-5">
-          <h3 className="font-display text-xl font-semibold tracking-tight text-ink group-hover:text-brass transition-colors">
-            {agency.name}
-          </h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-display text-xl font-semibold tracking-tight text-ink group-hover:text-brass transition-colors">
+              {agency.name}
+            </h3>
+          </div>
           <p className="mt-1 text-xs text-muted leading-relaxed line-clamp-2">
             {agency.tagline}
           </p>
-          <div className="mt-2.5 flex items-center gap-1.5 text-xs text-faint">
-            <ShieldCheck size={13} className="text-success shrink-0" />
-            <span>Licence: {agency.licenseNo}</span>
+
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-1.5 text-faint">
+              <ShieldCheck size={13} className="text-success shrink-0" />
+              <span>Licence: {agency.licenseNo}</span>
+            </div>
+            <AgencyRating agencyId={agency.id} variant="compact" />
           </div>
         </div>
 

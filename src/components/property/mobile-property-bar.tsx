@@ -1,11 +1,13 @@
 "use client";
 
-import { Phone } from "lucide-react";
+import { Phone, CalendarDays } from "lucide-react";
 import { useScrollNav } from "@/lib/use-scroll-nav";
 import { propertyPrice } from "@/lib/format";
 import type { Property, Agent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
+import { useLeadCapture } from "@/lib/store/lead-store";
+import { agencyForAgent } from "@/lib/data/agencies";
 
 export function MobilePropertyBar({
   property,
@@ -15,9 +17,96 @@ export function MobilePropertyBar({
   agent?: Agent;
 }) {
   const navVisible = useScrollNav();
-  const phone = agent?.phone || "+974 5555 0100";
-  const cleanPhone = phone.replace(/[^0-9+]/g, "");
-  const waPhone = phone.replace(/[^0-9]/g, "");
+  const { openLeadModal } = useLeadCapture();
+
+  const agency = agent
+    ? agencyForAgent(agent.id) ||
+      agencyForAgent(agent.name) ||
+      agencyForAgent(agent.agency)
+    : undefined;
+
+  const handleCall = () => {
+    openLeadModal({
+      action: "call",
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            phone: agent.phone,
+            photo: agent.photo,
+          }
+        : undefined,
+      agency: agency
+        ? {
+            id: agency.id,
+            name: agency.name,
+            slug: agency.slug,
+          }
+        : undefined,
+      property: {
+        id: property.id,
+        title: property.title,
+        price: propertyPrice(property, true),
+      },
+      sourcePage: typeof window !== "undefined" ? window.location.pathname : undefined,
+    });
+  };
+
+  const handleWhatsApp = () => {
+    const advisorFirst = agent ? agent.name.split(" ")[0] : "Agent";
+    openLeadModal({
+      action: "whatsapp",
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            phone: agent.phone,
+            photo: agent.photo,
+          }
+        : undefined,
+      agency: agency
+        ? {
+            id: agency.id,
+            name: agency.name,
+            slug: agency.slug,
+          }
+        : undefined,
+      property: {
+        id: property.id,
+        title: property.title,
+        price: propertyPrice(property, true),
+      },
+      defaultMessage: `Hi ${advisorFirst}, I'm interested in ${property.title} (${propertyPrice(property, true)}). I'd like more details.`,
+      sourcePage: typeof window !== "undefined" ? window.location.pathname : undefined,
+    });
+  };
+
+  const handleRequestViewing = () => {
+    openLeadModal({
+      action: "viewing",
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            phone: agent.phone,
+            photo: agent.photo,
+          }
+        : undefined,
+      agency: agency
+        ? {
+            id: agency.id,
+            name: agency.name,
+            slug: agency.slug,
+          }
+        : undefined,
+      property: {
+        id: property.id,
+        title: property.title,
+        price: propertyPrice(property, true),
+      },
+      sourcePage: typeof window !== "undefined" ? window.location.pathname : undefined,
+    });
+  };
 
   return (
     <div
@@ -37,34 +126,36 @@ export function MobilePropertyBar({
           </p>
         </div>
 
-        {/* Direct Action Buttons: Call, WhatsApp, Request Viewing */}
+        {/* Lead Capture Routed Action Buttons */}
         <div className="flex items-center gap-1.5 shrink-0">
-          <a
-            href={`tel:${cleanPhone}`}
+          <button
+            type="button"
+            onClick={handleCall}
             title={`Call ${agent ? agent.name : "Agent"}`}
             aria-label={`Call ${agent ? agent.name : "Agent"}`}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-ink hover:bg-brass-tint hover:text-brass transition-all active:scale-95 cursor-pointer shrink-0"
           >
             <Phone size={16} className="text-brass" />
-          </a>
+          </button>
 
-          <a
-            href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi ${agent ? agent.name.split(" ")[0] : "Agent"}, I'm interested in ${property.title} (${propertyPrice(property, true)}).`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={handleWhatsApp}
             title={`WhatsApp ${agent ? agent.name : "Agent"}`}
             aria-label={`WhatsApp ${agent ? agent.name : "Agent"}`}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xs hover:bg-[#20bd5a] transition-all active:scale-95 cursor-pointer shrink-0"
           >
             <WhatsAppIcon size={17} className="text-white" />
-          </a>
+          </button>
 
-          <a
-            href="#enquire"
-            className="inline-flex h-10 items-center justify-center rounded-full bg-ink px-4 text-xs font-semibold text-paper shadow-xs transition-all active:scale-95 shrink-0"
+          <button
+            type="button"
+            onClick={handleRequestViewing}
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-ink px-4 text-xs font-semibold text-paper shadow-xs transition-all active:scale-95 shrink-0 cursor-pointer"
           >
-            Request viewing
-          </a>
+            <CalendarDays size={13} className="text-brass" />
+            <span>Request viewing</span>
+          </button>
         </div>
       </div>
     </div>

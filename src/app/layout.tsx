@@ -7,6 +7,9 @@ import { MobileTabBar } from "@/components/site/mobile-tab-bar";
 import { SavedProvider } from "@/lib/store/saved";
 import { AuthProvider } from "@/lib/store/auth";
 import { AiAssistantProvider } from "@/lib/store/ai-assistant-context";
+import { LeadCaptureProvider } from "@/lib/store/lead-store";
+import { AgencyReviewProvider } from "@/lib/store/review-store";
+import { LeadCaptureModal } from "@/components/lead/lead-capture-modal";
 import { AiAssistantDrawer } from "@/components/site/ai-assistant-drawer";
 import { AiFloatingButton } from "@/components/site/ai-floating-button";
 
@@ -54,14 +57,19 @@ export default function RootLayout({
       <body className="min-h-[100dvh] flex flex-col">
         <AuthProvider>
           <SavedProvider>
-            <AiAssistantProvider>
-              <SiteHeader />
-              <main className="flex-1">{children}</main>
-              <SiteFooter />
-              <MobileTabBar />
-              <AiAssistantDrawer />
-              <AiFloatingButton />
-            </AiAssistantProvider>
+            <LeadCaptureProvider>
+              <AgencyReviewProvider>
+                <AiAssistantProvider>
+                  <SiteHeader />
+                  <main className="flex-1">{children}</main>
+                  <SiteFooter />
+                  <MobileTabBar />
+                  <LeadCaptureModal />
+                  <AiAssistantDrawer />
+                  <AiFloatingButton />
+                </AiAssistantProvider>
+              </AgencyReviewProvider>
+            </LeadCaptureProvider>
           </SavedProvider>
         </AuthProvider>
       </body>

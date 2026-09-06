@@ -35,6 +35,8 @@ export function PhoneInput({
   id = "phone-input",
   name = "phone",
   defaultValue = "",
+  value,
+  onChange,
   placeholder,
   required,
   className,
@@ -42,12 +44,24 @@ export function PhoneInput({
   id?: string;
   name?: string;
   defaultValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   required?: boolean;
   className?: string;
 }) {
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(COUNTRIES[0]);
-  const [phoneNumber, setPhoneNumber] = useState(defaultValue);
+  const [internalPhoneNumber, setInternalPhoneNumber] = useState(defaultValue);
+
+  const phoneNumber = value !== undefined ? value : internalPhoneNumber;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (value === undefined) {
+      setInternalPhoneNumber(val);
+    }
+    onChange?.(val);
+  };
 
   return (
     <div
@@ -89,7 +103,7 @@ export function PhoneInput({
         type="tel"
         required={required}
         value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        onChange={handlePhoneChange}
         placeholder={placeholder || selectedCountry.placeholder}
         className="h-11 w-full bg-transparent px-3 text-sm text-ink placeholder:text-faint focus:outline-none"
       />

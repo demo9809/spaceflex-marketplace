@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeading } from "@/components/site/section-heading";
 import { CompareTray } from "@/components/site/compare-tray";
+import { AgencyRating } from "@/components/agency/agency-rating";
+import { AgencyReviewsSection } from "@/components/agency/agency-reviews-section";
 
 export function generateStaticParams() {
   return agencies.map((a) => ({ slug: a.slug }));
@@ -90,14 +92,31 @@ export default async function AgencyPage({
               <p className="mt-2 text-muted">
                 {agency.tagline} · Based in {agency.city}
               </p>
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-success-tint px-3 py-1 text-xs font-medium text-success">
-                <ShieldCheck size={13} />
-                Licence {agency.licenseNo} · verified by SpaceFlex
-              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <p className="inline-flex items-center gap-1.5 rounded-full bg-success-tint px-3 py-1 text-xs font-medium text-success">
+                  <ShieldCheck size={13} />
+                  Licence {agency.licenseNo} · verified by SpaceFlex
+                </p>
+                <div className="inline-flex items-center rounded-full bg-surface border border-line px-3 py-1">
+                  <AgencyRating
+                    agencyId={agency.id}
+                    variant="compact"
+                    showCount={true}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <dl className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <dl className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-5">
+            <div className="rounded-2xl border border-line bg-raised p-5 col-span-2 sm:col-span-1">
+              <dd className="font-display text-2xl font-semibold">
+                <AgencyRating agencyId={agency.id} variant="small" />
+              </dd>
+              <dt className="mt-0.5 text-xs uppercase tracking-[0.12em] text-muted">
+                Client Rating
+              </dt>
+            </div>
             {stats.map((s) => (
               <div
                 key={s.label}
@@ -143,6 +162,9 @@ export default async function AgencyPage({
             </div>
           </section>
         )}
+
+        {/* Dedicated agency reviews section with ratings breakdown and verified review submission */}
+        <AgencyReviewsSection agency={agency} team={team} />
 
         <div className="mt-20 flex flex-col items-center gap-4 rounded-3xl bg-ink px-6 py-14 text-center text-paper">
           <Users size={24} className="text-brass-deep" />

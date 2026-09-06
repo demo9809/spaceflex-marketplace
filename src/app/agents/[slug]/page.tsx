@@ -15,6 +15,9 @@ import { ContactCard } from "@/components/agent/contact-card";
 import { Badge } from "@/components/ui/badge";
 import { CompareTray } from "@/components/site/compare-tray";
 import { MobileAgentBar } from "@/components/agent/mobile-agent-bar";
+import Link from "next/link";
+import { agencyForAgent } from "@/lib/data/agencies";
+import { AgencyRating } from "@/components/agency/agency-rating";
 
 export function generateStaticParams() {
   return agents.map((a) => ({ slug: a.slug }));
@@ -64,6 +67,11 @@ export default async function AgentProfilePage({
   const agent = getAgent(slug);
   if (!agent) notFound();
 
+  const agency =
+    agencyForAgent(agent.id) ||
+    agencyForAgent(agent.name) ||
+    agencyForAgent(agent.agency);
+
   const listings = agentListings(agent.id);
 
   const stats = [
@@ -99,14 +107,38 @@ export default async function AgentProfilePage({
                   </Badge>
                 )}
               </div>
-              <p className="mt-1 text-muted">
-                {agent.title} · {agent.agency} · {agent.city}
-              </p>
-              <p className="mt-2 flex items-center gap-1.5 text-sm">
-                <Star size={15} className="fill-gold stroke-gold" />
-                <span className="font-semibold">{agent.rating}</span>
-                <span className="text-muted">({agent.reviews} reviews)</span>
-              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-muted">
+                <span>{agent.title}</span>
+                <span>·</span>
+                {agency ? (
+                  <Link
+                    href={`/agencies/${agency.slug}`}
+                    className="font-medium text-ink hover:text-brass transition-colors underline-offset-4 hover:underline"
+                  >
+                    {agency.name}
+                  </Link>
+                ) : (
+                  <span>{agent.agency}</span>
+                )}
+                <span>·</span>
+                <span>{agent.city}</span>
+              </div>
+              <div className="mt-2.5 flex flex-wrap items-center gap-3">
+                <p className="flex items-center gap-1.5 text-sm">
+                  <Star size={15} className="fill-gold stroke-gold" />
+                  <span className="font-semibold">{agent.rating}</span>
+                  <span className="text-muted">({agent.reviews} reviews)</span>
+                </p>
+                {agency && (
+                  <>
+                    <span className="text-muted">·</span>
+                    <div className="flex items-center gap-1.5 text-xs text-muted">
+                      <span>Agency:</span>
+                      <AgencyRating agencyId={agency.id} variant="compact" />
+                    </div>
+                  </>
+                )}
+              </div>
               <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">
                 {agent.bio}
               </p>

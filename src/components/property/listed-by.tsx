@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 
 import { cn } from "@/lib/utils";
 
+import { AgencyRating } from "@/components/agency/agency-rating";
+
 /* "Listed by" — makes the listing party explicit: a verified brokerage,
    an independent agent, or a private owner. The enquiry contact below
    (ContactCard) is separate; this answers "who is behind this listing". */
@@ -89,6 +91,9 @@ export function ListedBy({
                 <Badge tone="outline">Agency</Badge>
               </div>
               <p className="mt-1 text-sm text-muted">{agency.tagline}</p>
+              <div className="mt-2">
+                <AgencyRating agencyId={agency.id} variant="compact" />
+              </div>
             </div>
             <ArrowUpRight
               size={18}
@@ -103,21 +108,28 @@ export function ListedBy({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-display text-lg font-semibold">
-                  {agent.name}
+                  Independent Advisor
                 </p>
-                <Badge tone="outline">Independent agent</Badge>
+                <Badge tone="neutral">Direct</Badge>
               </div>
               <p className="mt-1 text-sm text-muted">
-                Licensed individual agent · {agent.yearsActive} years on
-                SpaceFlex
+                Licensed advisor operating independently on SpaceFlex
               </p>
             </div>
           </div>
         )}
 
-        {/* ── Facts row ── */}
-        {kind === "agency" && agency && (
-          <dl className="grid grid-cols-3 border-t border-line text-center">
+        {/* ── Agency facts strip ── */}
+        {agency && (
+          <dl className="grid grid-cols-4 border-t border-line text-center">
+            <div className="border-r border-line p-4">
+              <dd className="font-display text-lg font-semibold">
+                <AgencyRating agencyId={agency.id} variant="small" />
+              </dd>
+              <dt className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+                Rating
+              </dt>
+            </div>
             <div className="border-r border-line p-4">
               <dd className="font-display text-lg font-semibold">
                 {agency.activeListings}
