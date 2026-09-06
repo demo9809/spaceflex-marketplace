@@ -17,7 +17,7 @@ function DriveTimeSkeleton() {
         <div className="skeleton h-11 w-full rounded-xl" />
         <div className="skeleton h-32 w-full rounded-2xl" />
       </div>
-      <div className="skeleton h-[28rem] w-full rounded-3xl lg:h-[calc(100svh-8rem)]" />
+      <div className="skeleton h-[28rem] w-full rounded-3xl lg:h-[calc(100dvh-8rem)]" />
     </div>
   );
 }

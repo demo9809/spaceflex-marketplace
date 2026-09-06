@@ -66,7 +66,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative isolate -mt-16 flex min-h-[92svh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
+      <section className="relative isolate -mt-16 flex min-h-[calc(100dvh-4rem)] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
         <HeroBackdrop />
 
         <div className="container-site relative z-10 pb-14 pt-36 md:pb-24">

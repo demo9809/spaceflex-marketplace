@@ -23,11 +23,20 @@ export function MobileTabBar() {
   const { openAi, isOpen } = useAiAssistant();
   const navVisible = useScrollNav();
 
+  // Hide tab bar on property/agent detail pages where a dedicated action bar exists
+  const isDetailPage =
+    /^\/properties\/[^/]+$/.test(pathname) ||
+    /^\/agents\/[^/]+$/.test(pathname);
+
+  if (isDetailPage) {
+    return null;
+  }
+
   return (
     <nav
       aria-label="Bottom navigation"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden transition-transform duration-300 ease-in-out",
+        "fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/90 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl md:hidden transition-transform duration-300 ease-in-out",
         !navVisible && "translate-y-full"
       )}
     >

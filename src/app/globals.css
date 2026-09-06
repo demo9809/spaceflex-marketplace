@@ -123,10 +123,19 @@
   --text-h4: clamp(1.125rem, 1rem + 0.5vw, 1.35rem);
 }
 
-/* ── Base ── */
+/* Enable smooth scrolling only for desktop / pointer: fine where users don't have gesture-driven
+   browser UI collapse. Touch devices (iOS Safari) must use native unhindered scroll momentum. */
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  /* Prevent horizontal micro-wobble without creating a scroll container */
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {

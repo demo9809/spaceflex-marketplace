@@ -82,7 +82,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-[60] transition-transform duration-300 ease-in-out",
+        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-in-out",
         !navVisible && !open && "-translate-y-full md:translate-y-0"
       )}
     >
@@ -223,7 +223,7 @@ export function SiteHeader() {
       {/* Mobile menu — fixed to viewport, above the tab bar */}
       <div
         className={cn(
-          "fixed inset-x-0 top-16 bottom-0 z-50 overflow-y-auto bg-paper transition-all duration-300 lg:hidden",
+          "fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top,0px))] bottom-0 z-50 overflow-y-auto bg-paper transition-all duration-300 lg:hidden",
           open ? "visible opacity-100" : "invisible opacity-0"
         )}
       >
@@ -252,7 +252,7 @@ export function SiteHeader() {
               </Link>
             );
           })}
-          <div className="mt-8 flex flex-col gap-3 pb-24">
+          <div className="mt-8 flex flex-col gap-3 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
             <ButtonLink href="/list-property" size="lg">
               List a property
             </ButtonLink>

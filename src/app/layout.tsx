@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/header";
@@ -21,6 +21,17 @@ const instrument = Instrument_Sans({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a1712" },
+  ],
+};
+
 export const metadata: Metadata = {
   title: {
     default: "SpaceFlex — Luxury Real Estate in Qatar",
@@ -38,14 +49,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${instrument.variable} h-full antialiased`}
+      className={`${display.variable} ${instrument.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-[100dvh] flex flex-col">
         <AuthProvider>
           <SavedProvider>
             <AiAssistantProvider>
               <SiteHeader />
-              <main className="flex-1 pb-16 md:pb-0">{children}</main>
+              <main className="flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">{children}</main>
               <SiteFooter />
               <MobileTabBar />
               <AiAssistantDrawer />

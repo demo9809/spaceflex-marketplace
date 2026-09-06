@@ -81,9 +81,9 @@ export function PropertyExplorer() {
   const [sort, setSort] = useState<Sort>("featured");
   const [view, setView] = useState<View>("grid");
   const searchParam = params.get("search");
-  const [searchModalOpen, setSearchModalOpen] = useState(searchParam === "open");
+  const searchModalOpenParam = searchParam === "open";
+  const [searchModalOpen, setSearchModalOpen] = useState(searchModalOpenParam);
   const introRef = useRef<HTMLDivElement>(null);
-  const [isPastIntro, setIsPastIntro] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const drawer = usePresence(filtersOpen);
 
@@ -131,19 +131,7 @@ export function PropertyExplorer() {
   const toggleHub = (id: string) =>
     setHubIds((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
-  /* Detect when user scrolls past page intro on mobile */
-  useEffect(() => {
-    const onScroll = () => {
-      if (introRef.current) {
-        const rect = introRef.current.getBoundingClientRect();
-        // Top-16 header is 64px tall on mobile
-        setIsPastIntro(rect.bottom <= 64);
-      }
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
 
   /* Lock page scroll while filter sheet or mobile search overlay is open */
   useEffect(() => {
@@ -380,11 +368,7 @@ export function PropertyExplorer() {
       {/* Sticky Toolbar */}
       <div
         className={cn(
-          "sticky z-50 transition-all duration-300 mb-8",
-          isPastIntro
-            ? "block -mx-[calc(50vw-50%)] px-[calc(50vw-50%)] border-b border-line bg-paper/95 py-3.5 backdrop-blur-xl shadow-sm"
-            : "hidden md:block py-2 border-0 bg-transparent",
-          navVisible ? "top-16 md:top-[4.5rem]" : "top-0 md:top-[4.5rem]"
+          "sticky top-[calc(4rem+env(safe-area-inset-top,0px))] md:top-[4.5rem] z-40 mb-8 border-b border-line bg-paper/95 py-3 backdrop-blur-xl transition-all duration-300 md:border-0 md:bg-transparent md:py-2 md:backdrop-blur-none"
         )}
       >
         <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap md:overflow-visible">
@@ -576,7 +560,7 @@ export function PropertyExplorer() {
         </div>
       ) : view === "map" ? (
         <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-          <div className="order-2 flex max-h-[42rem] flex-col gap-5 overflow-y-auto pr-1 lg:order-1">
+          <div className="order-2 flex flex-col gap-5 pr-1 lg:order-1 lg:max-h-[42rem] lg:overflow-y-auto">
             {results.map((p) => (
               <PropertyCard key={p.id} property={p} layout="list" />
             ))}

@@ -15,7 +15,7 @@ export function AuthShell({
   footer: ReactNode;
 }) {
   return (
-    <div className="grid min-h-[calc(100svh-4rem)] lg:grid-cols-2">
+    <div className="grid min-h-[calc(100dvh-4rem)] lg:grid-cols-2">
       <div className="relative hidden overflow-hidden lg:block">
         <Image
           src={IMG.interiorLux}
