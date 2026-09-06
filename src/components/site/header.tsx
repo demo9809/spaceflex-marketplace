@@ -84,6 +84,15 @@ export function SiteHeader() {
   }, [open]);
 
   useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
+  useEffect(() => {
     // Dynamically synchronize theme-color meta tag for transparent iOS status bar during scroll
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
@@ -245,16 +254,57 @@ export function SiteHeader() {
       </div>
     </header>
 
-    {/* Mobile menu — rendered via portal to body, immune to header transforms */}
+    {/* Mobile menu — rendered via portal to body, self-contained full-screen overlay */}
     {mounted &&
       createPortal(
         <div
           className={cn(
-            "fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top,0px))] bottom-0 z-[70] overflow-y-auto bg-paper transition-all duration-300 lg:hidden",
-            open ? "visible opacity-100 pointer-events-auto" : "invisible opacity-0 pointer-events-none"
+            "fixed inset-0 z-[100] flex flex-col bg-paper transition-all duration-300 lg:hidden",
+            open
+              ? "visible opacity-100 pointer-events-auto"
+              : "invisible opacity-0 pointer-events-none"
           )}
         >
-          <nav aria-label="Mobile" className="container-site flex flex-col py-6">
+          {/* Dedicated Header Bar inside Mobile Menu Drawer */}
+          <div className="border-b border-line bg-paper pt-[env(safe-area-inset-top,0px)] shadow-[0_1px_0_var(--line)]">
+            <div className="container-site flex h-16 items-center justify-between gap-4">
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                aria-label="SpaceFlex home"
+                className="shrink-0"
+              >
+                <Image
+                  src="/spaceflex-logo.svg"
+                  alt="SpaceFlex — Proptech Solutions"
+                  width={169}
+                  height={32}
+                  className="h-7 w-auto"
+                />
+              </Link>
+              <div className="flex items-center gap-2">
+                <ButtonLink
+                  href="/list-property"
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setOpen(false)}
+                >
+                  List property
+                </ButtonLink>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label="Close menu"
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-brass-tint transition-colors cursor-pointer"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Scrollable Navigation Links */}
+          <nav aria-label="Mobile" className="container-site flex-1 overflow-y-auto py-6">
             {[
               ...nav,
               ...insights.map(({ label, href }) => ({
