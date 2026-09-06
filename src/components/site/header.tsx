@@ -100,7 +100,7 @@ export function SiteHeader() {
           !open && "will-change-transform",
           !navVisible &&
             !open &&
-            "-translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto",
+            "max-md:hidden -translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto",
           open && "translate-y-0 opacity-100 pointer-events-auto bg-paper shadow-[0_1px_0_var(--line)]"
         )}
       >
