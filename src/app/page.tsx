@@ -69,7 +69,7 @@ export default function HomePage() {
       <section className="relative isolate -mt-[calc(4rem+env(safe-area-inset-top,0px))] flex min-h-[100dvh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
         <HeroBackdrop />
 
-        <div className="container-site relative z-10 pb-14 pt-36 md:pb-24">
+        <div className="container-site relative z-10 pb-[calc(7.5rem+env(safe-area-inset-bottom,0px))] pt-28 sm:pt-32 md:pb-24 md:pt-36">
           <p className="rise rise-1 eyebrow !text-paper/80">
             Qatar · Premium Property
           </p>

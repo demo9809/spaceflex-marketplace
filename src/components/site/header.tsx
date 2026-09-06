@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Heart, Menu, X, ChevronDown, Navigation, Sparkles } from "lucide-react";
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
@@ -31,11 +32,14 @@ const insights = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const navVisible = useScrollNav();
   const pathname = usePathname();
   const { saved } = useSaved();
   const { authed } = useAuth();
   const { openAi } = useAiAssistant();
+
+  useEffect(() => setMounted(true), []);
 
   /* Pages whose hero extends dark artwork beneath the header —
      the header renders light-on-dark until the user scrolls. */
@@ -91,30 +95,32 @@ export function SiteHeader() {
   }, [navVisible, scrolled]);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ease-out will-change-transform",
-        !navVisible &&
-          !open &&
-          "-translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto"
-      )}
-    >
-      {/* Background layer carries the blur so the fixed mobile menu
-          below is not trapped by a backdrop-filter containing block. */}
-      <div
-        aria-hidden
+    <>
+      <header
         className={cn(
-          "absolute inset-0 transition-all duration-300",
-          !navVisible && !open && "opacity-0 md:opacity-100",
-          open
-            ? "bg-paper"
-            : scrolled
-              ? "bg-paper/85 shadow-[0_1px_0_var(--line)] backdrop-blur-xl"
-              : light
-                ? "bg-white/5 shadow-[inset_0_-1px_0_rgb(255_255_255/0.12)] backdrop-blur-xl"
-                : "bg-white/30 shadow-[inset_0_-1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl backdrop-saturate-150"
+          "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ease-out",
+          !open && "will-change-transform",
+          !navVisible &&
+            !open &&
+            "-translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto",
+          open && "translate-y-0 opacity-100 pointer-events-auto bg-paper shadow-[0_1px_0_var(--line)]"
         )}
-      />
+      >
+        {/* Background layer carries the blur */}
+        <div
+          aria-hidden
+          className={cn(
+            "absolute inset-0 transition-all duration-300",
+            !navVisible && !open && "opacity-0 md:opacity-100",
+            open
+              ? "bg-paper opacity-100"
+              : scrolled
+                ? "bg-paper/85 shadow-[0_1px_0_var(--line)] backdrop-blur-xl"
+                : light
+                  ? "bg-white/5 shadow-[inset_0_-1px_0_rgb(255_255_255/0.12)] backdrop-blur-xl"
+                  : "bg-white/30 shadow-[inset_0_-1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl backdrop-saturate-150"
+          )}
+        />
       <div className="container-site relative flex h-16 items-center justify-between gap-6 md:h-[4.5rem]">
         <Link href="/" aria-label="SpaceFlex home" className="shrink-0">
           <Image
@@ -222,64 +228,75 @@ export function SiteHeader() {
           </ButtonLink>
           <button
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full transition-colors lg:hidden",
-              light ? "text-white hover:bg-white/10" : "hover:bg-brass-tint"
+              "flex h-10 w-10 items-center justify-center rounded-full transition-colors lg:hidden cursor-pointer",
+              open
+                ? "text-ink hover:bg-brass-tint"
+                : light
+                  ? "text-white hover:bg-white/10"
+                  : "text-ink hover:bg-brass-tint"
             )}
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
-
-      {/* Mobile menu — fixed to viewport, above the tab bar */}
-      <div
-        className={cn(
-          "fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top,0px))] bottom-0 z-50 overflow-y-auto bg-paper transition-all duration-300 lg:hidden",
-          open ? "visible opacity-100" : "invisible opacity-0"
-        )}
-      >
-        <nav aria-label="Mobile" className="container-site flex flex-col py-6">
-          {[
-            ...nav,
-            ...insights.map(({ label, href }) => ({
-              label,
-              href,
-              icon: undefined as NavIcon | undefined,
-            })),
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2.5 border-b border-line py-4 font-display text-2xl transition-all duration-300",
-                  open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-                )}
-                style={{ transitionDelay: `${60 + i * 40}ms` }}
-              >
-                {Icon && <Icon size={20} className="text-brass" />}
-                {item.label}
-              </Link>
-            );
-          })}
-          <div className="mt-8 flex flex-col gap-3 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
-            <ButtonLink href="/list-property" size="lg">
-              List a property
-            </ButtonLink>
-            <ButtonLink
-              href={authed ? "/dashboard" : "/signin"}
-              variant="outline"
-              size="lg"
-            >
-              {authed ? "Your dashboard" : "Sign in"}
-            </ButtonLink>
-          </div>
-        </nav>
-      </div>
     </header>
+
+    {/* Mobile menu — rendered via portal to body, immune to header transforms */}
+    {mounted &&
+      createPortal(
+        <div
+          className={cn(
+            "fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top,0px))] bottom-0 z-[70] overflow-y-auto bg-paper transition-all duration-300 lg:hidden",
+            open ? "visible opacity-100 pointer-events-auto" : "invisible opacity-0 pointer-events-none"
+          )}
+        >
+          <nav aria-label="Mobile" className="container-site flex flex-col py-6">
+            {[
+              ...nav,
+              ...insights.map(({ label, href }) => ({
+                label,
+                href,
+                icon: undefined as NavIcon | undefined,
+              })),
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2.5 border-b border-line py-4 font-display text-2xl transition-all duration-300",
+                    open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+                  )}
+                  style={{ transitionDelay: `${60 + i * 40}ms` }}
+                >
+                  {Icon && <Icon size={20} className="text-brass" />}
+                  {item.label}
+                </Link>
+              );
+            })}
+            <div className="mt-8 flex flex-col gap-3 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
+              <ButtonLink href="/list-property" size="lg" onClick={() => setOpen(false)}>
+                List a property
+              </ButtonLink>
+              <ButtonLink
+                href={authed ? "/dashboard" : "/signin"}
+                variant="outline"
+                size="lg"
+                onClick={() => setOpen(false)}
+              >
+                {authed ? "Your dashboard" : "Sign in"}
+              </ButtonLink>
+            </div>
+          </nav>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
