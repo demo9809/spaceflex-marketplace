@@ -19,6 +19,7 @@ import { getAgent } from "@/lib/data/agents";
 import { categoryIcon } from "@/lib/landmark-icons";
 import { Badge } from "@/components/ui/badge";
 import { SaveButton } from "./save-button";
+import { PropertyRating } from "./property-rating";
 import { useSaved } from "@/lib/store/saved";
 import { cn } from "@/lib/utils";
 
@@ -104,10 +105,13 @@ export function PropertyCard({
           </p>
         </div>
 
-        <p className="-mt-1 flex items-center gap-1.5 text-xs text-faint">
-          <SourceIcon size={12} className="shrink-0" />
-          <span className="truncate">{source}</span>
-        </p>
+        <div className="-mt-1 flex items-center justify-between gap-2 text-xs">
+          <p className="flex items-center gap-1.5 text-faint truncate">
+            <SourceIcon size={12} className="shrink-0" />
+            <span className="truncate">{source}</span>
+          </p>
+          <PropertyRating propertyId={property.id} variant="card" className="shrink-0" />
+        </div>
 
         {/* Estimated drive time to each selected hub */}
         {commute && commute.legs.length > 0 && (

@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { HeroSearch } from "@/components/home/hero-search";
 import { HeroBackdrop } from "@/components/home/hero-backdrop";
-import { HeroQatarVisual } from "@/components/home/hero-qatar-visual";
 import { DriveTimeBand } from "@/components/home/drive-time-band";
 import { PropertyCard } from "@/components/property/property-card";
 import { AgentCard } from "@/components/agent/agent-card";
@@ -69,7 +68,6 @@ export default function HomePage() {
       {/* ── HERO ── */}
       <section className="relative isolate -mt-[calc(4rem+env(safe-area-inset-top,0px))] flex min-h-[100dvh] items-end overflow-hidden md:-mt-[4.5rem] md:min-h-[88vh]">
         <HeroBackdrop />
-        <HeroQatarVisual />
 
         <div className="container-site relative z-10 pb-[calc(7.5rem+env(safe-area-inset-bottom,0px))] pt-28 sm:pt-32 md:pb-24 md:pt-36">
           <p className="rise rise-1 eyebrow !text-paper/80">

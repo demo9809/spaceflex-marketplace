@@ -114,3 +114,54 @@ export interface AgencyRatingSummary {
     responseTime: number;
   };
 }
+
+export type ResidentStatus =
+  | "Current Tenant"
+  | "Former Resident"
+  | "Verified Client"
+  | "Recent Viewing";
+
+export interface PropertyReview {
+  id: string;
+  propertyId: string;
+  reviewerName: string;
+  reviewerIdentifier?: string; // masked email or phone used to verify
+  verified: boolean;
+  residentStatus?: ResidentStatus;
+  date: string; // ISO date string e.g. "2026-06-15"
+  rating: number; // 1 to 5
+  headline: string;
+  comment: string;
+  categories: {
+    location: number; // 1 to 5
+    buildQuality: number; // 1 to 5
+    amenities: number; // 1 to 5
+    valueForMoney: number; // 1 to 5
+    management: number; // 1 to 5
+  };
+  pros?: string[];
+  cons?: string[];
+  leaseDuration?: string;
+  helpfulCount?: number;
+}
+
+export interface PropertyRatingSummary {
+  propertyId: string;
+  averageRating: number;
+  totalReviews: number;
+  verifiedReviewsCount: number;
+  distribution: {
+    fiveStar: { count: number; percentage: number };
+    fourStar: { count: number; percentage: number };
+    threeStar: { count: number; percentage: number };
+    twoStar: { count: number; percentage: number };
+    oneStar: { count: number; percentage: number };
+  };
+  categoryAverages: {
+    location: number;
+    buildQuality: number;
+    amenities: number;
+    valueForMoney: number;
+    management: number;
+  };
+}

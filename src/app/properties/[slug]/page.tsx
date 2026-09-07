@@ -32,6 +32,8 @@ import { PropertyMap } from "@/components/property/property-map";
 import { AmenitiesList } from "@/components/property/amenities-list";
 import { ContactCard } from "@/components/agent/contact-card";
 import { PropertyCard } from "@/components/property/property-card";
+import { PropertyRating } from "@/components/property/property-rating";
+import { PropertyReviewsSection } from "@/components/property/property-reviews-section";
 import { SaveButton } from "@/components/property/save-button";
 import { MobilePropertyBar } from "@/components/property/mobile-property-bar";
 import { Badge } from "@/components/ui/badge";
@@ -156,6 +158,7 @@ export default async function PropertyDetailPage({
                   </Badge>
                   <Badge tone="outline">{property.type}</Badge>
                   {property.exclusive && <Badge tone="brass">Exclusive</Badge>}
+                  <PropertyRating propertyId={property.id} variant="header" />
                 </div>
                 <h1 className="font-display text-h2 mt-3 font-medium tracking-tight text-balance">
                   {property.title}
@@ -246,7 +249,10 @@ export default async function PropertyDetailPage({
             {/* Commute / connectivity */}
             <GettingAround property={property} />
 
-
+            {/* Resident & Tenant Reviews */}
+            <div className="mt-12 pt-10 border-t border-line">
+              <PropertyReviewsSection property={property} />
+            </div>
           </div>
 
           {/* ── Sidebar ── */}

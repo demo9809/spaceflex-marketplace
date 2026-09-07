@@ -27,6 +27,10 @@ interface LeadCaptureState {
     input: Omit<Lead, "id" | "timestamp" | "status">
   ) => Promise<Lead>;
   hasVerifiedInteraction: (agencyId: string, phoneOrEmail?: string) => boolean;
+  hasVerifiedPropertyInteraction: (
+    propertyId: string,
+    phoneOrEmail?: string
+  ) => boolean;
   clearSavedProfile: () => void;
 }
 
@@ -141,6 +145,25 @@ export function LeadCaptureProvider({ children }: { children: ReactNode }) {
     [leads]
   );
 
+  const hasVerifiedPropertyInteraction = useCallback(
+    (propertyId: string, phoneOrEmail?: string): boolean => {
+      return leads.some((lead) => {
+        if (lead.propertyId !== propertyId) return false;
+        if (!phoneOrEmail) return true; // User interacted with this property on this browser
+
+        const cleanInput = phoneOrEmail.trim().toLowerCase();
+        const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
+        const inputCleanPhone = cleanInput.replace(/[^0-9]/g, "");
+
+        if (inputCleanPhone && cleanPhone.includes(inputCleanPhone)) return true;
+        if (lead.email && lead.email.toLowerCase() === cleanInput) return true;
+
+        return false;
+      });
+    },
+    [leads]
+  );
+
   const clearSavedProfile = useCallback(() => {
     setSavedProfile(null);
     try {
@@ -160,6 +183,7 @@ export function LeadCaptureProvider({ children }: { children: ReactNode }) {
         closeLeadModal,
         submitLead,
         hasVerifiedInteraction,
+        hasVerifiedPropertyInteraction,
         clearSavedProfile,
       }}
     >

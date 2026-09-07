@@ -7,8 +7,10 @@ import { useSaved } from "@/lib/store/saved";
 import { properties } from "@/lib/data/properties";
 import { propertyPrice, pricePerSqft, formatArea } from "@/lib/format";
 import { ButtonLink } from "@/components/ui/button";
+import { PropertyRating } from "@/components/property/property-rating";
 
 const rows = [
+  { label: "Resident Rating", get: (p: (typeof properties)[number]) => <PropertyRating propertyId={p.id} variant="card" /> },
   { label: "Price", get: (p: (typeof properties)[number]) => propertyPrice(p, true) },
   { label: "Price / sqft", get: (p: (typeof properties)[number]) => pricePerSqft(p) },
   { label: "Type", get: (p: (typeof properties)[number]) => p.type },
