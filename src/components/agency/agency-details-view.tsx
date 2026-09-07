@@ -487,7 +487,7 @@ export function AgencyDetailsView({
       {/* ── 3. Sticky In-Page Section Navigation Tabs ── */}
       <div
         className={cn(
-          "sticky z-30 border-b border-line bg-paper/95 backdrop-blur-xl transition-all duration-300 ease-out md:top-[4.5rem]",
+          "sticky z-30 border-b border-line bg-paper/95 backdrop-blur-xl transition-[top,padding] duration-300 ease-out md:top-[4.5rem]",
           navVisible
             ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
             : "top-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]"

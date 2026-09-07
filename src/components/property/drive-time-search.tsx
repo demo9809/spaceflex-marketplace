@@ -458,7 +458,7 @@ export function DriveTimeSearch() {
       {hasResults && (
         <div
           className={cn(
-            "sticky z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-all duration-300 ease-out md:top-[4.5rem] md:pt-0",
+            "sticky z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-[top,padding] duration-300 ease-out md:top-[4.5rem] md:pt-0",
             navVisible
               ? "top-[calc(4rem+env(safe-area-inset-top,0px))]"
               : "top-0 pt-[env(safe-area-inset-top,0px)]"

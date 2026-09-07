@@ -63,7 +63,9 @@ export function MobileAgentBar({ agent }: { agent: Agent }) {
     <div
       className={cn(
         "fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] backdrop-blur-xl md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out will-change-transform",
-        !navVisible && "hidden"
+        navVisible
+          ? "translate-y-0 pointer-events-auto"
+          : "translate-y-full pointer-events-none"
       )}
     >
       <div className="flex items-center justify-between gap-3">

@@ -96,20 +96,18 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ease-out",
-          !open && "will-change-transform",
-          !navVisible &&
-            !open &&
-            "max-md:hidden -translate-y-full md:translate-y-0 opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto",
-          open && "translate-y-0 opacity-100 pointer-events-auto bg-paper shadow-[0_1px_0_var(--line)]"
+          "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-out will-change-transform",
+          !navVisible && !open
+            ? "-translate-y-full md:translate-y-0 pointer-events-none md:pointer-events-auto"
+            : "translate-y-0 pointer-events-auto",
+          open && "bg-paper shadow-[0_1px_0_var(--line)]"
         )}
       >
         {/* Background layer carries the blur */}
         <div
           aria-hidden
           className={cn(
-            "absolute inset-0 transition-all duration-300",
-            !navVisible && !open && "opacity-0 md:opacity-100",
+            "absolute inset-0 transition-opacity duration-300",
             open
               ? "bg-paper opacity-100"
               : scrolled

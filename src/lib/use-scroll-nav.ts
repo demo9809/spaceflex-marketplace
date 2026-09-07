@@ -6,19 +6,24 @@ import { usePathname } from "next/navigation";
 export interface UseScrollNavOptions {
   /**
    * Scroll position (in px) from document top below which navigation
-   * is guaranteed to always remain visible. Defaults to 60px.
+   * is guaranteed to always remain visible. Defaults to 70px.
    */
   topThreshold?: number;
   /**
    * Accumulated downward scroll (in px) required to hide navigation.
-   * Prevents accidental hiding on micro-scrolls or finger taps. Defaults to 45px.
+   * Prevents accidental hiding on micro-scrolls or finger taps. Defaults to 65px.
    */
   downThreshold?: number;
   /**
    * Accumulated upward scroll (in px) required to reveal navigation.
-   * Gives an immediate, responsive response when the user scrolls back up. Defaults to 15px.
+   * Requires a deliberate upward scroll gesture. Defaults to 40px.
    */
   upThreshold?: number;
+  /**
+   * Minimum time (in ms) that must elapse between visibility state changes.
+   * Prevents rapid oscillation / stutter / flickering during inertia deceleration. Defaults to 250ms.
+   */
+  minToggleIntervalMs?: number;
 }
 
 /**
@@ -26,18 +31,21 @@ export interface UseScrollNavOptions {
  *
  * Features:
  * - Always visible at the top of the page.
- * - Smoothly hides on intentional downward scroll.
+ * - Smoothly hides on intentional, sustained downward scroll.
  * - Promptly reappears on intentional upward scroll.
+ * - Completely immune to micro-jitters, touch bounces, and address-bar resize noise.
  * - Ignores iOS rubber-banding elasticity at the top and bottom of the page.
- * - Frame-throttled via requestAnimationFrame for silky 60/120fps native-app performance.
- * - Keeps navigation visible when modals, menus, or drawers lock body scroll.
+ * - Hysteresis dwell cooldown (250ms) to eliminate flickering.
+ * - Frame-throttled via requestAnimationFrame for silky 60/120fps native performance.
+ * - Keeps navigation visible when modals, menus, drawers, or mobile keyboards are active.
  * - Resets to fully visible upon route changes.
  */
 export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
   const {
-    topThreshold = 60,
-    downThreshold = 45,
-    upThreshold = 15,
+    topThreshold = 70,
+    downThreshold = 65,
+    upThreshold = 40,
+    minToggleIntervalMs = 250,
   } = options;
 
   const [visible, setVisible] = useState(true);
@@ -47,12 +55,19 @@ export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
   const accumDown = useRef(0);
   const accumUp = useRef(0);
   const rafId = useRef<number | null>(null);
+  const lastToggleTime = useRef<number>(0);
+  const visibleRef = useRef(true);
+
+  // Keep ref synchronized with state to read current state synchronously in rAF
+  visibleRef.current = visible;
 
   // Reset to visible whenever the route changes
   useEffect(() => {
     setVisible(true);
+    visibleRef.current = true;
     accumDown.current = 0;
     accumUp.current = 0;
+    lastToggleTime.current = 0;
     if (typeof window !== "undefined") {
       lastScrollY.current = Math.max(
         0,
@@ -70,22 +85,50 @@ export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
     );
 
     const handleScrollUpdate = () => {
-      const currentScrollY = Math.max(
-        0,
-        window.scrollY || document.documentElement.scrollTop || 0
-      );
+      const now = performance.now();
+      const rawScrollY =
+        window.scrollY || document.documentElement.scrollTop || 0;
 
-      // 1. If any modal, drawer, or sheet locks the body, keep navigation visible
-      if (document.body.style.overflow === "hidden") {
-        setVisible(true);
+      // 1. If user is in iOS top rubber-band overscroll (negative scrollY) or at top
+      if (rawScrollY <= 0) {
+        if (!visibleRef.current) {
+          setVisible(true);
+          visibleRef.current = true;
+          lastToggleTime.current = now;
+        }
+        accumDown.current = 0;
+        accumUp.current = 0;
+        lastScrollY.current = 0;
+        rafId.current = null;
+        return;
+      }
+
+      const currentScrollY = rawScrollY;
+
+      // 2. If any modal, drawer, or sheet locks the body, or an input is focused, keep navigation visible
+      if (
+        document.body.style.overflow === "hidden" ||
+        document.body.classList.contains("overflow-hidden") ||
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        if (!visibleRef.current) {
+          setVisible(true);
+          visibleRef.current = true;
+          lastToggleTime.current = now;
+        }
         lastScrollY.current = currentScrollY;
         rafId.current = null;
         return;
       }
 
-      // 2. Always fully visible near the top of the page
+      // 3. Always fully visible near the top of the page
       if (currentScrollY <= topThreshold) {
-        setVisible(true);
+        if (!visibleRef.current) {
+          setVisible(true);
+          visibleRef.current = true;
+          lastToggleTime.current = now;
+        }
         accumDown.current = 0;
         accumUp.current = 0;
         lastScrollY.current = currentScrollY;
@@ -93,12 +136,12 @@ export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
         return;
       }
 
-      // 3. Ignore iOS bottom rubber-band bounce
+      // 4. Ignore iOS bottom rubber-band bounce
       const maxScrollY = Math.max(
         0,
         document.documentElement.scrollHeight - window.innerHeight
       );
-      if (currentScrollY >= maxScrollY - 10) {
+      if (currentScrollY >= maxScrollY - 30) {
         lastScrollY.current = currentScrollY;
         rafId.current = null;
         return;
@@ -106,22 +149,37 @@ export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
 
       const delta = currentScrollY - lastScrollY.current;
 
+      // Check toggle cooldown to completely prevent rapid flickering / stuttering
+      const canToggle = now - lastToggleTime.current >= minToggleIntervalMs;
+
       if (delta > 0) {
-        // Intentional downward scroll
+        // Downward scroll
         accumUp.current = 0;
         accumDown.current += delta;
 
-        if (accumDown.current >= downThreshold) {
+        if (
+          accumDown.current >= downThreshold &&
+          canToggle &&
+          visibleRef.current
+        ) {
           setVisible(false);
+          visibleRef.current = false;
+          lastToggleTime.current = now;
           accumDown.current = 0;
         }
       } else if (delta < 0) {
-        // Intentional upward scroll
+        // Upward scroll
         accumDown.current = 0;
         accumUp.current += Math.abs(delta);
 
-        if (accumUp.current >= upThreshold) {
+        if (
+          accumUp.current >= upThreshold &&
+          canToggle &&
+          !visibleRef.current
+        ) {
           setVisible(true);
+          visibleRef.current = true;
+          lastToggleTime.current = now;
           accumUp.current = 0;
         }
       }
@@ -145,7 +203,7 @@ export function useScrollNav(options: UseScrollNavOptions = {}): boolean {
         rafId.current = null;
       }
     };
-  }, [topThreshold, downThreshold, upThreshold]);
+  }, [topThreshold, downThreshold, upThreshold, minToggleIntervalMs]);
 
   return visible;
 }
