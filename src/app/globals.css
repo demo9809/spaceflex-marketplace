@@ -378,6 +378,123 @@ body {
 .rise-4 { animation-delay: 0.38s; }
 .rise-5 { animation-delay: 0.5s; }
 
+/* ── Qatar Maroon Abstract Hero Ribbon ── */
+.qatar-visual-container {
+  transform-origin: 68% 48%;
+  animation: qatar-breathe 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.qatar-serrated-core {
+  transform-origin: 650px 320px;
+  animation: qatar-core-undulate 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.qatar-layer-back {
+  transform-origin: 60% 45%;
+  animation: qatar-drift-1 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.qatar-layer-front {
+  transform-origin: 60% 55%;
+  animation: qatar-drift-2 20s ease-in-out infinite alternate-reverse;
+  will-change: transform;
+}
+
+.qatar-glow-pulse {
+  animation: qatar-glow-breath 14s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes qatar-breathe {
+  0% {
+    transform: translateY(-50%) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-48.5%) scale(1.03) rotate(1.2deg);
+  }
+  100% {
+    transform: translateY(-51.5%) scale(0.98) rotate(-0.8deg);
+  }
+}
+
+@keyframes qatar-core-undulate {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    transform: translate(-5px, 7px) rotate(1.4deg);
+  }
+  100% {
+    transform: translate(6px, -5px) rotate(-1.1deg);
+  }
+}
+
+@keyframes qatar-drift-1 {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+  100% {
+    transform: translateY(9px) scale(1.02);
+  }
+}
+
+@keyframes qatar-drift-2 {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+  100% {
+    transform: translateY(-8px) scale(0.985);
+  }
+}
+
+@keyframes qatar-glow-breath {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateY(-50%) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-48%) scale(1.06);
+  }
+}
+
+/* Traveling light pulse along the ribbon curves */
+.qatar-light-pulse-1,
+.qatar-light-pulse-2,
+.qatar-light-pulse-3 {
+  stroke-dasharray: 180 800;
+  stroke-dashoffset: 980;
+  animation: qatar-light-dash 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.qatar-light-pulse-2 {
+  animation-delay: 3.2s;
+  animation-duration: 12s;
+}
+.qatar-light-pulse-3 {
+  animation-delay: 6.8s;
+  animation-duration: 11s;
+}
+
+@keyframes qatar-light-dash {
+  0% {
+    stroke-dashoffset: 980;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: -980;
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
