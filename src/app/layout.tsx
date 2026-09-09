@@ -29,10 +29,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a1712" },
-  ],
 };
 
 export const metadata: Metadata = {
@@ -44,15 +40,11 @@ export const metadata: Metadata = {
     "The curated marketplace for premium property across Qatar — West Bay, The Pearl, Lusail and Msheireb. Verified agents, market intelligence, and investment-grade homes.",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "SpaceFlex",
   },
   formatDetection: {
     telephone: false,
-  },
-  other: {
-    "apple-touch-fullscreen": "yes",
-    "mobile-web-app-capable": "yes",
   },
 };
 
@@ -66,24 +58,26 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${instrument.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col">
-        <AuthProvider>
-          <SavedProvider>
-            <LeadCaptureProvider>
-              <AgencyReviewProvider>
-                <AiAssistantProvider>
-                  <SiteHeader />
-                  <main className="flex-1">{children}</main>
-                  <SiteFooter />
-                  <MobileTabBar />
-                  <LeadCaptureModal />
-                  <AiAssistantDrawer />
-                  <AiFloatingButton />
-                </AiAssistantProvider>
-              </AgencyReviewProvider>
-            </LeadCaptureProvider>
-          </SavedProvider>
-        </AuthProvider>
+      <body className="min-h-dvh flex flex-col">
+        <div className="flex min-h-dvh flex-col overflow-x-clip">
+          <AuthProvider>
+            <SavedProvider>
+              <LeadCaptureProvider>
+                <AgencyReviewProvider>
+                  <AiAssistantProvider>
+                    <SiteHeader />
+                    <main className="flex-1">{children}</main>
+                    <SiteFooter />
+                    <MobileTabBar />
+                    <LeadCaptureModal />
+                    <AiAssistantDrawer />
+                    <AiFloatingButton />
+                  </AiAssistantProvider>
+                </AgencyReviewProvider>
+              </LeadCaptureProvider>
+            </SavedProvider>
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );

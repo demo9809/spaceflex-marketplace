@@ -98,7 +98,7 @@ export function SiteHeader() {
         className={cn(
           "sticky top-0 z-[60] pt-[env(safe-area-inset-top,0px)] transition-transform duration-300 ease-out will-change-transform",
           !navVisible && !open
-            ? "-translate-y-full md:translate-y-0 pointer-events-none md:pointer-events-auto"
+            ? "max-md:hidden -translate-y-full md:translate-y-0 pointer-events-none md:pointer-events-auto"
             : "translate-y-0 pointer-events-auto",
           open && "bg-paper shadow-[0_1px_0_var(--line)]"
         )}
